@@ -8,3 +8,4 @@ export const InfoIcon = (style) => <Icon {...style} name="info" />;
 export const LoginIcon = (style) => <Icon {...style} name="log-in" />;
 export const ActivityIcon = (style) => <Icon {...style} name="activity" />;
 export const VideoIcon = (style) => <Icon {...style} name="video-outline" />;
+export const ProfileIcon = (style) => <Icon {...style} name="person-outline" />;
