@@ -1,11 +1,27 @@
-import { ArrowIosBackIcon, MenuIcon } from '../assets/icons';
-import { Divider, Layout, Text, TopNavigation, TopNavigationAction } from '@ui-kitten/components';
-
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from "react";
+import { ArrowIosBackIcon, MenuIcon } from "../assets/icons";
+import {
+  Divider,
+  Layout,
+  Text,
+  TopNavigation,
+  TopNavigationAction,
+  Button,
+} from "@ui-kitten/components";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { StyleSheet } from "react-native";
+
+import LoginScreen from "./authentication/LoginScreen";
 
 export const ProfileScreen = () => {
+  // State temporarily
+  const [logged, setLogged] = useState(false);
+
+  const togggleView = () => {
+    setLogged(!logged);
+  };
+
   const navigation = useNavigation();
 
   const renderDrawerAction = () => (
@@ -18,14 +34,36 @@ export const ProfileScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
-          title="Settings"
-          alignment="center"
-          accessoryLeft={renderDrawerAction}
-        />
-      <Divider/>
-      <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text category='h1'>Profile Screen</Text>
-      </Layout>
+        title={logged ? "Profile" : "Login / Signup"}
+        alignment="center"
+        accessoryLeft={renderDrawerAction}
+      />
+      <Divider />
+
+      {logged ? (
+        <Layout style={{ flex: 1, textAlign: "left" }}>
+          <Text category="h1">Profile Screen</Text>
+        </Layout>
+      ) : (
+        // Show Login Screen which also inclused Signup
+        <LoginScreen />
+      )}
+
+      <Button style={{ width: 200 }} onPress={togggleView}>
+        Toggle Logged In ({logged ? "T" : "F"})
+      </Button>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  layout: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
