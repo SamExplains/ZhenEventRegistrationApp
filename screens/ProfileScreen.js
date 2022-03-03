@@ -13,6 +13,7 @@ import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 
 import LoginScreen from "./authentication/LoginScreen";
+import ProfileUserDetails from "../components/molecules/profile/ProfileUserDetails";
 
 export const ProfileScreen = () => {
   // State temporarily
@@ -42,14 +43,14 @@ export const ProfileScreen = () => {
 
       {logged ? (
         <Layout style={{ flex: 1, textAlign: "left" }}>
-          <Text category="h1">Profile Screen</Text>
+          <ProfileUserDetails />
         </Layout>
       ) : (
         // Show Login Screen which also inclused Signup
         <LoginScreen />
       )}
 
-      <Button style={{ width: 200 }} onPress={togggleView}>
+      <Button style={{ width: 200 }} onPress={togggleView} size="small">
         Toggle Logged In ({logged ? "T" : "F"})
       </Button>
     </SafeAreaView>

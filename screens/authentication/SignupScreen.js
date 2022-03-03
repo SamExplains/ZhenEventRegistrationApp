@@ -5,10 +5,18 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { Icon, Input, Text, Button, Layout } from "@ui-kitten/components";
+import {
+  Icon,
+  Input,
+  Text,
+  Button,
+  Layout,
+  CheckBox,
+} from "@ui-kitten/components";
 import React, { Component, useState } from "react";
 
 const email = null;
+const checked = false;
 
 export const SignupScreen = () => {
   return (
@@ -51,7 +59,18 @@ export const SignupScreen = () => {
             label="Phone"
             placeholder="000-0000"
           />
-          <Button style={styles.button}>Signup</Button>
+
+          <CheckBox
+            style={styles.checkBox}
+            checked={checked}
+            onChange={(nextChecked) => setChecked(nextChecked)}
+          >
+            Terms of Conditions and Privacy Policy
+          </CheckBox>
+
+          <Button style={styles.button} size="small">
+            Signup
+          </Button>
         </Layout>
       </ScrollView>
     </SafeAreaView>
@@ -74,6 +93,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 10,
     width: 150,
+  },
+  checkBox: {
+    marginLeft: 10,
+    marginBottom: 20,
   },
 });
 
