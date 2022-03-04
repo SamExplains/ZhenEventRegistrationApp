@@ -17,7 +17,7 @@ import ProfileUserDetails from "../components/molecules/profile/ProfileUserDetai
 
 export const ProfileScreen = () => {
   // State temporarily
-  const [logged, setLogged] = useState(false);
+  const [logged, setLogged] = useState(true);
 
   const togggleView = () => {
     setLogged(!logged);

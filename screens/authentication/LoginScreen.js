@@ -14,7 +14,6 @@ import {
   Divider,
   CheckBox,
 } from "@ui-kitten/components";
-import { GoogleIcon } from "../../assets/icons";
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
 import React, { Component, useState } from "react";
@@ -77,7 +76,7 @@ const onForgotPassword = () => {
 
 export const LoginScreen = () => {
   // Temporarily toggle to switch between the Login view and the Google/Signup view
-  const [signup, setSignup] = useState(2);
+  const [signup, setSignup] = useState(1);
   const [forgotPassword] = useState(false);
 
   const onToggleSignup = () => {
