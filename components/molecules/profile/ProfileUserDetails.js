@@ -56,6 +56,13 @@ export const ProfileUserDetails = () => {
           <EventCard />
         </Layout>
       );
+    } else {
+      return (
+        <Layout>
+          <EventCard />
+          <EventCard />
+        </Layout>
+      );
     }
   };
   return (
@@ -144,30 +151,9 @@ export const ProfileUserDetails = () => {
               </Text>
             </Layout>
           </Layout>
-
-          {/* Tabbed View Organizer / Participant */}
-          {/* <Layout style={styles.tabbar}>
-              <TabView selectedIndex={0} onSelect={0}>
-                <Tab
-                  title={(evaProps) => (
-                    <Text
-                      category="p1"
-                      style={{ color: "#301A4B", fontWeight: "bold" }}
-                    >
-                      I am a participant
-                    </Text>
-                  )}
-                >
-                  <EventGeneral />
-                </Tab>
-                <Tab title="I am the Participant">
-                  <Layout>
-                    <Text category="h5">ORDERS</Text>
-                  </Layout>
-                </Tab>
-              </TabView>
-            </Layout> */}
+          {/* Tabs */}
           {tabs()}
+          {/* Tab Views */}
           {tabView()}
         </Layout>
       </Layout>

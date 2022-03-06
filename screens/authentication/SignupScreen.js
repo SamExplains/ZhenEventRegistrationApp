@@ -1,10 +1,7 @@
-import {
-  TouchableWithoutFeedback,
-  StyleSheet,
-  View,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import { TouchableWithoutFeedback, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "react-native-gesture-handler";
+
 import {
   Icon,
   Input,
@@ -13,15 +10,29 @@ import {
   Layout,
   CheckBox,
   StyleService,
+  TopNavigation,
+  TopNavigationAction,
 } from "@ui-kitten/components";
+import { ArrowBackIcon } from "../../assets/icons";
 import React, { Component, useState } from "react";
 
 const email = null;
 const checked = false;
 
-export const SignupScreen = () => {
+export const SignupScreen = ({ navigation }) => {
+  const navigateBack = () => {
+    navigation.goBack();
+  };
+  const BackAction = () => (
+    <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
+  );
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <TopNavigation
+        title="Signup"
+        alignment="center"
+        accessoryLeft={BackAction}
+      />
       <ScrollView style={styles.scrollView}>
         <Layout>
           <Layout style={styles.hero}>
@@ -149,4 +160,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignupScreen;
+// export default SignupScreen;

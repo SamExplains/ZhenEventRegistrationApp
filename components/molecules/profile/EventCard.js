@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, Image } from "react-native";
 import React, { Component } from "react";
-import { Layout, Button } from "@ui-kitten/components";
+import { Layout, Button, ButtonGroup } from "@ui-kitten/components";
 
 export default class EventCard extends Component {
   render() {
@@ -32,9 +32,17 @@ export default class EventCard extends Component {
           {/* View */}
           <Button style={styles.button}>View</Button>
           {/* Edit / Check In */}
-          <Button style={styles.buttonAlternate}>
+          {/* <Button style={styles.buttonAlternate}>
             <Text style={{ color: "#3F295A" }}>Edit or Check In</Text>
-          </Button>
+          </Button> */}
+          <ButtonGroup style={styles.buttonGroup} status="control">
+            <Button style={{ width: "42%" }}>
+              <Text style={{ color: "#3F295A" }}>Edit</Text>
+            </Button>
+            <Button style={{ width: "58%" }}>
+              <Text style={{ color: "#3F295A" }}>Check In</Text>
+            </Button>
+          </ButtonGroup>
         </Layout>
       </View>
     );
@@ -83,8 +91,15 @@ const styles = StyleSheet.create({
   buttonAlternate: {
     width: "48.5%",
     marginTop: 20,
-    color: "red",
     backgroundColor: "white",
     borderColor: "#3F295A",
+  },
+  buttonGroup: {
+    width: "48.5%",
+    borderWidth: 0,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#3F295A",
+    // borderColor: "white",
   },
 });

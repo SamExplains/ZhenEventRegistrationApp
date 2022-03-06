@@ -11,4 +11,7 @@ export const LoginIcon = (style) => <Icon {...style} name="log-in" />;
 export const ActivityIcon = (style) => <Icon {...style} name="activity" />;
 export const VideoIcon = (style) => <Icon {...style} name="video-outline" />;
 export const ProfileIcon = (style) => <Icon {...style} name="person-outline" />;
+export const ArrowBackIcon = (style) => (
+  <Icon {...style} name="arrow-back-outline" />
+);
 export const GoogleIcon = (style) => <Icon {...style} name="google" />;

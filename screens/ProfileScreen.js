@@ -11,13 +11,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
-
 import LoginScreen from "./authentication/LoginScreen";
 import ProfileUserDetails from "../components/molecules/profile/ProfileUserDetails";
 
 export const ProfileScreen = () => {
   // State temporarily
-  const [logged, setLogged] = useState(true);
+  // TRUE means we have been Authenticated
+  const [logged, setLogged] = useState(false);
 
   const togggleView = () => {
     setLogged(!logged);

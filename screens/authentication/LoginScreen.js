@@ -17,6 +17,7 @@ import {
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
 import React, { Component, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const email = null;
 const password = null;
@@ -79,6 +80,16 @@ export const LoginScreen = () => {
   const [signup, setSignup] = useState(1);
   const [forgotPassword] = useState(false);
 
+  const navigation = useNavigation();
+
+  const navigateForgotPassword = () => {
+    navigation.navigate("Reset");
+  };
+
+  const navigateSignup = () => {
+    navigation.navigate("Signup");
+  };
+
   const onToggleSignup = () => {
     // Toggle based on what screen to show
     setSignup(3);
@@ -133,7 +144,7 @@ export const LoginScreen = () => {
               color: "#0B2F8D",
               fontWeight: "bold",
             }}
-            onPress={onForgotPassword}
+            onPress={navigateForgotPassword}
           >
             Forgot Password?
           </Text>
@@ -149,7 +160,7 @@ export const LoginScreen = () => {
 
           <Text style={styles.noaccount}>
             Don't have an account?
-            <Text style={styles.signUp} onPress={onToggleSignup}>
+            <Text style={styles.signUp} onPress={navigateSignup}>
               {" "}
               Sign Up
             </Text>
