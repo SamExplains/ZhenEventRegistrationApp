@@ -1,53 +1,59 @@
 import { Text, View, StyleSheet, Image } from "react-native";
 import React, { Component } from "react";
-import { Layout, Button, ButtonGroup } from "@ui-kitten/components";
+import {
+  Layout,
+  Button,
+  TopNavigation,
+  TopNavigationAction,
+} from "@ui-kitten/components";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 
-export default class EventCard extends Component {
-  render() {
-    return (
-      <View style={styles.card}>
-        <Layout style={styles.cardContent}>
-          <Image source={require("../../../assets/Rectangle_53.png")} />
-          {/* Details */}
-          <Layout style={styles.cardTextContainer}>
-            {/* Event Name */}
-            <Layout style={styles.cardText}>
-              <Text style={styles.cardLabel}>Event Name:</Text>
-              <Text>A event name goes here.</Text>
-            </Layout>
-            {/* Event Date */}
-            <Layout style={styles.cardText}>
-              <Text style={styles.cardLabel}>Event Date:</Text>
-              <Text>00/00/0000</Text>
-            </Layout>
-            {/* Event ID */}
-            <Layout style={styles.cardText}>
-              <Text style={styles.cardLabel}>Event ID:</Text>
-              <Text>0000</Text>
-            </Layout>
+export const EventCard = () => {
+  const navigation = useNavigation();
+  const navigateEventDetails = () => {
+    navigation.navigate("EventDetails");
+  };
+  return (
+    <View style={styles.card}>
+      <Layout style={styles.cardContent}>
+        <Image source={require("../../../assets/Rectangle_53.png")} />
+        {/* Details */}
+        <Layout style={styles.cardTextContainer}>
+          {/* Event Name */}
+          <Layout style={styles.cardText}>
+            <Text style={styles.cardLabel}>Event Name:</Text>
+            <Text>A event name goes here.</Text>
+          </Layout>
+          {/* Event Date */}
+          <Layout style={styles.cardText}>
+            <Text style={styles.cardLabel}>Event Date:</Text>
+            <Text>00/00/0000</Text>
+          </Layout>
+          {/* Event ID */}
+          <Layout style={styles.cardText}>
+            <Text style={styles.cardLabel}>Event ID:</Text>
+            <Text>0000</Text>
           </Layout>
         </Layout>
-        {/* Buttons */}
-        <Layout style={styles.cardBottom}>
-          {/* View */}
-          <Button style={styles.button}>View</Button>
-          {/* Edit / Check In */}
-          {/* <Button style={styles.buttonAlternate}>
-            <Text style={{ color: "#3F295A" }}>Edit or Check In</Text>
-          </Button> */}
-          <ButtonGroup style={styles.buttonGroup} status="control">
-            <Button style={{ width: "42%" }}>
-              <Text style={{ color: "#3F295A" }}>Edit</Text>
-            </Button>
-            <Button style={{ width: "58%" }}>
-              <Text style={{ color: "#3F295A" }}>Check In</Text>
-            </Button>
-          </ButtonGroup>
-        </Layout>
-      </View>
-    );
-  }
-}
+      </Layout>
+      {/* Buttons */}
+      <Layout style={styles.cardBottom}>
+        {/* View */}
+        <Button style={styles.button} onPress={navigateEventDetails}>
+          View
+        </Button>
+        {/* Edit / Check In */}
+        <Button style={styles.buttonAlternate}>
+          <Text style={{ color: "#3F295A" }}>Edit</Text>
+        </Button>
+        <Button style={styles.buttonAlternate}>
+          <Text style={{ color: "#3F295A" }}>Check In</Text>
+        </Button>
+      </Layout>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   card: {
@@ -83,23 +89,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
-    width: "48.5%",
+    width: "33%",
     marginTop: 20,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
   },
   buttonAlternate: {
-    width: "48.5%",
+    width: "33%",
     marginTop: 20,
     backgroundColor: "white",
     borderColor: "#3F295A",
   },
-  buttonGroup: {
-    width: "48.5%",
-    borderWidth: 0,
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: "#3F295A",
-    // borderColor: "white",
-  },
 });
+
+export default EventCard;

@@ -8,7 +8,6 @@ import {
   Button,
   Icon,
 } from "@ui-kitten/components";
-import EventGeneral from "./EventGeneral";
 import EventCard from "./EventCard";
 
 // Tab menu toggle
@@ -84,6 +83,21 @@ export const ProfileUserDetails = () => {
           <Button style={styles.signoutBtn} status="basic" size="small">
             Sign Out
           </Button>
+          {/* Vector 1 */}
+          <Image
+            style={styles.vector1}
+            source={require("../../../assets/Vector(3).png")}
+          />
+          {/* Vector2 */}
+          <Image
+            style={styles.vector2}
+            source={require("../../../assets/Vector(1).png")}
+          />
+          {/* Vector3 */}
+          <Image
+            style={styles.vector3}
+            source={require("../../../assets/Vector(2).png")}
+          />
         </Layout>
         {/* Content Main Container */}
         <Layout style={styles.body}>
@@ -109,7 +123,9 @@ export const ProfileUserDetails = () => {
             <Text category="h4" style={{ marginTop: 15 }}>
               Firstname Lastname
             </Text>
-            <Text style={{ fontWeight: "bold", marginTop: 10 }}>
+            <Text
+              style={{ fontWeight: "bold", marginTop: 10, color: "#301A4B" }}
+            >
               Member ID: 002
             </Text>
           </Layout>
@@ -184,6 +200,21 @@ const styles = StyleSheet.create({
     height: 175,
     display: "flex",
     flexDirection: "row",
+    position: "relative",
+  },
+  vector1: {
+    position: "absolute",
+    top: 80,
+  },
+  vector2: {
+    position: "absolute",
+    bottom: -20,
+    right: 50,
+  },
+  vector3: {
+    position: "absolute",
+    right: 0,
+    top: -30,
   },
   signoutBtn: {
     color: "white",
@@ -193,6 +224,7 @@ const styles = StyleSheet.create({
     height: 15,
     borderRadius: 20,
     borderWidth: 0,
+    zIndex: 1,
   },
   profileImageBackside: {
     borderWidth: 3,

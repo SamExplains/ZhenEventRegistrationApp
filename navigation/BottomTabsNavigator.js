@@ -11,9 +11,10 @@ import { StoryDetailsScreen } from "../screens/StoryDetailsScreen";
 import { VideosScreen } from "../screens/VideosScreen";
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ProfileScreen } from "../screens/ProfileScreen";
+import { ProfileScreen } from "../screens/Profile/ProfileScreen";
 import { SignupScreen } from "../screens/authentication/SignupScreen";
 import PasswordResetScreen from "../screens/authentication/PasswordResetScreen";
+import EventDetailedScreen from "../screens/Events/EventDetailedScreen";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -40,5 +41,6 @@ export const BottomTabsNavigator = () => (
     <Screen name="Details" component={StoryDetailsScreen} />
     <Screen name="Signup" component={SignupScreen} />
     <Screen name="Reset" component={PasswordResetScreen} />
+    <Screen name="EventDetails" component={EventDetailedScreen} />
   </Navigator>
 );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowIosBackIcon, MenuIcon } from "../assets/icons";
+import { ArrowIosBackIcon, MenuIcon } from "../../assets/icons";
 import {
   Divider,
   Layout,
@@ -11,13 +11,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
-import LoginScreen from "./authentication/LoginScreen";
-import ProfileUserDetails from "../components/molecules/profile/ProfileUserDetails";
+import LoginScreen from "../authentication/LoginScreen";
+import ProfileUserDetails from "../../components/molecules/profile/ProfileUserDetails";
 
 export const ProfileScreen = () => {
   // State temporarily
   // TRUE means we have been Authenticated
-  const [logged, setLogged] = useState(false);
+  const [logged, setLogged] = useState(true);
 
   const togggleView = () => {
     setLogged(!logged);

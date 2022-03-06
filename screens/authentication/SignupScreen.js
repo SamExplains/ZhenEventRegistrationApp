@@ -1,4 +1,9 @@
-import { TouchableWithoutFeedback, StyleSheet, View } from "react-native";
+import {
+  TouchableWithoutFeedback,
+  StyleSheet,
+  View,
+  Image,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -52,6 +57,21 @@ export const SignupScreen = ({ navigation }) => {
             >
               Event Registration
             </Text>
+            {/* Vector 1 */}
+            <Image
+              style={styles.vector1}
+              source={require("../../assets/Vector(3).png")}
+            />
+            {/* Vector2 */}
+            <Image
+              style={styles.vector2}
+              source={require("../../assets/Vector(1).png")}
+            />
+            {/* Vector3 */}
+            <Image
+              style={styles.vector3}
+              source={require("../../assets/Vector(2).png")}
+            />
           </Layout>
           <Layout style={styles.container}>
             <Text
@@ -134,6 +154,21 @@ const styles = StyleSheet.create({
   hero: {
     backgroundColor: "#301A4B",
     height: 175,
+    position: "relative",
+  },
+  vector1: {
+    position: "absolute",
+    top: 80,
+  },
+  vector2: {
+    position: "absolute",
+    bottom: -20,
+    right: 50,
+  },
+  vector3: {
+    position: "absolute",
+    right: 0,
+    top: -30,
   },
   input: {
     paddingLeft: 15,
