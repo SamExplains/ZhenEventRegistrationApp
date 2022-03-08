@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 10,
     fontWeight: "bold",
-    color: "black",
+    color: "#301A4B",
     borderRadius: 5,
     position: "absolute",
     right: 20,

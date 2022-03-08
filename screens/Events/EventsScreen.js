@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Divider, Layout, Text } from "@ui-kitten/components";
 import EventCard from "../../components/molecules/events/EventCard";
+import { SearchAndFilter } from "../../components/molecules/events/SearchAndFilter";
 
 export default class EventsScreen extends Component {
   render() {
@@ -45,13 +46,14 @@ export default class EventsScreen extends Component {
             />
           </Layout>
           <Layout style={styles.contentContainer}>
+            <SearchAndFilter />
+
             <Text category="h6" style={styles.title}>
               Recently Listed Events
             </Text>
-            <ScrollView>
-              <EventCard />
-              <EventCard />
-            </ScrollView>
+            {/* Events */}
+            <EventCard />
+            <EventCard />
           </Layout>
         </ScrollView>
       </SafeAreaView>

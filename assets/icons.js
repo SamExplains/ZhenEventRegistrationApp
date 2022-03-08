@@ -26,3 +26,7 @@ export const NavigationOutline2 = (style) => (
   <Icon {...style} name="navigation-2-outline" />
 );
 export const MapOutline = (style) => <Icon {...style} name="map-outline" />;
+export const Options2 = (style) => <Icon {...style} name="options-2" />;
+export const SearchOutline = (style) => (
+  <Icon {...style} fill="#333333" name="search-outline" />
+);
