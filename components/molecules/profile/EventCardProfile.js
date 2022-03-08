@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 
-export const EventCard = () => {
+export const EventCardProfile = () => {
   const navigation = useNavigation();
   const navigateEventDetails = () => {
     navigation.navigate("EventDetails");
@@ -102,4 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EventCard;
+export default EventCardProfile;

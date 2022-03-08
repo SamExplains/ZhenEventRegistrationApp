@@ -2,7 +2,7 @@ import { View, ScrollView, StyleSheet, Image } from "react-native";
 import React, { Component } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Divider, Layout, Text } from "@ui-kitten/components";
-import EventCard from "../../components/molecules/profile/EventCard";
+import EventCard from "../../components/molecules/events/EventCard";
 
 export default class EventsScreen extends Component {
   render() {
@@ -45,12 +45,10 @@ export default class EventsScreen extends Component {
             />
           </Layout>
           <Layout style={styles.contentContainer}>
+            <Text category="h6" style={styles.title}>
+              Recently Listed Events
+            </Text>
             <ScrollView>
-              <Text>EventsScreen</Text>
-              <EventCard />
-              <EventCard />
-              <EventCard />
-              <EventCard />
               <EventCard />
               <EventCard />
             </ScrollView>
@@ -122,5 +120,10 @@ const styles = StyleSheet.create({
     marginTop: -25,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    padding: 15,
+  },
+  title: {
+    fontWeight: "700",
+    marginTop: 15,
   },
 });

@@ -8,7 +8,7 @@ import {
   Button,
   Icon,
 } from "@ui-kitten/components";
-import EventCard from "./EventCard";
+import EventCard from "./EventCardProfile";
 
 // Tab menu toggle
 
