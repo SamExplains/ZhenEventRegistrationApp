@@ -15,6 +15,7 @@ import { ProfileScreen } from "../screens/Profile/ProfileScreen";
 import { SignupScreen } from "../screens/authentication/SignupScreen";
 import PasswordResetScreen from "../screens/authentication/PasswordResetScreen";
 import EventDetailedScreen from "../screens/Events/EventDetailedScreen";
+import EventsScreen from "../screens/Events/EventsScreen";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -35,7 +36,7 @@ const BottomTabBar = ({ navigation, state }) => (
 
 export const BottomTabsNavigator = () => (
   <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
-    <Screen name="Home" component={HomeScreen} />
+    <Screen name="Home" component={EventsScreen} />
     <Screen name="Videos" component={VideosScreen} />
     <Screen name="Profile" component={ProfileScreen} />
     <Screen name="Details" component={StoryDetailsScreen} />
