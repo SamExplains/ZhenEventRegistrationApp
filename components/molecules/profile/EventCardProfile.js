@@ -14,6 +14,9 @@ export const EventCardProfile = () => {
   const navigateEventDetails = () => {
     navigation.navigate("EventDetails");
   };
+  const navigateToCheckIn = () => {
+    navigation.navigate("CheckIn");
+  };
   return (
     <View style={styles.card}>
       <Layout style={styles.cardContent}>
@@ -48,7 +51,9 @@ export const EventCardProfile = () => {
           <Text style={{ color: "#3F295A" }}>Edit</Text>
         </Button>
         <Button style={styles.buttonAlternate}>
-          <Text style={{ color: "#3F295A" }}>Check In</Text>
+          <Text style={{ color: "#3F295A" }} onPress={navigateToCheckIn}>
+            Check In
+          </Text>
         </Button>
       </Layout>
     </View>

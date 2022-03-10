@@ -2,6 +2,7 @@ import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { Component } from "react";
 import { Layout, Text, Button } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
+import CheckInScreen from "../../../screens/Profile/OrganizerCheckInScreen";
 
 export const EventCard = () => {
   const navigation = useNavigation();
