@@ -1,65 +1,87 @@
 import { View, ScrollView, StyleSheet, Image } from "react-native";
 import React, { Component } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Divider, Layout, Text } from "@ui-kitten/components";
+import {
+  Button,
+  Divider,
+  Layout,
+  Text,
+  TopNavigation,
+  TopNavigationAction,
+} from "@ui-kitten/components";
+import { MenuIcon } from "../../assets/icons";
 import EventCard from "../../components/molecules/events/EventCard";
 import { SearchAndFilter } from "../../components/molecules/events/SearchAndFilter";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 
-export default class EventsScreen extends Component {
-  render() {
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
-          <Layout style={{ position: "relative" }}>
-            <Layout style={styles.header}>
-              <Text category="h5" style={styles.appTitle}>
-                Party Be Mine
-              </Text>
-              <Text style={styles.appSubtitle} category="c2">
-                Create Your Favorite Events
-              </Text>
-              {/* Four Labels */}
-              <Layout style={styles.labelsContainer}>
-                <Text style={styles.purpleLabel}>Birthday</Text>
-                <Text style={styles.purpleLabel}>Potluck</Text>
-                <Text style={styles.purpleLabel}>Party</Text>
-                <Text style={styles.purpleLabel}>Online</Text>
-              </Layout>
-              <Text style={styles.appSubtitle} category="c2">
-                Assign Party Supplies or Check In Your Guest
-              </Text>
-            </Layout>
-            {/* Vector 1 */}
-            <Image
-              style={styles.vector1}
-              source={require("../../assets/Vector(3).png")}
-            />
-            {/* Vector2 */}
-            <Image
-              style={styles.vector2}
-              source={require("../../assets/Vector(1).png")}
-            />
-            {/* Vector3 */}
-            <Image
-              style={styles.vector3}
-              source={require("../../assets/Vector(2).png")}
-            />
-          </Layout>
-          <Layout style={styles.contentContainer}>
-            <SearchAndFilter />
-
-            <Text category="h6" style={styles.title}>
-              Recently Listed Events
+export const EventsScreen = () => {
+  const navigation = useNavigation();
+  const navigateDetails = () => {
+    navigation.navigate("Reset");
+  };
+  const renderDrawerAction = () => (
+    <TopNavigationAction
+      icon={MenuIcon}
+      onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+    />
+  );
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <TopNavigation
+        title="Party Be Mine"
+        alignment="center"
+        accessoryLeft={renderDrawerAction}
+      />
+      <ScrollView>
+        <Layout style={{ position: "relative" }}>
+          <Layout style={styles.header}>
+            <Text category="h5" style={styles.appTitle}>
+              Party Be Mine
             </Text>
-            {/* Events */}
-            <EventCard />
-            <EventCard />
+            <Text style={styles.appSubtitle} category="c2">
+              Create Your Favorite Events
+            </Text>
+            {/* Four Labels */}
+            <Layout style={styles.labelsContainer}>
+              <Text style={styles.purpleLabel}>Birthday</Text>
+              <Text style={styles.purpleLabel}>Potluck</Text>
+              <Text style={styles.purpleLabel}>Party</Text>
+              <Text style={styles.purpleLabel}>Online</Text>
+            </Layout>
+            <Text style={styles.appSubtitle} category="c2">
+              Assign Party Supplies or Check In Your Guest
+            </Text>
           </Layout>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-}
+          {/* Vector 1 */}
+          <Image
+            style={styles.vector1}
+            source={require("../../assets/Vector(3).png")}
+          />
+          {/* Vector2 */}
+          <Image
+            style={styles.vector2}
+            source={require("../../assets/Vector(1).png")}
+          />
+          {/* Vector3 */}
+          <Image
+            style={styles.vector3}
+            source={require("../../assets/Vector(2).png")}
+          />
+        </Layout>
+        <Layout style={styles.contentContainer}>
+          <SearchAndFilter />
+
+          <Text category="h6" style={styles.title}>
+            Recently Listed Events
+          </Text>
+          {/* Events */}
+          <EventCard />
+          <EventCard />
+        </Layout>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   header: {
@@ -129,3 +151,5 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
 });
+
+export default EventsScreen;

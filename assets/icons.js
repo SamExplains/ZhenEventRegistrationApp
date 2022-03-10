@@ -30,3 +30,7 @@ export const Options2 = (style) => <Icon {...style} name="options-2" />;
 export const SearchOutline = (style) => (
   <Icon {...style} fill="#333333" name="search-outline" />
 );
+export const PlusOutline = (style) => <Icon {...style} name="plus-outline" />;
+export const ShareLink = (style) => <Icon {...style} name="share-outline" />;
+export const Twitter = (style) => <Icon {...style} name="twitter" />;
+export const Facebook = (style) => <Icon {...style} name="facebook" />;

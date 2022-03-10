@@ -18,6 +18,10 @@ export const ViewOrCheckIn = (props) => {
           </Button>
         </Text>
       </Layout>
+      <Text>
+        This button changes based on the Props to view people not registered
+      </Text>
+
       {/* View Pending Users for Register(Check-In) for the Event */}
       <Layout style={styles.status}>
         <Text style={styles.status_icon}>

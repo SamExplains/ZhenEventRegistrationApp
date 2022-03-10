@@ -7,6 +7,9 @@ import {
   TopNavigationAction,
   Divider,
   CheckBox,
+  Card,
+  Button,
+  Modal,
 } from "@ui-kitten/components";
 import {
   ArrowBackIcon,
@@ -14,12 +17,16 @@ import {
   NavigationOutline2,
   MapOutline,
   GlobeOutline,
+  ShareLink,
+  Twitter,
+  Facebook,
 } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 
 export const EventDetailedScreen = ({ navigation }) => {
   const [checked, setChecked] = React.useState(true);
+  const [visible, setVisible] = React.useState(false);
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -48,6 +55,43 @@ export const EventDetailedScreen = ({ navigation }) => {
             source={require("../../assets/Rectangle_28.png")}
           />
           <Text style={styles.imageContainerImageNumber}>1/3</Text>
+          {/* Modal */}
+          <Button
+            size="tiny"
+            appearance="ghost"
+            style={styles.imageContainerShareButton}
+            onPress={() => setVisible(true)}
+          >
+            <ShareLink fill="white" style={styles.icon} />
+          </Button>
+          {/* Share modal links */}
+          <Modal
+            visible={visible}
+            backdropStyle={styles.backdrop}
+            onBackdropPress={() => setVisible(false)}
+          >
+            <Card disabled={true}>
+              <Text category="h6" style={{ fontWeight: "bold" }}>
+                Share
+              </Text>
+              <Layout style={styles.socialsContainer}>
+                <Twitter style={styles.social}>1</Twitter>
+                <Facebook style={styles.social}>2</Facebook>
+                <Twitter style={styles.social}>3</Twitter>
+                <Facebook style={styles.social}>4</Facebook>
+              </Layout>
+              <Text
+                category="p2"
+                style={{ fontWeight: "bold", marginBottom: 15 }}
+              >
+                Page Lnk
+              </Text>
+              <Text style={{ fontWeight: "bold", marginBottom: 15 }}>
+                https://www.example.com
+              </Text>
+              <Button onPress={() => setVisible(false)}>DISMISS</Button>
+            </Card>
+          </Modal>
         </Layout>
         {/* Content Container */}
         <Layout style={styles.contentContainer}>
@@ -136,6 +180,15 @@ const styles = StyleSheet.create({
     position: "relative",
     alignItems: "center",
   },
+  imageContainerShareButton: {
+    // width: 32,
+    // height: 32,
+    tintColor: "white",
+    position: "absolute",
+    color: "white",
+    top: 10,
+    right: 10,
+  },
   imageContainerImageNumber: {
     position: "absolute",
     color: "white",
@@ -205,6 +258,25 @@ const styles = StyleSheet.create({
   checkbox: {
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  backdrop: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  socialsContainer: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 15,
+    marginBottom: 15,
+    width: 250,
+  },
+  social: {
+    // backgroundColor: "orange",
+    // padding: 25,
+    width: 25,
+    height: 25,
+    tintColor: "#301A4B",
   },
 });
 
