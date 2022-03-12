@@ -22,6 +22,7 @@ import PasswordResetScreen from "../screens/authentication/PasswordResetScreen";
 import EventDetailedScreen from "../screens/Events/EventDetailedScreen";
 import EventsScreen from "../screens/Events/EventsScreen";
 import CheckInScreen from "../screens/Profile/OrganizerCheckInScreen";
+import AddEventScreen from "../screens/AddEvent/AddEventScreen";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -45,8 +46,8 @@ const BottomTabBar = ({ navigation, state }) => (
         }
       }
     >
-      <BottomNavigationTab title="Stories" icon={ActivityIcon} />
-      <BottomNavigationTab title="Add Event" icon={PlusOutline} />
+      <BottomNavigationTab title="Events" icon={ActivityIcon} />
+      <BottomNavigationTab title="AddEvent" icon={PlusOutline} />
       <BottomNavigationTab title="Profile" icon={ProfileIcon} />
     </BottomNavigation>
   </View>
@@ -55,7 +56,9 @@ const BottomTabBar = ({ navigation, state }) => (
 export const BottomTabsNavigator = () => (
   <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
     <Screen name="Home" component={EventsScreen} />
-    <Screen name="Videos" component={VideosScreen} />
+    {/* The bottom tab follow 1..2...3 order so whatever screen is second here it will be selected by the #2 bottom tab */}
+    {/* <Screen name="Videos" component={VideosScreen} /> */}
+    <Screen name="AddEvent" component={AddEventScreen} />
     <Screen name="Profile" component={ProfileScreen} />
     <Screen name="Details" component={StoryDetailsScreen} />
     <Screen name="Signup" component={SignupScreen} />

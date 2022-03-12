@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Clipboard } from "react-native";
 import React, { Component, useState } from "react";
 import {
   Layout,
@@ -20,6 +20,7 @@ import {
   ShareLink,
   Twitter,
   Facebook,
+  CopyOutline,
 } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
@@ -27,6 +28,12 @@ import { ScrollView } from "react-native-gesture-handler";
 export const EventDetailedScreen = ({ navigation }) => {
   const [checked, setChecked] = React.useState(true);
   const [visible, setVisible] = React.useState(false);
+  // Clipboard
+  const [copiedText, setCopiedText] = useState("");
+
+  const copyToClipboard = () => {
+    Clipboard.setString("hello world");
+  };
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -80,16 +87,26 @@ export const EventDetailedScreen = ({ navigation }) => {
                 <Twitter style={styles.social}>3</Twitter>
                 <Facebook style={styles.social}>4</Facebook>
               </Layout>
-              <Text
-                category="p2"
-                style={{ fontWeight: "bold", marginBottom: 15 }}
-              >
+              <Text category="p2" style={{ fontWeight: "bold" }}>
                 Page Lnk
               </Text>
-              <Text style={{ fontWeight: "bold", marginBottom: 15 }}>
-                https://www.example.com
-              </Text>
-              <Button onPress={() => setVisible(false)}>DISMISS</Button>
+              <Layout style={styles.pagelinkContainer}>
+                <Text
+                  style={{ fontWeight: "bold", marginBottom: 15 }}
+                  style={styles.pagelinkText}
+                >
+                  https://www.example.com
+                </Text>
+                <Button
+                  style={styles.pagelinkBtn}
+                  size="small"
+                  appearance="ghost"
+                  onPress={() => copyToClipboard()}
+                >
+                  <CopyOutline style={styles.copy} />
+                </Button>
+              </Layout>
+              {/* <Button onPress={() => setVisible(false)}>DISMISS</Button> */}
             </Card>
           </Modal>
         </Layout>
@@ -269,11 +286,28 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 15,
     marginBottom: 15,
-    width: 250,
   },
   social: {
     // backgroundColor: "orange",
     // padding: 25,
+    width: 25,
+    height: 25,
+    tintColor: "#301A4B",
+  },
+  pagelinkContainer: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pagelinkText: {
+    width: "75%",
+  },
+  pagelinkBtn: {
+    width: "15%",
+  },
+  copy: {
     width: 25,
     height: 25,
     tintColor: "#301A4B",
