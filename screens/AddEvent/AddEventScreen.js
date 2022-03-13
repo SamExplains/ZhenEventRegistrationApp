@@ -66,12 +66,124 @@ export const AddEventScreen = () => {
             />
           </Layout>
           <Layout style={styles.container}>
+            {/* Title */}
             <Input
               style={styles.input}
-              //   style={{ marginTop: 20 }}
               value={email}
-              label="E-mail"
-              placeholder="Enter your email addess"
+              label="Event Title"
+              placeholder="..."
+            />
+            {/* Description */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Description"
+              placeholder="..."
+            />
+            <Layout style={styles.timeContainer}>
+              <Input
+                style={styles.time_a}
+                value={email}
+                label="From"
+                placeholder="..."
+              />
+              <Input
+                style={styles.time_b}
+                value={email}
+                label="To"
+                placeholder="..."
+              />
+            </Layout>
+            {/* Images */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Image"
+              placeholder="..."
+            />
+            {/* Address */}
+            <Layout style={styles.locationContainer}>
+              <Input
+                style={styles.location_a}
+                value={email}
+                label="Address"
+                placeholder="..."
+              />
+              <Input
+                style={styles.location_b}
+                value={email}
+                label="city"
+                placeholder="..."
+              />
+              <Input
+                style={styles.location_c}
+                value={email}
+                label="Zipcode"
+                placeholder="..."
+              />
+            </Layout>
+            {/* Role */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Role"
+              placeholder="..."
+            />
+            {/* Public/Private */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Public/Private"
+              placeholder="..."
+            />
+            {/* On/Off Line */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="On/Off Line"
+              placeholder="..."
+            />
+            {/* Capacity */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Capacity"
+              placeholder="..."
+            />
+            {/* Check in required */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Check in Required"
+              placeholder="..."
+            />
+            {/* Event URL */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Event URL or Meeting Link"
+              placeholder="..."
+            />
+            {/* Additional Items */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="List of items needed"
+              placeholder="..."
+            />
+            {/* Email */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Email for people to see"
+              placeholder="..."
+            />
+            {/* Phone */}
+            <Input
+              style={styles.input}
+              value={email}
+              label="Number to call you"
+              placeholder="..."
             />
             <Button style={styles.button} size="medium">
               Let's Go!
@@ -123,6 +235,35 @@ const styles = StyleSheet.create({
     marginRight: 15,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
+  },
+  timeContainer: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+  },
+  time_a: {
+    width: "48%",
+  },
+  time_b: {
+    width: "48%",
+  },
+  locationContainer: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+  },
+  location_a: {
+    width: "32%",
+  },
+  location_b: {
+    width: "32%",
+  },
+  location_c: {
+    width: "32%",
   },
 });
 
