@@ -1,9 +1,4 @@
-import {
-  TouchableWithoutFeedback,
-  StyleSheet,
-  View,
-  Image,
-} from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -14,23 +9,84 @@ import {
   Button,
   Layout,
   CheckBox,
-  StyleService,
   TopNavigation,
   TopNavigationAction,
 } from "@ui-kitten/components";
 import { ArrowBackIcon } from "../../assets/icons";
-import React, { Component, useState } from "react";
-
-const email = null;
-const checked = false;
+import React, { Component, useState, useEffect } from "react";
 
 export const SignupScreen = ({ navigation }) => {
+  // State Inputs
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+
+  const [zip, setZip] = useState("");
+  const [zipError, setZipError] = useState(false);
+
+  const [name, setName] = useState(null);
+  const [nameError, setNameError] = useState(false);
+
+  const [password, setPassword] = useState(null);
+  const [passwordError, setPasswordError] = useState(false);
+
+  const [confirmPassword, setConfirmPassword] = useState(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+  const [phone, setPhone] = useState(null);
+  const [phoneError, setPhoneError] = useState(false);
+
+  const [checked, setChecked] = useState(false);
+  const [checkedError, setCheckedError] = useState(false);
+
   const navigateBack = () => {
     navigation.goBack();
   };
   const BackAction = () => (
     <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
   );
+
+  const onSignup = () => {
+    alert(
+      `onSignup ${email}, ${zip}, ${name}, ${password}, ${confirmPassword}, ${phone}, ${checked}`
+    );
+  };
+
+  // Validations
+  const onEmailBlur = () => {
+    email.length ? setEmailError(true) : null;
+  };
+
+  const onZipBlur = () => {
+    zip.length ? setZipError(true) : null;
+  };
+
+  const onNameBlur = () => {
+    name.length ? setNameError(true) : null;
+  };
+
+  const onPasswodBlur = () => {
+    password.length ? setPasswordError(true) : null;
+  };
+
+  const onConfirmPasswodBlur = () => {
+    if (confirmPassword.length) {
+      password === confirmPassword ? setConfirmPasswordError(true) : null;
+    }
+  };
+
+  const onPhoneBlur = () => {
+    phone !== null ? setPhoneError(true) : null;
+  };
+
+  // Watcher
+  // Use this to validate email or whatever with regular expressiosn
+  useEffect(() => {
+    // Side-effect uses `prop` and `state`
+    if (email) {
+      console.log("Greetings!");
+    }
+  }, [email]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
@@ -90,50 +146,98 @@ export const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={email}
               label="E-mail"
-              placeholder="Enter your email addess"
+              placeholder="Enter your email address"
+              textContentType={"emailAddress"}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType={"email-address"}
+              onChangeText={(newEmail) => setEmail(newEmail)}
+              onBlur={onEmailBlur}
+              status={emailError ? "success" : "danger"}
             />
             <Input
               style={styles.input}
-              value={email}
+              value={zip}
               label="Zip Code"
               placeholder="00000"
+              maxLength={5}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType={"number-pad"}
+              onChangeText={(newZip) => setZip(newZip)}
+              onBlur={onZipBlur}
+              status={zipError ? "success" : "danger"}
             />
             <Input
               style={styles.input}
-              value={email}
+              value={name}
               label="Name"
               placeholder="John Appleseed"
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType={"default"}
+              onChangeText={(newName) => setName(newName)}
+              onBlur={onNameBlur}
+              status={nameError ? "success" : "danger"}
             />
             <Input
               style={styles.input}
-              value={email}
+              value={password}
               label="Password (at least 8 characters)"
               placeholder=""
+              secureTextEntry={true}
+              returnKeyType="next"
+              onChangeText={(newPassword) => setPassword(newPassword)}
+              onBlur={onPasswodBlur}
+              status={passwordError ? "success" : "danger"}
             />
+
+            {!confirmPasswordError && (
+              <Text style={styles.errorInput}>Passwords don't match!</Text>
+            )}
+
             <Input
               style={styles.input}
-              value={email}
+              value={confirmPassword}
               label="Confirm Password"
               placeholder=""
+              secureTextEntry={true}
+              returnKeyType="next"
+              onChangeText={(newConfirmPassword) =>
+                setConfirmPassword(newConfirmPassword)
+              }
+              onBlur={onConfirmPasswodBlur}
+              status={confirmPasswordError ? "success" : "danger"}
             />
             <Input
               style={styles.input}
-              value={email}
+              value={phone}
               label="Phone Number (Optional)"
-              placeholder="000-0000"
+              placeholder="000-000-0000"
+              maxLength={12}
+              clearButtonMode="always"
+              returnKeyType="done"
+              keyboardType={"phone-pad"}
+              onChangeText={(newPhone) => setPhone(newPhone)}
+              onBlur={onPhoneBlur}
+              status={phoneError ? "success" : "danger"}
             />
 
             <CheckBox
               style={styles.checkBox}
               checked={checked}
-              onChange={(nextChecked) => setChecked(nextChecked)}
+              onChange={(nextChecked) => {
+                setChecked(nextChecked);
+                setCheckedError(!checkedError);
+              }}
+              status={checkedError ? "success" : "danger"}
             >
               I agree to the{" "}
               <Text style={styles.text_blue}>Terms of Conditions</Text> and{" "}
               <Text style={styles.text_blue}>Privacy Policy</Text>
             </CheckBox>
 
-            <Button style={styles.button} size="medium">
+            <Button style={styles.button} size="medium" onPress={onSignup}>
               Let's Go!
             </Button>
           </Layout>
@@ -176,7 +280,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
   },
-
+  errorInput: {
+    padding: 15,
+    backgroundColor: "#FD422B",
+    marginLeft: 15,
+    marginRight: 15,
+    color: "white",
+  },
   button: {
     marginBottom: 15,
     marginLeft: 15,
@@ -195,4 +305,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// export default SignupScreen;
+export default SignupScreen;

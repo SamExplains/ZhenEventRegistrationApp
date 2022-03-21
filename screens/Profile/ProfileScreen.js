@@ -17,7 +17,7 @@ import ProfileUserDetails from "../../components/molecules/profile/ProfileUserDe
 export const ProfileScreen = () => {
   // State temporarily
   // TRUE means we have been Authenticated
-  const [logged, setLogged] = useState(true);
+  const [logged, setLogged] = useState(false);
 
   const togggleView = () => {
     setLogged(!logged);

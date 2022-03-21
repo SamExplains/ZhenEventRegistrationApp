@@ -77,7 +77,7 @@ const onForgotPassword = () => {
 
 export const LoginScreen = () => {
   // Temporarily toggle to switch between the Login view and the Google/Signup view
-  const [signup, setSignup] = useState(1);
+  const [signup, setSignup] = useState(2);
   const [forgotPassword] = useState(false);
 
   const navigation = useNavigation();

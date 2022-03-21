@@ -113,7 +113,7 @@ export const ProfileUserDetails = () => {
             <Layout style={styles.profileImageBackside}>
               <Image
                 style={styles.profileImage}
-                source={require("../../../assets/Screenshot_from_2022.png")}
+                source={require("../../../assets/MomsInLA-condensed.png")}
               />
               <Button style={styles.cameraUploadButton}>
                 <Icon style={styles.icon} name="camera" />
