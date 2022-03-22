@@ -1,7 +1,7 @@
-import { StyleSheet, View, Image } from "react-native";
+import baseUrl from "../../settings.json";
+import { StyleSheet, View, Image, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
-
 import {
   Icon,
   Input,
@@ -14,6 +14,8 @@ import {
 } from "@ui-kitten/components";
 import { ArrowBackIcon } from "../../assets/icons";
 import React, { Component, useState, useEffect } from "react";
+import axios from "axios";
+import Toast from "react-native-toast-message";
 
 export const SignupScreen = ({ navigation }) => {
   // State Inputs
@@ -33,7 +35,7 @@ export const SignupScreen = ({ navigation }) => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   const [phone, setPhone] = useState(null);
-  const [phoneError, setPhoneError] = useState(false);
+  const [phoneError, setPhoneError] = useState(true);
 
   const [checked, setChecked] = useState(false);
   const [checkedError, setCheckedError] = useState(false);
@@ -44,12 +46,6 @@ export const SignupScreen = ({ navigation }) => {
   const BackAction = () => (
     <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
   );
-
-  const onSignup = () => {
-    alert(
-      `onSignup ${email}, ${zip}, ${name}, ${password}, ${confirmPassword}, ${phone}, ${checked}`
-    );
-  };
 
   // Validations
   const onEmailBlur = () => {
@@ -78,14 +74,55 @@ export const SignupScreen = ({ navigation }) => {
     phone !== null ? setPhoneError(true) : null;
   };
 
+  // Submit
+  const onSignup = async () => {
+    if (emailError && zipError && nameError && confirmPasswordError) {
+      const response = await axios
+        .post(`${baseUrl.api}/signup`, {
+          email: email,
+          zip: zip,
+          name: name,
+          password: password,
+          phone: phone,
+        })
+        .catch((e) => {
+          console.log(`Error ${e}`);
+        });
+      //TODO Pass on to STATE REDUX.
+      if (response.status === 201) {
+        Toast.show({
+          type: "success",
+          text1: "Registered",
+          text2: "Your account has been registered.",
+        });
+        // Dimiss keyboard if still showing.
+        Keyboard.dismiss();
+        // Send user back to Log In already signed in due to step above.
+        navigateBack();
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Invalid",
+          text2: "That email address is already taken.",
+        });
+      }
+    } else {
+      // Alert Error for unfinished form data...
+      Toast.show({
+        type: "error",
+        text1: "Please fill all required fields!",
+      });
+    }
+  };
+
   // Watcher
   // Use this to validate email or whatever with regular expressiosn
-  useEffect(() => {
-    // Side-effect uses `prop` and `state`
-    if (email) {
-      console.log("Greetings!");
-    }
-  }, [email]);
+  // useEffect(() => {
+  //   // Side-effect uses `prop` and `state`
+  //   if (email) {
+  //     console.log("Greetings!");
+  //   }
+  // }, [email]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -213,10 +250,10 @@ export const SignupScreen = ({ navigation }) => {
               style={styles.input}
               value={phone}
               label="Phone Number (Optional)"
-              placeholder="000-000-0000"
-              maxLength={12}
+              placeholder="..."
+              maxLength={10}
               clearButtonMode="always"
-              returnKeyType="done"
+              returnKeyType="next"
               keyboardType={"phone-pad"}
               onChangeText={(newPhone) => setPhone(newPhone)}
               onBlur={onPhoneBlur}
@@ -243,6 +280,7 @@ export const SignupScreen = ({ navigation }) => {
           </Layout>
         </Layout>
       </ScrollView>
+      <Toast />
     </SafeAreaView>
   );
 };
