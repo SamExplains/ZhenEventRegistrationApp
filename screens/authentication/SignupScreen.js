@@ -1,9 +1,8 @@
 import baseUrl from "../../settings.json";
-import { StyleSheet, View, Image, Keyboard } from "react-native";
+import { StyleSheet, Image, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import {
-  Icon,
   Input,
   Text,
   Button,
@@ -13,9 +12,11 @@ import {
   TopNavigationAction,
 } from "@ui-kitten/components";
 import { ArrowBackIcon } from "../../assets/icons";
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/actions/user";
 
 export const SignupScreen = ({ navigation }) => {
   // State Inputs
@@ -39,6 +40,9 @@ export const SignupScreen = ({ navigation }) => {
 
   const [checked, setChecked] = useState(false);
   const [checkedError, setCheckedError] = useState(false);
+
+  // State
+  const dispatch = useDispatch();
 
   const navigateBack = () => {
     navigation.goBack();
@@ -74,6 +78,25 @@ export const SignupScreen = ({ navigation }) => {
     phone !== null ? setPhoneError(true) : null;
   };
 
+  const resetFormState = () => {
+    setEmail("");
+    setZip("");
+    setName(null);
+    setPassword(null);
+    setConfirmPassword(null);
+    setPhone(null);
+    setChecked(false);
+
+    // Reset errors
+    setEmailError(false);
+    setZipError(false);
+    setNameError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
+    setPhoneError(true);
+    setCheckedError(false);
+  };
+
   // Submit
   const onSignup = async () => {
     if (emailError && zipError && nameError && confirmPasswordError) {
@@ -85,27 +108,31 @@ export const SignupScreen = ({ navigation }) => {
           password: password,
           phone: phone,
         })
+        .then((response) => {
+          if (response.status === 201) {
+            dispatch(setUser(response.data));
+            Toast.show({
+              type: "success",
+              text1: "Registered",
+              text2: "Your account has been registered.",
+            });
+            // Reset form state
+            resetFormState();
+            // Dimiss keyboard if still showing.
+            Keyboard.dismiss();
+            // Send user back to Log In already signed in due to step above.
+            navigateBack();
+          } else {
+            Toast.show({
+              type: "error",
+              text1: "Invalid",
+              text2: "That email address is already taken.",
+            });
+          }
+        })
         .catch((e) => {
           console.log(`Error ${e}`);
         });
-      //TODO Pass on to STATE REDUX.
-      if (response.status === 201) {
-        Toast.show({
-          type: "success",
-          text1: "Registered",
-          text2: "Your account has been registered.",
-        });
-        // Dimiss keyboard if still showing.
-        Keyboard.dismiss();
-        // Send user back to Log In already signed in due to step above.
-        navigateBack();
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "Invalid",
-          text2: "That email address is already taken.",
-        });
-      }
     } else {
       // Alert Error for unfinished form data...
       Toast.show({
@@ -114,15 +141,6 @@ export const SignupScreen = ({ navigation }) => {
       });
     }
   };
-
-  // Watcher
-  // Use this to validate email or whatever with regular expressiosn
-  // useEffect(() => {
-  //   // Side-effect uses `prop` and `state`
-  //   if (email) {
-  //     console.log("Greetings!");
-  //   }
-  // }, [email]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -263,6 +281,7 @@ export const SignupScreen = ({ navigation }) => {
             <CheckBox
               style={styles.checkBox}
               checked={checked}
+              returnKeyType="next"
               onChange={(nextChecked) => {
                 setChecked(nextChecked);
                 setCheckedError(!checkedError);

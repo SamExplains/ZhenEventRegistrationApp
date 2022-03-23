@@ -1,81 +1,16 @@
-import {
-  TouchableWithoutFeedback,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
-import {
-  Icon,
-  Input,
-  Layout,
-  Text,
-  Button,
-  Divider,
-  CheckBox,
-} from "@ui-kitten/components";
+import { StyleSheet, Image, SafeAreaView, ScrollView } from "react-native";
+import { Input, Layout, Text, Button } from "@ui-kitten/components";
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
-import React, { Component, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
 
 const email = null;
 const password = null;
-const checked = false;
-
-// export default class LoginScreen extends Component {
-//   render() {
-//     return (
-//       <Layout style={styles.container}>
-//         <Text>LoginScreen Component!</Text>
-//         {!signUpClicked ? (
-//           <Layout>
-//             <Input
-//               style={styles.input}
-//               value={email}
-//               label="E-mail"
-//               placeholder="Enter your email addess"
-//             />
-//             <Input
-//               style={styles.input}
-//               value={password}
-//               label="Password"
-//               placeholder="Enter your password"
-//             />
-
-//             <CheckBox
-//               style={styles.checkBox}
-//               checked={checked}
-//               onChange={(nextChecked) => setChecked(nextChecked)}
-//             >
-//               Terms of Conditions and Privacy Policy
-//             </CheckBox>
-
-//             <Button style={styles.button} size="small">
-//               Sign In
-//             </Button>
-
-//             <Divider style={styles.divider} />
-//             <Text style={styles.noaccount}>
-//               Don't have an either?
-//               <Text style={styles.signUp} onPress={onClickSignup}>
-//                 {" "}
-//                 Sign up here
-//               </Text>
-//             </Text>
-//           </Layout>
-//         ) : (
-//           <SignupScreen />
-//         )}
-//       </Layout>
-//     );
-//   }
-// }
-const onForgotPassword = () => {
-  alert("onForgotPassword");
-};
 
 export const LoginScreen = () => {
+  const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
   // Temporarily toggle to switch between the Login view and the Google/Signup view
   const [signup, setSignup] = useState(1);
   const [forgotPassword] = useState(false);
@@ -123,6 +58,8 @@ export const LoginScreen = () => {
           >
             Event Registration
           </Text>
+
+          <Text>{currentUser.name}</Text>
           <Input
             style={styles.input}
             value={email}
