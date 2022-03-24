@@ -19,10 +19,6 @@ export const ProfileScreen = () => {
   // TRUE means we have been Authenticated
   const [logged, setLogged] = useState(false);
 
-  const togggleView = () => {
-    setLogged(!logged);
-  };
-
   const navigation = useNavigation();
 
   const renderDrawerAction = () => (
@@ -49,10 +45,6 @@ export const ProfileScreen = () => {
         // Show Login Screen which also inclused Signup
         <LoginScreen />
       )}
-
-      <Button style={{ width: 200 }} onPress={togggleView} size="small">
-        Toggle Logged In ({logged ? "T" : "F"})
-      </Button>
     </SafeAreaView>
   );
 };

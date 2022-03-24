@@ -1,5 +1,5 @@
 import baseUrl from "../../settings.json";
-import { StyleSheet, Image, Keyboard } from "react-native";
+import { StyleSheet, Image, Keyboard, AsyncStorage } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import {
@@ -43,6 +43,18 @@ export const SignupScreen = ({ navigation }) => {
 
   // State
   const dispatch = useDispatch();
+
+  // Save to AsyncStorage
+  // create a function that saves your data asyncronously
+  const _storeData = async (user) => {
+    try {
+      await AsyncStorage.setItem("account", JSON.stringify([user]));
+      console.log("Async User Saved");
+    } catch (error) {
+      // Error saving data
+      console.log(error);
+    }
+  };
 
   const navigateBack = () => {
     navigation.goBack();
@@ -111,6 +123,8 @@ export const SignupScreen = ({ navigation }) => {
         .then((response) => {
           if (response.status === 201) {
             dispatch(setUser(response.data));
+            // Save to Async
+            _storeData(response.data);
             Toast.show({
               type: "success",
               text1: "Registered",
