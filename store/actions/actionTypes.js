@@ -33,5 +33,9 @@ export const UPDATE_TAB = "UPDATE_TAB";
 //*******************
 //set a new user details
 export const SET_USER = "SET_USER";
+
 // Set logged in
 export const SET_AUTENTICATED = "SET_AUTENTICATED";
+
+// Update logged in
+export const UPDATE_AUTENTICATED = "UPDATE_AUTENTICATED";

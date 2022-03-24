@@ -9,10 +9,15 @@ import {
   Icon,
 } from "@ui-kitten/components";
 import EventCard from "./EventCardProfile";
+import { useSelector, useDispatch } from "react-redux";
+import { updateAuthenticated } from "../../../store/actions/user";
 
 // Tab menu toggle
 
 export const ProfileUserDetails = (props) => {
+  // State / Authenticated
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
   const [toggle, setToggle] = useState(1);
 
   const toggleTab = (tab) => {
@@ -48,6 +53,10 @@ export const ProfileUserDetails = (props) => {
     );
   };
 
+  const onSignOut = () => {
+    dispatch(updateAuthenticated(false));
+  };
+
   const tabView = () => {
     if (toggle === 1) {
       return (
@@ -80,7 +89,12 @@ export const ProfileUserDetails = (props) => {
           >
             Event Registration
           </Text>
-          <Button style={styles.signoutBtn} status="basic" size="small">
+          <Button
+            style={styles.signoutBtn}
+            status="basic"
+            size="small"
+            onPress={onSignOut}
+          >
             Sign Out
           </Button>
           {/* Vector 1 */}
@@ -113,7 +127,10 @@ export const ProfileUserDetails = (props) => {
             <Layout style={styles.profileImageBackside}>
               <Image
                 style={styles.profileImage}
-                source={{ uri: props.authenticatedUser.profile_image_src }}
+                // source={{ uri: props.authenticatedUser.profile_image_src }}
+                source={{
+                  uri: "http:10.0.2.2:8000/img/dog-1558962_960_720.jpg",
+                }}
               />
               <Button style={styles.cameraUploadButton}>
                 <Icon style={styles.icon} name="camera" />

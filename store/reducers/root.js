@@ -12,6 +12,7 @@ import {
   UPDATE_EVENT_TIME,
   SET_USER,
   SET_AUTENTICATED,
+  UPDATE_AUTENTICATED,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -52,6 +53,12 @@ const reducer = (state = initialState, action) => {
       };
       break;
     case SET_AUTENTICATED:
+      return {
+        ...state,
+        authenticated: action.payload,
+      };
+      break;
+    case UPDATE_AUTENTICATED:
       return {
         ...state,
         authenticated: action.payload,
