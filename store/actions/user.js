@@ -1,11 +1,19 @@
-import { SET_USER, UPDATE_USER_INFO } from "./actionTypes";
+import { SET_USER, UPDATE_USER_INFO, SET_AUTENTICATED } from "./actionTypes";
 
 //Add user's information from payload
 export const setUser = (payload) => {
   return (dispatch) => {
-    console.log("DISPATCHED! ", payload);
     dispatch({
       type: SET_USER,
+      payload: payload,
+    });
+  };
+};
+
+export const setAuthenticated = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_AUTENTICATED,
       payload: payload,
     });
   };

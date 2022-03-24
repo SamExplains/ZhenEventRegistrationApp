@@ -6,30 +6,30 @@ import {
   AsyncStorage,
   TouchableOpacity,
 } from "react-native";
-import {
-  Input,
-  Layout,
-  Text,
-  Button,
-  ListItem,
-  Avatar,
-} from "@ui-kitten/components";
+import { Input, Layout, Text, Button, Avatar } from "@ui-kitten/components";
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
-
-const email = null;
-const password = null;
+import axios from "axios";
+import { setUser, setAuthenticated } from "../../store/actions/user";
+import baseUrl from "../../settings.json";
 
 export const LoginScreen = () => {
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
+  const authenticated = useSelector(
+    (state) => state.eventsAndUsers.authenticated
+  );
   // Temporarily toggle to switch between the Login view and the Google/Signup view
   const [signup, setSignup] = useState(1);
   const [forgotPassword] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [accounts, setAccounts] = useState([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
 
@@ -61,33 +61,38 @@ export const LoginScreen = () => {
       // Error retrieving data
     }
   };
-
-  const InstallButton = (props) => <Button size="tiny">select</Button>;
-
-  const renderItem = (info) => (
-    <ListItem
-      title={"UI Kitten"}
-      description="A set of React Native components"
-      accessoryLeft={ItemImage}
-      accessoryRight={InstallButton}
-    />
-  );
+  const continueWithUser = async (user) => {
+    await axios
+      .post(`${baseUrl.api}/login`, {
+        id: user.id,
+        email: user.email,
+        token: user.token,
+      })
+      .then(({ data, status }) => {
+        console.log("Response ", data, "   ", status);
+        dispatch(setUser(data));
+        dispatch(setAuthenticated(true));
+        // Set logged in state and user to details
+      })
+      .catch((e) => {
+        console.log("Error ", e);
+      });
+  };
 
   const renderAccountsList = () => {
     if (accounts.length) {
-      // accounts.push({ name: "Peanut", id: 111 });
-      // accounts.push({ name: "Peanut", id: 112 });
-      // accounts.push({ name: "Peanut", id: 113 });
-      // accounts.push({ name: "Peanut", id: 114 });
-      // accounts.push({ name: "Peanut", id: 115 });
-      // accounts.push({ name: "Peanut", id: 116 });
-      // accounts.push({ name: "Peanut", id: 117 });
       return accounts.map((account) => {
         return (
-          <TouchableOpacity style={styles.accountItem}>
+          <TouchableOpacity
+            style={styles.accountItem}
+            onPress={() => continueWithUser(account)}
+            key={account.id}
+          >
             <Avatar
               source={{
-                uri: "https://cdn.pixabay.com/photo/2016/07/31/13/43/dog-1558962_960_720.jpg",
+                // uri: "https://cdn.pixabay.com/photo/2016/07/31/13/43/dog-1558962_960_720.jpg",\
+                // uri: account.profile_image_src,
+                uri: "http:10.0.2.2:8000/img/tc_logo.png",
               }}
               shape="square"
             />
@@ -192,6 +197,8 @@ export const LoginScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
+        <Text>{currentUser.name}</Text>
+        <Text>Authenticated: {authenticated ? "true" : "false"}</Text>
         <Layout style={styles.container}>{show()}</Layout>
       </ScrollView>
     </SafeAreaView>

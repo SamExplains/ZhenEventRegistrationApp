@@ -50,10 +50,7 @@ export const SignupScreen = ({ navigation }) => {
     try {
       await AsyncStorage.setItem("account", JSON.stringify([user]));
       console.log("Async User Saved");
-    } catch (error) {
-      // Error saving data
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const navigateBack = () => {
@@ -145,7 +142,7 @@ export const SignupScreen = ({ navigation }) => {
           }
         })
         .catch((e) => {
-          console.log(`Error ${e}`);
+          // console.log(`Error ${e}`);
         });
     } else {
       // Alert Error for unfinished form data...

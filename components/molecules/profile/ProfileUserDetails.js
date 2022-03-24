@@ -12,7 +12,7 @@ import EventCard from "./EventCardProfile";
 
 // Tab menu toggle
 
-export const ProfileUserDetails = () => {
+export const ProfileUserDetails = (props) => {
   const [toggle, setToggle] = useState(1);
 
   const toggleTab = (tab) => {
@@ -113,7 +113,7 @@ export const ProfileUserDetails = () => {
             <Layout style={styles.profileImageBackside}>
               <Image
                 style={styles.profileImage}
-                source={require("../../../assets/MomsInLA-condensed.png")}
+                source={{ uri: props.authenticatedUser.profile_image_src }}
               />
               <Button style={styles.cameraUploadButton}>
                 <Icon style={styles.icon} name="camera" />
@@ -121,12 +121,12 @@ export const ProfileUserDetails = () => {
             </Layout>
 
             <Text category="h4" style={{ marginTop: 15 }}>
-              Firstname Lastname
+              {props.authenticatedUser.name}
             </Text>
             <Text
               style={{ fontWeight: "bold", marginTop: 10, color: "#301A4B" }}
             >
-              Member ID: 002
+              Member ID: {props.authenticatedUser.id}
             </Text>
           </Layout>
 
@@ -135,7 +135,9 @@ export const ProfileUserDetails = () => {
             {/* Name */}
             <Layout style={styles.userDetailsContainer}>
               <Text style={styles.userDetail_1}>Email</Text>
-              <Text style={styles.userDetail_2}>Email@email.com</Text>
+              <Text style={styles.userDetail_2}>
+                {props.authenticatedUser.email}
+              </Text>
               <Text style={styles.userDetail_3}>
                 <Icon
                   style={styles.iconDetail}
@@ -147,7 +149,9 @@ export const ProfileUserDetails = () => {
             {/* Zipcode */}
             <Layout style={styles.userDetailsContainer}>
               <Text style={styles.userDetail_1}>Zipcode</Text>
-              <Text style={styles.userDetail_2}>00000</Text>
+              <Text style={styles.userDetail_2}>
+                {props.authenticatedUser.zip}
+              </Text>
               <Text style={styles.userDetail_3}>
                 <Icon
                   style={styles.iconDetail}
@@ -158,7 +162,9 @@ export const ProfileUserDetails = () => {
             {/* Phone */}
             <Layout style={styles.userDetailsContainer}>
               <Text style={styles.userDetail_1}>Phone</Text>
-              <Text style={styles.userDetail_2}>+1 000 0000</Text>
+              <Text style={styles.userDetail_2}>
+                {props.authenticatedUser.phone || "no phone number present"}
+              </Text>
               <Text style={styles.userDetail_3}>
                 <Icon
                   style={styles.iconDetail}

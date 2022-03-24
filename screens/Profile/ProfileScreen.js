@@ -13,11 +13,15 @@ import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import LoginScreen from "../authentication/LoginScreen";
 import ProfileUserDetails from "../../components/molecules/profile/ProfileUserDetails";
+import { useSelector } from "react-redux";
 
 export const ProfileScreen = () => {
   // State temporarily
   // TRUE means we have been Authenticated
-  const [logged, setLogged] = useState(false);
+  const authenticated = useSelector(
+    (state) => state.eventsAndUsers.authenticated
+  );
+  const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
 
   const navigation = useNavigation();
 
@@ -31,15 +35,15 @@ export const ProfileScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
-        title={logged ? "Profile" : "Login / Signup"}
+        title={authenticated ? "Profile" : "Login / Signup"}
         alignment="center"
         accessoryLeft={renderDrawerAction}
       />
       <Divider />
 
-      {logged ? (
+      {authenticated ? (
         <Layout style={{ flex: 1, textAlign: "left" }}>
-          <ProfileUserDetails />
+          <ProfileUserDetails authenticatedUser={currentUser} />
         </Layout>
       ) : (
         // Show Login Screen which also inclused Signup

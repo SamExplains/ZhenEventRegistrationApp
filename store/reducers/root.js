@@ -11,11 +11,13 @@ import {
   CREATE_EVENT,
   UPDATE_EVENT_TIME,
   SET_USER,
+  SET_AUTENTICATED,
 } from "../actions/actionTypes";
 
 const initialState = {
   // currentUser: null,
-  currentUser: { name: "Username" },
+  currentUser: { name: "username" },
+  authenticated: false,
   currentUserAttending: false,
   showUser: null,
   allUsers: [],
@@ -47,6 +49,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         currentUser: action.payload,
+      };
+      break;
+    case SET_AUTENTICATED:
+      return {
+        ...state,
+        authenticated: action.payload,
       };
       break;
     default:
