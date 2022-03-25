@@ -10,8 +10,8 @@ import { Input, Layout, Text, Button, Avatar } from "@ui-kitten/components";
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import { setUser, setAuthenticated } from "../../store/actions/user";
@@ -124,7 +124,31 @@ export const LoginScreen = () => {
           email: email,
           password: password,
         })
-        .then(({ data, status }) => {
+        .then(async ({ data, status }) => {
+          // Add user to Async if not available.
+          /**
+         *     try {
+      await AsyncStorage.setItem("account", JSON.stringify([user]));
+      console.log("Async User Saved");
+    } catch (error) {}
+         * 
+         */
+          const accounts = await AsyncStorage.getItem("account");
+          if (accounts === null) {
+            // We have NO data!!
+            // Set new account
+            AsyncStorage.setItem("account", JSON.stringify([data]));
+          } else {
+            // Add account if it does not exist
+            JSON.parse(accounts).forEach((el) => {
+              data.id === el.id
+                ? null
+                : AsyncStorage.setItem(
+                    "account",
+                    JSON.stringify([...JSON.parse(accounts), data])
+                  );
+            });
+          }
           dispatch(setUser(data));
           dispatch(setAuthenticated(true));
           // Set logged in state and user to details
@@ -135,7 +159,6 @@ export const LoginScreen = () => {
           });
         })
         .catch((e) => {
-          console.log("Error ", e);
           Toast.show({
             type: "error",
             text1: "Check your login details!",
@@ -188,7 +211,7 @@ export const LoginScreen = () => {
               {renderAccountsList()}
             </ScrollView>
           ) : (
-            <Text>...</Text>
+            <Text></Text>
           )}
           <Input
             style={styles.input}

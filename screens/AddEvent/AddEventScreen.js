@@ -15,11 +15,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
 
 export const AddEventScreen = () => {
   const email = null;
   const checked = false;
   const navigation = useNavigation();
+  const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
+  const authenticated = useSelector(
+    (state) => state.eventsAndUsers.authenticated
+  );
 
   const renderDrawerAction = () => (
     <TopNavigationAction
@@ -28,13 +33,8 @@ export const AddEventScreen = () => {
     />
   );
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <TopNavigation
-        title="Create Event"
-        alignment="center"
-        accessoryLeft={renderDrawerAction}
-      />
+  const addEventForm = () => {
+    return (
       <ScrollView style={styles.scrollView}>
         <Layout>
           <Layout style={styles.hero}>
@@ -191,6 +191,27 @@ export const AddEventScreen = () => {
           </Layout>
         </Layout>
       </ScrollView>
+    );
+  };
+
+  const notAuthenticated = () => {
+    return (
+      <Layout
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <Text category="h5">Not authorized</Text>
+      </Layout>
+    );
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <TopNavigation
+        title="Create Event"
+        alignment="center"
+        accessoryLeft={renderDrawerAction}
+      />
+      {authenticated ? addEventForm() : notAuthenticated()}
     </SafeAreaView>
   );
 };
