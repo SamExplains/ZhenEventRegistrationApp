@@ -62,6 +62,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         authenticated: action.payload,
+        currentUser: { name: "username" },
       };
       break;
     default:

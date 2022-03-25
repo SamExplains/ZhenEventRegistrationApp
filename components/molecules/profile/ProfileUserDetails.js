@@ -73,6 +73,7 @@ export const ProfileUserDetails = (props) => {
       );
     }
   };
+
   return (
     <ScrollView>
       <Layout style={styles.container}>

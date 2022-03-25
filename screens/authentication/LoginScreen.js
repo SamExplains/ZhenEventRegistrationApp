@@ -12,24 +12,34 @@ import PasswordResetScreen from "./PasswordResetScreen";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
+import Toast from "react-native-toast-message";
 import axios from "axios";
 import { setUser, setAuthenticated } from "../../store/actions/user";
 import baseUrl from "../../settings.json";
 
 export const LoginScreen = () => {
-  const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
   const authenticated = useSelector(
     (state) => state.eventsAndUsers.authenticated
   );
+
   // Temporarily toggle to switch between the Login view and the Google/Signup view
   const [signup, setSignup] = useState(1);
   const [forgotPassword] = useState(false);
+
+  // state for authenticated
   const [loaded, setLoaded] = useState(false);
+
+  // Loaded from AsyncStorage
   const [accounts, setAccounts] = useState([]);
+
+  // Fields
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
 
   const navigation = useNavigation();
 
@@ -39,11 +49,6 @@ export const LoginScreen = () => {
 
   const navigateSignup = () => {
     navigation.navigate("Signup");
-  };
-
-  const onToggleSignup = () => {
-    // Toggle based on what screen to show
-    setSignup(3);
   };
 
   const _retrieveData = async () => {
@@ -63,13 +68,13 @@ export const LoginScreen = () => {
   };
   const continueWithUser = async (user) => {
     await axios
-      .post(`${baseUrl.api}/login`, {
+      .post(`${baseUrl.api}/quicklogin`, {
         id: user.id,
         email: user.email,
         token: user.token,
       })
       .then(({ data, status }) => {
-        console.log("Response ", data, "   ", status);
+        // console.log("Response ", data, "   ", status);
         dispatch(setUser(data));
         dispatch(setAuthenticated(true));
         // Set logged in state and user to details
@@ -99,6 +104,48 @@ export const LoginScreen = () => {
             <Text style={styles.accountName}>{account.name}</Text>
           </TouchableOpacity>
         );
+      });
+    }
+  };
+
+  // Validations
+  const onEmailBlur = () => {
+    email.length ? setEmailError(true) : null;
+  };
+
+  const onPasswodBlur = () => {
+    password.length ? setPasswordError(true) : null;
+  };
+
+  const onLogin = async () => {
+    if (emailError && passwordError) {
+      await axios
+        .post(`${baseUrl.api}/login`, {
+          email: email,
+          password: password,
+        })
+        .then(({ data, status }) => {
+          dispatch(setUser(data));
+          dispatch(setAuthenticated(true));
+          // Set logged in state and user to details
+          Toast.show({
+            type: "success",
+            text1: "Login",
+            text2: "You have signed in.",
+          });
+        })
+        .catch((e) => {
+          console.log("Error ", e);
+          Toast.show({
+            type: "error",
+            text1: "Check your login details!",
+          });
+        });
+    } else {
+      // Alert Error for unfinished form data...
+      Toast.show({
+        type: "error",
+        text1: "Please fill all required fields!",
       });
     }
   };
@@ -141,19 +188,31 @@ export const LoginScreen = () => {
               {renderAccountsList()}
             </ScrollView>
           ) : (
-            <Text>Waiting</Text>
+            <Text>...</Text>
           )}
           <Input
             style={styles.input}
             value={email}
             label="E-mail"
-            placeholder="Enter your email addess"
+            placeholder="Enter your email address"
+            textContentType={"emailAddress"}
+            clearButtonMode="always"
+            returnKeyType="next"
+            keyboardType={"email-address"}
+            onChangeText={(newEmail) => setEmail(newEmail)}
+            onBlur={onEmailBlur}
+            status={emailError ? "success" : "danger"}
           />
           <Input
             style={styles.input}
             value={password}
-            label="Password"
-            placeholder="Enter your password"
+            label="Password (at least 8 characters)"
+            placeholder=""
+            secureTextEntry={true}
+            returnKeyType="next"
+            onChangeText={(newPassword) => setPassword(newPassword)}
+            onBlur={onPasswodBlur}
+            status={passwordError ? "success" : "danger"}
           />
           <Text
             style={{
@@ -169,7 +228,7 @@ export const LoginScreen = () => {
             Forgot Password?
           </Text>
 
-          <Button style={styles.button} size="medium">
+          <Button style={styles.button} size="medium" onPress={onLogin}>
             Let's Go!
           </Button>
           <Button size="medium" appearance="outline" style={styles.buttonAlt}>
@@ -201,6 +260,7 @@ export const LoginScreen = () => {
         <Text>Authenticated: {authenticated ? "true" : "false"}</Text>
         <Layout style={styles.container}>{show()}</Layout>
       </ScrollView>
+      <Toast />
     </SafeAreaView>
   );
 };
@@ -233,8 +293,8 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     marginTop: 10,
     marginBottom: 5,
-    backgroundColor: "white",
-    borderColor: "#969595",
+    // backgroundColor: "white",
+    // borderColor: "#969595",
   },
   checkBox: {
     marginLeft: 15,

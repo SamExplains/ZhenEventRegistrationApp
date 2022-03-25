@@ -35,7 +35,7 @@ export const ProfileScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
-        title={authenticated ? "Profile" : "Login / Signup"}
+        title={authenticated ? "Profile" : "Login"}
         alignment="center"
         accessoryLeft={renderDrawerAction}
       />
