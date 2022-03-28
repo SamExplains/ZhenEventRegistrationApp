@@ -1,14 +1,12 @@
 import { View, StyleSheet, Image } from "react-native";
-import React, { Component } from "react";
-import { ArrowIosBackIcon, MenuIcon } from "../../assets/icons";
+import React, { useState } from "react";
+import { CalendarOutline, MenuIcon, PlusOutline } from "../../assets/icons";
 import {
-  Divider,
   Layout,
   Text,
   TopNavigation,
   TopNavigationAction,
   Input,
-  CheckBox,
   Button,
 } from "@ui-kitten/components";
 
@@ -16,9 +14,38 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
+import DatePicker from "react-native-modern-datepicker";
+// import ImagePicker from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import baseUrl from "../../settings.json";
 
 export const AddEventScreen = () => {
-  const email = null;
+  const [email, setEmail] = useState("");
+
+  // title
+  const [title, setTitle] = useState("");
+  const [titleError, setTitleError] = useState(false);
+
+  // description
+  const [decription, setDecription] = useState("");
+  const [decriptionError, setDecriptionError] = useState(false);
+
+  // start date
+  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const [selectedStartDateError, setSelectedStartDateError] = useState(false);
+  const [showStartSelector, setShowStartSelector] = useState(false);
+
+  // end date
+  // start date
+  const [selectedEndDate, setSelectedEndDate] = useState("");
+  const [selectedEndDateError, setSelectedEndDateError] = useState(false);
+  const [showEndSelector, setShowEndSelector] = useState(false);
+
+  // Camera
+  const [firstImage, setFirstImage] = useState(null);
+  const [secondImage, setSecondImage] = useState(null);
+
   const checked = false;
   const navigation = useNavigation();
   const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
@@ -32,6 +59,66 @@ export const AddEventScreen = () => {
       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
     />
   );
+
+  // Validations
+  const onTitleBlur = () => {
+    title.length ? setTitleError(true) : setTitleError(false);
+  };
+
+  const onDescriptionBlur = () => {
+    title.length ? setDecriptionError(true) : setDecriptionError(false);
+  };
+
+  const showDateSelector = () => {
+    return showStartSelector ? (
+      <DatePicker
+        onSelectedChange={(date) => {
+          setSelectedStartDate(date);
+          setSelectedStartDateError(true);
+        }}
+      />
+    ) : null;
+  };
+
+  const showEndDateSelector = () => {
+    return showEndSelector ? (
+      <DatePicker
+        onSelectedChange={(date) => {
+          setSelectedEndDate(date);
+          setSelectedEndDateError(true);
+        }}
+      />
+    ) : null;
+  };
+
+  const pickImage = async (flag) => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      flag === "first" ? setFirstImage(result.uri) : setSecondImage(result.uri);
+    }
+  };
+
+  const onSubmitEvent = async () => {
+    console.log(baseUrl.api, " --- ", firstImage);
+    await axios
+      .post(
+        `${baseUrl.api}/create`,
+        { image: firstImage },
+        {
+          "content-type": "multipart/form-data",
+        }
+      )
+      .then(({ data }) => console.log(data));
+  };
 
   const addEventForm = () => {
     return (
@@ -69,32 +156,104 @@ export const AddEventScreen = () => {
             {/* Title */}
             <Input
               style={styles.input}
-              value={email}
+              value={title}
               label="Event Title"
-              placeholder="..."
+              placeholder="title"
+              textContentType={"none"}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType="default"
+              maxLength={30}
+              onChangeText={(newTitle) => setTitle(newTitle)}
+              onBlur={onTitleBlur}
+              status={titleError ? "success" : "danger"}
             />
             {/* Description */}
             <Input
               style={styles.input}
-              value={email}
+              value={decription}
               label="Description"
-              placeholder="..."
+              placeholder="description"
+              textContentType={"none"}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType="default"
+              multiline={true}
+              numberOfLines={3}
+              onChangeText={(newDescription) => setDecription(newDescription)}
+              onBlur={onDescriptionBlur}
+              status={decriptionError ? "success" : "danger"}
             />
+            {/* Start date */}
             <Layout style={styles.timeContainer}>
               <Input
-                style={styles.time_a}
-                value={email}
-                label="From"
-                placeholder="..."
+                style={styles.time_input}
+                value={selectedStartDate}
+                // disabled={true}
+                label="Start time and date"
+                placeholder="yyyy/mm/dd hh mm:ss"
+                status={selectedStartDateError ? "success" : "danger"}
               />
-              <Input
-                style={styles.time_b}
-                value={email}
-                label="To"
-                placeholder="..."
+              <Button
+                style={styles.time_button}
+                size="medium"
+                accessoryLeft={CalendarOutline}
+                onPress={() => setShowStartSelector(!showStartSelector)}
               />
             </Layout>
+            {showDateSelector()}
+
+            {/* End date */}
+            <Layout style={styles.timeContainer}>
+              <Input
+                style={styles.time_input}
+                value={selectedEndDate}
+                // disabled={true}
+                label="End time and date"
+                placeholder="yyyy/mm/dd hh mm:ss"
+                status={selectedEndDateError ? "success" : "danger"}
+              />
+              <Button
+                style={styles.time_button}
+                size="medium"
+                accessoryLeft={CalendarOutline}
+                onPress={() => setShowEndSelector(!showEndSelector)}
+              />
+            </Layout>
+            {showEndDateSelector()}
+
             {/* Images */}
+            <Layout style={styles.baseContainer}>
+              <Image
+                source={{ uri: firstImage }}
+                style={styles.image}
+                resizeMode="contain"
+              />
+              <Image
+                source={{ uri: secondImage }}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            </Layout>
+
+            {/* Image Buttons */}
+            <Layout style={styles.baseContainerBtn}>
+              <Button
+                style={styles.buttonAlt}
+                size="small"
+                title="Pick an image from camera roll"
+                accessoryLeft={PlusOutline}
+                onPress={() => pickImage("first")}
+              />
+              <Button
+                style={styles.buttonAlt}
+                size="small"
+                title="Pick an image from camera roll"
+                accessoryLeft={PlusOutline}
+                onPress={() => pickImage("second")}
+              />
+            </Layout>
+
             <Input
               style={styles.input}
               value={email}
@@ -185,7 +344,7 @@ export const AddEventScreen = () => {
               label="Number to call you"
               placeholder="..."
             />
-            <Button style={styles.button} size="medium">
+            <Button style={styles.button} size="medium" onPress={onSubmitEvent}>
               Let's Go!
             </Button>
           </Layout>
@@ -261,14 +420,19 @@ const styles = StyleSheet.create({
     display: "flex",
     flex: 1,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
     padding: 15,
   },
-  time_a: {
-    width: "48%",
+  time_input: {
+    width: "80%",
   },
-  time_b: {
-    width: "48%",
+  time_button: {
+    width: "15%",
+    marginTop: 20,
+    backgroundColor: "#3F295A",
+    borderColor: "transparent",
+    borderRadius: 0,
   },
   locationContainer: {
     display: "flex",
@@ -285,6 +449,35 @@ const styles = StyleSheet.create({
   },
   location_c: {
     width: "32%",
+  },
+  baseContainer: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 15,
+  },
+  baseContainerBtn: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+  },
+  image: {
+    width: "47%",
+    height: 135,
+    backgroundColor: "#E7E2F1",
+  },
+  buttonAlt: {
+    marginBottom: 15,
+    marginLeft: 75,
+    marginRight: 75,
+    backgroundColor: "#3F295A",
+    borderColor: "transparent",
+    marginTop: -15,
   },
 });
 

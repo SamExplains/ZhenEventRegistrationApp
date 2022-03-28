@@ -279,8 +279,6 @@ export const LoginScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Text>{currentUser.name}</Text>
-        <Text>Authenticated: {authenticated ? "true" : "false"}</Text>
         <Layout style={styles.container}>{show()}</Layout>
       </ScrollView>
       <Toast />
