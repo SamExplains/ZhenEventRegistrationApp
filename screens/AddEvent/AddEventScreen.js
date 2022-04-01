@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import React, { useState } from "react";
 import { CalendarOutline, MenuIcon, PlusOutline } from "../../assets/icons";
 import {
@@ -8,6 +8,7 @@ import {
   TopNavigationAction,
   Input,
   Button,
+  Toggle,
 } from "@ui-kitten/components";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,14 +16,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-native-modern-datepicker";
-// import ImagePicker from "react-native-image-picker";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import Slider from "@react-native-community/slider";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 import baseUrl from "../../settings.json";
 
 export const AddEventScreen = () => {
-  const [email, setEmail] = useState("");
-
   // title
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState(false);
@@ -42,11 +43,38 @@ export const AddEventScreen = () => {
   const [selectedEndDateError, setSelectedEndDateError] = useState(false);
   const [showEndSelector, setShowEndSelector] = useState(false);
 
-  // Camera
+  // Camera Library
   const [firstImage, setFirstImage] = useState(null);
   const [secondImage, setSecondImage] = useState(null);
 
-  const checked = false;
+  // Location
+  const [address, setAddress] = useState("");
+  const [addressError, setAddressError] = useState(false);
+
+  const [city, setCity] = useState("");
+  const [cityError, setCityError] = useState(false);
+  const [zip, setZip] = useState("");
+  const [zipError, setZipError] = useState("");
+
+  const [publicChk, setPublicChk] = useState(false);
+  const [offlineChk, setOfflineChk] = useState(false);
+  const [checkinChk, setCheckinChk] = useState(false);
+
+  const [capacity, setCapacity] = useState(0);
+
+  const [eventUrl, setEventUrl] = useState("");
+  const [eventUrlError, setEventUrlError] = useState(false);
+
+  // Personal details
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(true);
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState(true);
+
+  // Additional items
+  const [additionalItem, setAdditionalItem] = useState("");
+  const [additionalItems, setAdditionalItems] = useState([]);
+
   const navigation = useNavigation();
   const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
   const authenticated = useSelector(
@@ -69,6 +97,28 @@ export const AddEventScreen = () => {
     title.length ? setDecriptionError(true) : setDecriptionError(false);
   };
 
+  const onAddressBlur = () => {
+    address.length ? setAddressError(true) : setAddressError(false);
+  };
+  const onCityBlur = () => {
+    city.length ? setCityError(true) : setCityError(false);
+  };
+  const onZipBlur = () => {
+    zip.length ? setZipError(true) : setZipError(false);
+  };
+  const onEventUrlBlur = () => {
+    eventUrl.length ? setEventUrlError(true) : setEventUrlError(false);
+  };
+
+  const onEmailBlur = () => {
+    email.length ? setEmailError(true) : setEmailError(false);
+  };
+
+  const onPhoneBlur = () => {
+    phone.length ? setPhoneError(true) : setPhoneError(false);
+  };
+
+  // Date selectors
   const showDateSelector = () => {
     return showStartSelector ? (
       <DatePicker
@@ -91,6 +141,42 @@ export const AddEventScreen = () => {
     ) : null;
   };
 
+  const onPublicCheckedChange = (isChecked) => {
+    setPublicChk(isChecked);
+  };
+
+  const onOfflineCheckedChange = (isChecked) => {
+    setOfflineChk(isChecked);
+  };
+
+  const onCheckedinCheckedChange = (isChecked) => {
+    setCheckinChk(isChecked);
+  };
+
+  const renderAdditionalItems = () => {
+    const _c = [...additionalItems];
+    return _c.map((item) => {
+      return <Text key={item.id}>{item.name}</Text>;
+    });
+  };
+
+  const onAddAdditionalItem = () => {
+    additionalItem.length
+      ? setAdditionalItems([
+          ...additionalItems,
+          {
+            id: Math.floor(Math.random() * 1000),
+            name: additionalItem,
+            taken: null,
+          },
+        ])
+      : Toast.show({
+          type: "error",
+          text1: "Enter item name!",
+        });
+  };
+
+  // Select image from library
   const pickImage = async (flag) => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -107,17 +193,162 @@ export const AddEventScreen = () => {
     }
   };
 
+  const isThereAnImageSelected = () => {
+    let flag = null;
+    if (firstImage && secondImage) {
+      // 2 images will be transfered
+      flag = "both";
+    } else if (firstImage) {
+      // first image will be transfered
+      flag = "first";
+    } else if (secondImage) {
+      // second image will be transfered
+      flag = "second";
+    } else {
+      // no images, send them an alert to choose a image
+      Toast.show({
+        type: "error",
+        text1: "Select atleast 1 image!",
+      });
+    }
+    return flag;
+  };
+
+  const onResetFields = () => {
+    // title
+    setTitle("");
+    setTitleError(false);
+
+    // description
+    setDecription("");
+    setDecriptionError(false);
+
+    // start date
+    setSelectedStartDate("");
+    setSelectedStartDateError(false);
+    setShowStartSelector(false);
+
+    // end date
+    // start date
+    setSelectedEndDate("");
+    setSelectedEndDateError(false);
+    setShowEndSelector(false);
+
+    // Camera Library
+    setFirstImage(null);
+    setSecondImage(null);
+
+    // Location
+    setAddress("");
+    setAddressError(false);
+
+    setCity("");
+    setCityError(false);
+    setZip("");
+    setZipError("");
+
+    setPublicChk(false);
+    setOfflineChk(false);
+    setCheckinChk(false);
+
+    setCapacity(0);
+
+    setEventUrl("");
+    setEventUrlError(false);
+
+    // Personal details
+    setEmail("");
+    setEmailError(true);
+    setPhone("");
+    setPhoneError(true);
+
+    // Additional items
+    setAdditionalItem("");
+    setAdditionalItems([]);
+  };
+
   const onSubmitEvent = async () => {
-    console.log(baseUrl.api, " --- ", firstImage);
-    await axios
-      .post(
-        `${baseUrl.api}/create`,
-        { image: firstImage },
-        {
-          "content-type": "multipart/form-data",
-        }
-      )
-      .then(({ data }) => console.log(data));
+    const imageFlag = isThereAnImageSelected();
+    // Validations
+    if (
+      titleError &&
+      decriptionError &&
+      selectedStartDateError &&
+      selectedEndDateError &&
+      addressError &&
+      cityError &&
+      zipError &&
+      eventUrlError &&
+      imageFlag !== null
+    ) {
+      // Stringify Additional Items if array length exceeds 0
+      // Reset state when done
+      console.log("success");
+
+      let firstBase64Image = null;
+      let secondBase64Image = null;
+
+      if (imageFlag === "both") {
+        firstBase64Image = await FileSystem.readAsStringAsync(firstImage, {
+          encoding: "base64",
+        });
+        secondBase64Image = await FileSystem.readAsStringAsync(secondImage, {
+          encoding: "base64",
+        });
+      } else if (imageFlag === "first") {
+        firstBase64Image = await FileSystem.readAsStringAsync(firstImage, {
+          encoding: "base64",
+        });
+      } else if (imageFlag === "second") {
+        secondBase64Image = await FileSystem.readAsStringAsync(secondImage, {
+          encoding: "base64",
+        });
+      }
+
+      // const base64 = await FileSystem.readAsStringAsync(secondImage, {
+      //   encoding: "base64",
+      // });
+
+      // console.log("Base64 ", "data:image/png;base64, " + base64);
+
+      await axios
+        .post(`${baseUrl.api}/create`, {
+          title: title,
+          description: decription,
+          start_time: selectedStartDate,
+          end_time: selectedEndDate,
+          first_image: firstBase64Image,
+          second_image: secondBase64Image,
+          address: address,
+          city: city,
+          zip: zip,
+          public_private: publicChk,
+          on_off_line: offlineChk,
+          check_in: checkinChk,
+          capacity: capacity,
+          url: eventUrl,
+          additional_items: JSON.stringify(additionalItems),
+          email: email,
+          phone: phone,
+          creator_id: currentUser.id,
+        })
+        .then(({ data }) => {
+          // Save event object to state
+          // Check in verification field required for checking in!
+          console.log(data);
+          onResetFields();
+        });
+
+      Toast.show({
+        type: "success",
+        text1: "Event has been saved.",
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Fill all required fields!",
+      });
+    }
   };
 
   const addEventForm = () => {
@@ -254,95 +485,169 @@ export const AddEventScreen = () => {
               />
             </Layout>
 
-            <Input
-              style={styles.input}
-              value={email}
-              label="Image"
-              placeholder="..."
-            />
             {/* Address */}
             <Layout style={styles.locationContainer}>
               <Input
                 style={styles.location_a}
-                value={email}
+                value={address}
                 label="Address"
                 placeholder="..."
+                textContentType={"none"}
+                clearButtonMode="always"
+                returnKeyType="next"
+                keyboardType="default"
+                onChangeText={(newAddress) => setAddress(newAddress)}
+                onBlur={onAddressBlur}
+                status={addressError ? "success" : "danger"}
               />
+              {/* City */}
               <Input
                 style={styles.location_b}
-                value={email}
-                label="city"
+                value={city}
+                label="City"
                 placeholder="..."
+                textContentType={"none"}
+                clearButtonMode="always"
+                returnKeyType="next"
+                keyboardType="default"
+                onChangeText={(newCity) => setCity(newCity)}
+                onBlur={onCityBlur}
+                status={cityError ? "success" : "danger"}
+                maxLength={2}
               />
               <Input
                 style={styles.location_c}
-                value={email}
+                value={zip}
                 label="Zipcode"
                 placeholder="..."
+                textContentType={"none"}
+                clearButtonMode="always"
+                returnKeyType="next"
+                keyboardType="numeric"
+                onChangeText={(newZip) => setZip(newZip)}
+                onBlur={onZipBlur}
+                status={zipError ? "success" : "danger"}
+                maxLength={5}
               />
             </Layout>
-            {/* Role */}
-            <Input
-              style={styles.input}
-              value={email}
-              label="Role"
-              placeholder="..."
-            />
-            {/* Public/Private */}
-            <Input
-              style={styles.input}
-              value={email}
-              label="Public/Private"
-              placeholder="..."
-            />
-            {/* On/Off Line */}
-            <Input
-              style={styles.input}
-              value={email}
-              label="On/Off Line"
-              placeholder="..."
-            />
-            {/* Capacity */}
-            <Input
-              style={styles.input}
-              value={email}
-              label="Capacity"
-              placeholder="..."
-            />
-            {/* Check in required */}
-            <Input
-              style={styles.input}
-              value={email}
-              label="Check in Required"
-              placeholder="..."
-            />
+            {/* Event Type Details */}
+            <Layout style={styles.event_details_container}>
+              <Layout style={styles.event_details_container_item}>
+                <Text style={styles.label}>Public / Private</Text>
+                <Toggle checked={publicChk} onChange={onPublicCheckedChange} />
+              </Layout>
+              <Layout style={styles.event_details_container_item}>
+                <Text style={styles.label}>On / Off line</Text>
+                <Toggle
+                  checked={offlineChk}
+                  onChange={onOfflineCheckedChange}
+                />
+              </Layout>
+              <Layout style={styles.event_details_container_item}>
+                <Text style={styles.label}>Check-In required</Text>
+                <Toggle
+                  checked={checkinChk}
+                  onChange={onCheckedinCheckedChange}
+                />
+              </Layout>
+            </Layout>
+
+            <Layout
+              style={{
+                marginTop: 15,
+                marginBottom: 15,
+                paddingLeft: 15,
+                paddinngrRight: 15,
+              }}
+            >
+              <Text style={styles.label}>Capacity {capacity}</Text>
+              <Slider
+                minimumValue={0}
+                maximumValue={500}
+                value={capacity}
+                onValueChange={(value) => setCapacity(value)}
+                step={5}
+                minimumTrackTintColor="#3F295A"
+                maximumTrackTintColor="#909CB3"
+                thumbTintColor="#3F295A"
+              />
+            </Layout>
+
             {/* Event URL */}
             <Input
               style={styles.input}
-              value={email}
+              value={eventUrl}
               label="Event URL or Meeting Link"
               placeholder="..."
+              textContentType={"none"}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType="default"
+              onChangeText={(newUrl) => setEventUrl(newUrl)}
+              onBlur={onEventUrlBlur}
+              status={eventUrlError ? "success" : "danger"}
             />
             {/* Additional Items */}
-            <Input
-              style={styles.input}
-              value={email}
-              label="List of items needed"
-              placeholder="..."
-            />
+            <Layout
+              style={{
+                marginTop: 15,
+                marginBottom: 15,
+                paddingLeft: 15,
+                paddinngrRight: 15,
+              }}
+            >
+              <Text style={styles.label}>Additional items</Text>
+              {renderAdditionalItems()}
+            </Layout>
+
+            {/* Add additional item input */}
+            <Layout style={styles.additional_container}>
+              <Input
+                style={styles.additional_item_input}
+                value={additionalItem}
+                label="Add additional item"
+                placeholder="..."
+                textContentType={"none"}
+                clearButtonMode="always"
+                returnKeyType="next"
+                keyboardType="default"
+                maxLength={50}
+                onChangeText={(newItem) => setAdditionalItem(newItem)}
+              />
+              <Button
+                style={styles.additional_item_button}
+                accessoryRight={PlusOutline}
+                size="small"
+                onPress={onAddAdditionalItem}
+              />
+            </Layout>
             {/* Email */}
             <Input
               style={styles.input}
               value={email}
               label="Email for people to see"
               placeholder="..."
+              textContentType={"none"}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType="default"
+              onChangeText={(newEmail) => setEmail(newEmail)}
+              onBlur={onEmailBlur}
+              status={emailError ? "success" : "danger"}
             />
             {/* Phone */}
             <Input
               style={styles.input}
-              value={email}
+              value={phone}
               label="Number to call you"
               placeholder="..."
+              textContentType={"none"}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType={"phone-pad"}
+              onChangeText={(newPhone) => setPhone(newPhone)}
+              onBlur={onPhoneBlur}
+              status={phoneError ? "success" : "danger"}
             />
             <Button style={styles.button} size="medium" onPress={onSubmitEvent}>
               Let's Go!
@@ -371,6 +676,7 @@ export const AddEventScreen = () => {
         accessoryLeft={renderDrawerAction}
       />
       {authenticated ? addEventForm() : notAuthenticated()}
+      <Toast />
     </SafeAreaView>
   );
 };
@@ -442,13 +748,13 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   location_a: {
-    width: "32%",
+    width: "50%",
   },
   location_b: {
-    width: "32%",
+    width: "23%",
   },
   location_c: {
-    width: "32%",
+    width: "23%",
   },
   baseContainer: {
     display: "flex",
@@ -472,12 +778,42 @@ const styles = StyleSheet.create({
     backgroundColor: "#E7E2F1",
   },
   buttonAlt: {
-    marginBottom: 15,
     marginLeft: 75,
     marginRight: 75,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
     marginTop: -15,
+  },
+  event_details_container: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 15,
+  },
+  event_details_container_item: {
+    // backgroundColor: "lightgreen",
+  },
+  label: {
+    fontSize: 12,
+    marginBottom: 5,
+    color: "#909CB3",
+  },
+  additional_container: {
+    padding: 15,
+    display: "flex",
+    flexDirection: "row",
+  },
+  additional_item_input: {
+    width: "83%",
+  },
+  additional_item_button: {
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 18,
+    backgroundColor: "#3F295A",
+    borderColor: "transparent",
   },
 });
 

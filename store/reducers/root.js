@@ -7,18 +7,21 @@ import {
   UPDATE_SHOW_USER_INFO,
   UPDATE_SHOW_EVENT_INFO,
   RENDERED_EVENTS,
-  FETCH_EVENTS,
   CREATE_EVENT,
   UPDATE_EVENT_TIME,
   SET_USER,
   SET_AUTENTICATED,
   UPDATE_AUTENTICATED,
+  FETCH_EVENTS,
 } from "../actions/actionTypes";
 
 const initialState = {
   // currentUser: null,
   currentUser: { name: "username" },
   authenticated: false,
+  allEvents: [],
+  allEventsView: true,
+  // Not in use
   currentUserAttending: false,
   showUser: null,
   allUsers: [],
@@ -26,8 +29,6 @@ const initialState = {
   showUserInfo: [],
   showEventInfo: [],
   showEventId: null,
-  allEvents: [],
-  allEventsView: true,
   selectedEventTime: 0,
   tab: "",
 };
@@ -62,7 +63,14 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         authenticated: action.payload,
+        // resets to null after logout
         currentUser: { name: "username" },
+      };
+      break;
+    case FETCH_EVENTS:
+      return {
+        ...state,
+        allEvents: [...state.allEvents, action.payload],
       };
       break;
     default:

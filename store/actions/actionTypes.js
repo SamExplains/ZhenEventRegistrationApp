@@ -19,9 +19,6 @@ export const UPDATE_SHOW_EVENT_INFO = "UPDATE_SHOW_EVENT_INFO";
 //should events render user's events (false) or all events (true). Default is true
 export const RENDERED_EVENTS = "RENDERED_EVENTS";
 
-//fetch all events
-export const FETCH_EVENTS = "FETCH_EVENTS";
-
 //create a new event
 export const CREATE_EVENT = "CREATE_EVENT";
 
@@ -39,3 +36,6 @@ export const SET_AUTENTICATED = "SET_AUTENTICATED";
 
 // Update logged in
 export const UPDATE_AUTENTICATED = "UPDATE_AUTENTICATED";
+
+//fetch all events
+export const FETCH_EVENTS = "FETCH_EVENTS";

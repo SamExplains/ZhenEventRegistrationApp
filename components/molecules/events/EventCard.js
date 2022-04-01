@@ -4,32 +4,86 @@ import { Layout, Text, Button } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
 import CheckInScreen from "../../../screens/Profile/OrganizerCheckInScreen";
 
-export const EventCard = () => {
+export const EventCard = (props) => {
   const navigation = useNavigation();
+
   const navigateEventDetails = () => {
     navigation.navigate("EventDetails");
   };
+
+  const parseDate = (date) => {
+    const _d = date.split("/");
+    const _day = _d[2].split(" ");
+    let month = "";
+    let day = _day[0];
+    switch (_d[1]) {
+      case "01":
+        month = "JAN";
+        break;
+      case "02":
+        month = "FEB";
+        break;
+      case "03":
+        month = "MAR";
+        break;
+      case "04":
+        month = "APR";
+        break;
+      case "05":
+        month = "MAY";
+        break;
+      case "06":
+        month = "JUN";
+        break;
+      case "07":
+        month = "JUL";
+        break;
+      case "08":
+        month = "AUG";
+        break;
+      case "09":
+        month = "SEP";
+        break;
+      case "10":
+        month = "OCT";
+        break;
+      case "11":
+        month = "NOV";
+        break;
+      case "12":
+        month = "DEC";
+        break;
+    }
+    return `${day} ${month}`;
+  };
+
   return (
     <TouchableOpacity style={styles.container} onPress={navigateEventDetails}>
       <Image
-        resizeMode="contain"
+        resizeMode="cover"
         style={styles.image}
-        source={require("../../../assets/Rectangle44.png")}
+        source={{
+          uri: `http:10.0.2.2:8000/storage/${props.details.first_image}`,
+        }}
       />
       {/* Event Date */}
-      <Text style={styles.date}>00 Jan</Text>
+      {/* <Text style={styles.date}>00 Jan</Text> */}
+      <Text style={styles.date}>{parseDate(props.details.start_time)}</Text>
       <Text category="h6" style={styles.title}>
-        Event Title
+        {props.details.title}
       </Text>
       <Text category="p1" style={styles.id}>
-        ID: 0000
+        ID: {props.details.event_key || "no event key"}
       </Text>
       <Layout style={styles.location}>
         <Image
           resizeMode="contain"
           source={require("../../../assets/Vector(10).png")}
         />
-        <Text category="p2">{"     "}000 Street, City, State ZIP</Text>
+        <Text category="p2">
+          {"     "}
+          {props.details.address}, {props.details.city}, {props.details.zip}
+        </Text>
       </Layout>
     </TouchableOpacity>
   );
@@ -46,9 +100,12 @@ const styles = StyleSheet.create({
     borderColor: "#E6E5E5",
     position: "relative",
     marginTop: 15,
+    marginLeft: 15,
+    marginRight: 15,
   },
   image: {
     width: "100%",
+    height: 230,
   },
   title: {
     fontWeight: "bold",
@@ -74,7 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     position: "absolute",
     right: 20,
-    top: 105,
+    top: 170,
   },
 });
 
