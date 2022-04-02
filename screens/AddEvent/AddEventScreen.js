@@ -186,7 +186,7 @@ export const AddEventScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
       flag === "first" ? setFirstImage(result.uri) : setSecondImage(result.uri);
@@ -337,6 +337,9 @@ export const AddEventScreen = () => {
           // Check in verification field required for checking in!
           console.log(data);
           onResetFields();
+        })
+        .catch((error) => {
+          console.log(error);
         });
 
       Toast.show({

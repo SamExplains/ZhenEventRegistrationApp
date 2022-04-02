@@ -8,7 +8,8 @@ export const EventCard = (props) => {
   const navigation = useNavigation();
 
   const navigateEventDetails = () => {
-    navigation.navigate("EventDetails");
+    // Pass the event object from props to the next screen
+    navigation.navigate("EventDetails", props.details);
   };
 
   const parseDate = (date) => {
@@ -62,9 +63,15 @@ export const EventCard = (props) => {
       <Image
         resizeMode="cover"
         style={styles.image}
-        source={{
-          uri: `http:10.0.2.2:8000/storage/${props.details.first_image}`,
-        }}
+        source={
+          props.details.first_image
+            ? {
+                uri: props.details.first_image,
+              }
+            : {
+                uri: props.details.second_image,
+              }
+        }
       />
       {/* Event Date */}
       {/* <Text style={styles.date}>00 Jan</Text> */}
