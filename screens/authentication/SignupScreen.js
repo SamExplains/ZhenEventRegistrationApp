@@ -108,6 +108,7 @@ export const SignupScreen = ({ navigation }) => {
 
   // Submit
   const onSignup = async () => {
+    console.log(baseUrl.api);
     if (emailError && zipError && nameError && confirmPasswordError) {
       const response = await axios
         .post(`${baseUrl.api}/signup`, {

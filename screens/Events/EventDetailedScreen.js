@@ -1,5 +1,5 @@
-import { View, Image, StyleSheet, Clipboard } from "react-native";
-import React, { Component, useState } from "react";
+import { Image, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import {
   Layout,
   Text,
@@ -20,58 +20,111 @@ import {
   ShareLink,
   Twitter,
   Facebook,
-  CopyOutline,
 } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native-gesture-handler";
-import { SliderBox } from "react-native-image-slider-box";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 export const EventDetailedScreen = ({ navigation, route }) => {
   // Check images to only return an array of actual image links
   const checkImages = () => {
     if (route.params.first_image && route.params.second_image) {
+      // setImages([route.params.first_image, route.params.second_image]);
       return [route.params.first_image, route.params.second_image];
     } else if (route.params.first_image) {
+      // setImages([route.params.first_image]);
       return [route.params.first_image];
     } else {
+      // setImages([route.params.second_image]);
       return [route.params.second_image];
     }
   };
 
-  const [images, setImages] = useState(checkImages);
-  const [checked, setChecked] = React.useState(true);
-  const [visible, setVisible] = React.useState(false);
-  // Clipboard
-  const [copiedText, setCopiedText] = useState("");
+  const [images, setImages] = useState([]);
+  const [source, setSource] = useState(
+    route.params.first_image.length
+      ? route.params.first_image
+      : route.params.second_image
+  );
+  const [visible, setVisible] = useState(false);
 
-  // const copyToClipboard = () => {
-  //   Clipboard.setString("hello world");
-  // };
+  const parseAdditionalItems = () => {
+    // Parse for state
+    const parsed = JSON.parse(route.params.additional_items);
+    return parsed.length ? [...parsed] : [];
+  };
+
+  // Additional items
+  const [additionalItems, setAdditionalItems] = useState(
+    parseAdditionalItems()
+  );
+
   const navigateBack = () => {
     navigation.goBack();
   };
 
   const BackAction = () => (
-    // fill="white"
-    // <TopNavigationAction icon={ArrowBackIconWhite} onPress={navigateBack} />
     <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
   );
 
+  const toggleImage = (index) => {
+    console.log("Toggled");
+    index === 0
+      ? setSource(route.params.first_image)
+      : setSource(route.params.second_image);
+  };
+
+  const renderImageToggle = () => {
+    return checkImages().map((img, index) => {
+      return (
+        <TouchableOpacity onPress={() => toggleImage(index)} key={index}>
+          <Image
+            source={{ uri: img }}
+            style={styles.imageContainerImageThumbnail}
+          />
+        </TouchableOpacity>
+      );
+    });
+  };
+
+  const updateChecklistItem = (item) => {
+    // Updated based on item
+    // Dispach to state
+    const itemIndex = additionalItems.findIndex((x) => x.id === item.id);
+    // Set checked value
+    additionalItems[itemIndex].checked = !item.checked;
+    // Set taken name
+    additionalItems[itemIndex].checked
+      ? (additionalItems[itemIndex].taken = "Peanut")
+      : (additionalItems[itemIndex].taken = null);
+    // Make Request and Update checked items state
+    setAdditionalItems([...additionalItems]);
+  };
+
   const renderChecklist = () => {
-    return JSON.parse(route.params.additional_items).length ? (
-      <Text>Checklist items go here...</Text>
-    ) : (
-      <Text>No items available</Text>
-    );
+    if (additionalItems.length) {
+      const _c = [...additionalItems];
+      return _c.map((item) => {
+        return (
+          <CheckBox
+            key={item.id}
+            checked={item.checked}
+            onChange={() => updateChecklistItem(item)}
+            style={{ marginTop: 10 }}
+          >
+            {item.name}{" "}
+            {item.taken ? " will be brought by " + item.taken : null}
+          </CheckBox>
+        );
+      });
+    } else {
+      return <Text>No items available</Text>;
+    }
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
-        title={() => (
-          // <Text style={{ color: "white" }}>Event Details Title</Text>
-          <Text>{route.params.title}</Text>
-        )}
+        title={() => <Text>{route.params.title}</Text>}
         alignment="center"
         accessoryLeft={BackAction}
         style={styles.topnav}
@@ -79,26 +132,24 @@ export const EventDetailedScreen = ({ navigation, route }) => {
       />
       <ScrollView>
         {/* Image Containe "TOP" */}
-        <SliderBox
-          sliderBoxHeight={300}
-          resizeMode={"cover"}
-          dotColor="#FFEE58"
-          inactiveDotColor="#90A4AE"
-          autoplay
-          circleLoop
-          images={images}
-        />
         <Layout style={styles.imageContainer}>
-          {/* <Image
-            resizeMode="cover"
-            style={{ width: "100%", height: 300 }}
-            source={{
-              uri: `http:10.0.2.2:8000/storage/${route.params.first_image}`,
+          <Image
+            style={{ height: 300, width: "100%" }}
+            source={{ uri: source }}
+          />
+          {/* Image number container */}
+          <Layout
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              position: "absolute",
+              bottom: 0,
+              backgroundColor: "transparent",
             }}
-          /> */}
-        </Layout>
-        {/* Content Container */}
-        <Layout style={styles.contentContainer}>
+          >
+            {renderImageToggle()}
+          </Layout>
           {/* Modal */}
           <Button
             size="tiny"
@@ -146,7 +197,9 @@ export const EventDetailedScreen = ({ navigation, route }) => {
               {/* <Button onPress={() => setVisible(false)}>DISMISS</Button> */}
             </Card>
           </Modal>
-
+        </Layout>
+        {/* Content Container */}
+        <Layout style={styles.contentContainer}>
           <Text category="h6" style={styles.title}>
             {route.params.title}
           </Text>
@@ -206,20 +259,9 @@ export const EventDetailedScreen = ({ navigation, route }) => {
             Items needed for the Party
           </Text>
           {renderChecklist()}
-          {/* <CheckBox
-            style={styles.checkbox}
-            checked={checked}
-            onChange={(nextChecked) => setChecked(nextChecked)}
-          >
-            {`Checked: ${checked}`}
-          </CheckBox>
-          <CheckBox
-            style={styles.checkbox}
-            checked={checked}
-            onChange={(nextChecked) => setChecked(nextChecked)}
-          >
-            {`Checked: ${checked}`}
-          </CheckBox> */}
+          <Button style={styles.button} size="medium">
+            Register
+          </Button>
         </Layout>
       </ScrollView>
     </SafeAreaView>
@@ -243,11 +285,17 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  imageContainerImageNumber: {
-    position: "absolute",
-    color: "white",
+  imageContainerImageThumbnail: {
     bottom: 0,
     marginBottom: 35,
+    paddingLeft: 15,
+    paddingRight: 15,
+    marginLeft: 5,
+    marginRight: 5,
+    height: 25,
+    width: 25,
+    borderWidth: 2.5,
+    borderColor: "white",
   },
   title: {
     fontWeight: "700",
@@ -350,6 +398,14 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     tintColor: "#301A4B",
+  },
+  button: {
+    marginBottom: 15,
+    // marginLeft: 15,
+    // marginRight: 15,
+    marginTop: 35,
+    backgroundColor: "#3F295A",
+    borderColor: "transparent",
   },
 });
 

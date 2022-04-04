@@ -168,6 +168,7 @@ export const AddEventScreen = () => {
             id: Math.floor(Math.random() * 1000),
             name: additionalItem,
             taken: null,
+            checked: false,
           },
         ])
       : Toast.show({

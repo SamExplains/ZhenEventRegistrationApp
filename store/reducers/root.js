@@ -13,6 +13,8 @@ import {
   SET_AUTENTICATED,
   UPDATE_AUTENTICATED,
   FETCH_EVENTS,
+  FIND_EVENT_DETAILS,
+  FETCH_EVENT_DETAILS,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -21,6 +23,7 @@ const initialState = {
   authenticated: false,
   allEvents: [],
   allEventsView: true,
+  activeEvent: {},
   // Not in use
   currentUserAttending: false,
   showUser: null,
@@ -68,10 +71,24 @@ const reducer = (state = initialState, action) => {
       };
       break;
     case FETCH_EVENTS:
+      // Update events with new batch of events
       return {
         ...state,
-        allEvents: [...state.allEvents, action.payload],
+        allEvents: [...state.allEvents, ...action.payload],
       };
+      break;
+    case FIND_EVENT_DETAILS:
+      const event = state.allEvents.filter((el) => {
+        return el.id === action.payload;
+      });
+      console.log("Store: FIND_EVENT_DETAILS: ", action.payload, "  ", event);
+      return {
+        ...state,
+      };
+      break;
+    case FETCH_EVENT_DETAILS:
+      console.log("Store: FETCH_EVENT_DETAILS");
+      return {};
       break;
     default:
       return state;

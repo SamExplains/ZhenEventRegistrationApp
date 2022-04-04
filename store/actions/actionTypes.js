@@ -39,3 +39,9 @@ export const UPDATE_AUTENTICATED = "UPDATE_AUTENTICATED";
 
 //fetch all events
 export const FETCH_EVENTS = "FETCH_EVENTS";
+
+// find a single event
+export const FIND_EVENT_DETAILS = "FIND_EVENT_DETAILS";
+
+// fetch a single event
+export const FETCH_EVENT_DETAILS = "FETCH_EVENT_DETAILS";

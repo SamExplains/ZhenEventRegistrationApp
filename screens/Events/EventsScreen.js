@@ -21,9 +21,14 @@ export const EventsScreen = () => {
   // State
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true); // true as in fetching data
-  const [events, setEvents] = useState(
-    useSelector((state) => state.eventsAndUsers.allEvents)
-  );
+  const [shouldFetch, setShouldFetch] = useState(true);
+  // next page API url
+  const [page, setPage] = useState(null);
+  // final page API endpoint which is recieved from 1st API call
+  const [finalPage, setFinalPage] = useState(null);
+  const [finalPageReached, setFinalPageReached] = useState(false);
+  const [events, setEvents] = useState([]);
+  const storedEvents = useSelector((state) => state.eventsAndUsers.allEvents);
   const navigation = useNavigation();
 
   const navigateDetails = () => {
@@ -37,28 +42,74 @@ export const EventsScreen = () => {
     />
   );
 
-  const componentDidMount = async () => {
-    console.log("componentDidMount");
-
+  const fetch = async () => {
     // Get first batch of events from API
-    if (loading) {
+    await axios
+      .get(`${baseUrl.api}/events`)
+      .then(({ data }) => {
+        /**
+         * FINAL PAGE : last_page_url
+         * NEXT PAGE: next_page_url
+         * PAYLOAD: data
+         */
+        console.log("Fetch complete");
+        // set the should fetch call to false to prevent fetching
+        setShouldFetch(false);
+        // set next page
+        // on page number update
+        setPage(data.next_page_url);
+        // set final page
+        data.current_page === 1 ? setFinalPage(data.last_page_url) : null;
+        // Update Store with items
+        dispatch(fetchEvents(data.data));
+        setEvents((oldEvents) => [...oldEvents, ...data.data]);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const fetchMore = async () => {
+    // console.log("End of list recieved. Will fetch more with ", page);
+    // Get next batch of events from API
+    // Check if last page url has been met and set flags
+    if (!finalPageReached) {
       await axios
-        .get(`${baseUrl.api}/events`)
+        .get(page)
         .then(({ data }) => {
-          // dispatch(fetchEvents(data));
-          // setEvents(useSelector((state) => state.eventsAndUsers.allEvents));
-          setEvents(data.data);
-          // console.log("We got data! ", data);
+          /**
+           * FINAL PAGE : last_page_url
+           * NEXT PAGE: next_page_url
+           * PAYLOAD: data
+           */
+          // set next page
+          // on next page api url update
+          if (data.next_page_url === finalPage) {
+            console.log("Final page Reached");
+            setFinalPageReached(true);
+          } else {
+            // console.log("Previous page ", page);
+            setPage(data.next_page_url);
+            // console.log("Next page ", data.next_page_url);
+            // Update Store with items
+            dispatch(fetchEvents(data.data));
+            setEvents((oldEvents) => [...oldEvents, ...data.data]);
+          }
         })
         .catch((e) => console.log(e));
+      // console.log("Stored events of ", storedEvents.length);
     } else {
-      console.log("Got initial data! ", events);
+      console.log("No more results available. Final page reached!");
     }
   };
 
   useEffect(() => {
-    componentDidMount(setLoading(false));
-  }, [events]);
+    // prevent fetching for other state changes
+    if (!shouldFetch) {
+      console.log("No more fetching, Initial fetch successfull.");
+      return;
+    }
+
+    fetch();
+  }, [page, shouldFetch]);
 
   const renderHeader = () => {
     return (
@@ -116,12 +167,14 @@ export const EventsScreen = () => {
         alignment="center"
         accessoryLeft={renderDrawerAction}
       />
-      {!loading ? (
+      {!shouldFetch ? (
         <FlatList
           ListHeaderComponent={renderHeader}
           data={events}
+          keyExtractor={(item) => item.event_key.toString()}
           renderItem={({ item }) => <EventCard details={item} />}
-          keyExtractor={(item) => item.id.toString()}
+          onEndReachedThreshold={0.9}
+          onEndReached={fetchMore}
         />
       ) : (
         <Layout style={styles.spinnerContainer}>

@@ -2,14 +2,18 @@ import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { Component } from "react";
 import { Layout, Text, Button } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { findEventDetails } from "../../../store/actions/event";
 import CheckInScreen from "../../../screens/Profile/OrganizerCheckInScreen";
 
 export const EventCard = (props) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const navigateEventDetails = () => {
-    // Pass the event object from props to the next screen
-    navigation.navigate("EventDetails", props.details);
+    // Dispatch ID to set event
+    dispatch(findEventDetails(props.details.id));
+    // navigation.navigate("EventDetails");
   };
 
   const parseDate = (date) => {
