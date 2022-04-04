@@ -23,6 +23,7 @@ const initialState = {
   authenticated: false,
   allEvents: [],
   allEventsView: true,
+  // Sets to event details when a event card is clicked
   activeEvent: {},
   // Not in use
   currentUserAttending: false,
@@ -81,9 +82,10 @@ const reducer = (state = initialState, action) => {
       const event = state.allEvents.filter((el) => {
         return el.id === action.payload;
       });
-      console.log("Store: FIND_EVENT_DETAILS: ", action.payload, "  ", event);
+      // console.log("Store: FIND_EVENT_DETAILS: ", event[0]);
       return {
         ...state,
+        activeEvent: event[0],
       };
       break;
     case FETCH_EVENT_DETAILS:

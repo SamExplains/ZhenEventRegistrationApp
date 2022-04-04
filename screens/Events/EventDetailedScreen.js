@@ -1,5 +1,5 @@
 import { Image, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Layout,
   Text,
@@ -23,33 +23,39 @@ import {
 } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 
 export const EventDetailedScreen = ({ navigation, route }) => {
+  const eventDetails = useSelector((state) => state.eventsAndUsers.activeEvent);
+  const [source, setSource] = useState(eventDetails.first_image);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    // Update image source
+    setSource(
+      eventDetails.first_image.length
+        ? eventDetails.first_image
+        : eventDetails.second_image
+    );
+  }, [eventDetails]);
+
   // Check images to only return an array of actual image links
   const checkImages = () => {
-    if (route.params.first_image && route.params.second_image) {
-      // setImages([route.params.first_image, route.params.second_image]);
-      return [route.params.first_image, route.params.second_image];
-    } else if (route.params.first_image) {
-      // setImages([route.params.first_image]);
-      return [route.params.first_image];
+    if (eventDetails.first_image && eventDetails.second_image) {
+      // setImages([eventDetails.first_image, eventDetails.second_image]);
+      return [eventDetails.first_image, eventDetails.second_image];
+    } else if (eventDetails.first_image) {
+      // setImages([eventDetails.first_image]);
+      return [eventDetails.first_image];
     } else {
-      // setImages([route.params.second_image]);
-      return [route.params.second_image];
+      // setImages([eventDetails.second_image]);
+      return [eventDetails.second_image];
     }
   };
 
-  const [images, setImages] = useState([]);
-  const [source, setSource] = useState(
-    route.params.first_image.length
-      ? route.params.first_image
-      : route.params.second_image
-  );
-  const [visible, setVisible] = useState(false);
-
   const parseAdditionalItems = () => {
     // Parse for state
-    const parsed = JSON.parse(route.params.additional_items);
+    const parsed = JSON.parse(eventDetails.additional_items);
     return parsed.length ? [...parsed] : [];
   };
 
@@ -69,8 +75,8 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   const toggleImage = (index) => {
     console.log("Toggled");
     index === 0
-      ? setSource(route.params.first_image)
-      : setSource(route.params.second_image);
+      ? setSource(eventDetails.first_image)
+      : setSource(eventDetails.second_image);
   };
 
   const renderImageToggle = () => {
@@ -124,7 +130,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
-        title={() => <Text>{route.params.title}</Text>}
+        title={() => <Text>{eventDetails.title}</Text>}
         alignment="center"
         accessoryLeft={BackAction}
         style={styles.topnav}
@@ -183,7 +189,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
                   style={{ fontWeight: "bold", marginBottom: 15 }}
                   style={styles.pagelinkText}
                 >
-                  {route.params.url}/{route.params.event_key}
+                  {eventDetails.url}/{eventDetails.event_key}
                 </Text>
                 {/* <Button
                   style={styles.pagelinkBtn}
@@ -201,25 +207,25 @@ export const EventDetailedScreen = ({ navigation, route }) => {
         {/* Content Container */}
         <Layout style={styles.contentContainer}>
           <Text category="h6" style={styles.title}>
-            {route.params.title}
+            {eventDetails.title}
           </Text>
           <Text style={styles.spotsLeft}>
             Spots Left:
-            <Text> 0/{route.params.capacity} Full</Text>
+            <Text> 0/{eventDetails.capacity} Full</Text>
           </Text>
           {/* Four Purple Labels */}
           <Layout style={styles.fourLabelsContainer}>
-            <Text style={styles.purpleLabel}>ID: {route.params.event_key}</Text>
+            <Text style={styles.purpleLabel}>ID: {eventDetails.event_key}</Text>
             <Text style={styles.purpleLabel}>
-              {route.params.public_private ? "Public" : "Private"}
+              {eventDetails.public_private ? "Public" : "Private"}
             </Text>
             <Text style={styles.purpleLabel}>
-              {route.params.on_off_line ? "Online" : "Offline"}
+              {eventDetails.on_off_line ? "Online" : "Offline"}
             </Text>
-            <Text style={styles.purpleLabel}>0/{route.params.capacity}</Text>
+            <Text style={styles.purpleLabel}>0/{eventDetails.capacity}</Text>
           </Layout>
           <Text category="p1" style={styles.description}>
-            {route.params.description}
+            {eventDetails.description}
           </Text>
 
           {/* Date */}
@@ -228,7 +234,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
               <CalendarOutline style={styles.icon} />
             </Layout>
             <Text style={styles.DMLItemMiddle}>
-              {route.params.start_time} - {route.params.end_time}
+              {eventDetails.start_time} - {eventDetails.end_time}
             </Text>
             <Text style={styles.DMLItemRight}></Text>
           </Layout>
@@ -238,7 +244,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
               <MapOutline style={styles.icon} />
             </Layout>
             <Text style={styles.DMLItemMiddle}>
-              {route.params.address}, {route.params.city}, {route.params.zip}
+              {eventDetails.address}, {eventDetails.city}, {eventDetails.zip}
             </Text>
             <Layout style={styles.DMLItemRight}>
               <NavigationOutline2 style={styles.icon} />
@@ -250,7 +256,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
             <Layout style={styles.DMLItemLeft}>
               <GlobeOutline style={styles.icon} />
             </Layout>
-            <Text style={styles.DMLItemMiddle}>{route.params.url}</Text>
+            <Text style={styles.DMLItemMiddle}>{eventDetails.url}</Text>
             <Layout style={styles.DMLItemRight}></Layout>
           </Layout>
 

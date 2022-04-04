@@ -13,7 +13,7 @@ export const EventCard = (props) => {
   const navigateEventDetails = () => {
     // Dispatch ID to set event
     dispatch(findEventDetails(props.details.id));
-    // navigation.navigate("EventDetails");
+    navigation.navigate("EventDetails");
   };
 
   const parseDate = (date) => {

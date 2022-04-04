@@ -20,7 +20,6 @@ import { ProfileScreen } from "../screens/Profile/ProfileScreen";
 import { SignupScreen } from "../screens/authentication/SignupScreen";
 import PasswordResetScreen from "../screens/authentication/PasswordResetScreen";
 import EventDetailedScreen from "../screens/Events/EventDetailedScreen";
-import EventDetailedScreenSTATE from "../screens/Events/EventDetailedScreen_STATE";
 import EventsScreen from "../screens/Events/EventsScreen";
 import CheckInScreen from "../screens/Profile/OrganizerCheckInScreen";
 import AddEventScreen from "../screens/AddEvent/AddEventScreen";
@@ -64,7 +63,7 @@ export const BottomTabsNavigator = () => (
     <Screen name="Details" component={StoryDetailsScreen} />
     <Screen name="Signup" component={SignupScreen} />
     <Screen name="Reset" component={PasswordResetScreen} />
-    <Screen name="EventDetails" component={EventDetailedScreenSTATE} />
+    <Screen name="EventDetails" component={EventDetailedScreen} />
     <Screen name="CheckIn" component={CheckInScreen} />
   </Navigator>
 );
