@@ -62,42 +62,56 @@ export const EventCard = (props) => {
     return `${day} ${month}`;
   };
 
-  return (
-    <TouchableOpacity style={styles.container} onPress={navigateEventDetails}>
-      <Image
-        resizeMode="cover"
-        style={styles.image}
-        source={
-          props.details.first_image
-            ? {
-                uri: props.details.first_image,
-              }
-            : {
-                uri: props.details.second_image,
-              }
-        }
-      />
-      {/* Event Date */}
-      {/* <Text style={styles.date}>00 Jan</Text> */}
-      <Text style={styles.date}>{parseDate(props.details.start_time)}</Text>
-      <Text category="h6" style={styles.title}>
-        {props.details.title}
-      </Text>
-      <Text category="p1" style={styles.id}>
-        ID: {props.details.event_key || "no event key"}
-      </Text>
-      <Layout style={styles.location}>
+  const eventCardPublic = () => {
+    return (
+      <TouchableOpacity style={styles.container} onPress={navigateEventDetails}>
         <Image
-          resizeMode="contain"
-          source={require("../../../assets/Vector(10).png")}
+          resizeMode="cover"
+          style={styles.image}
+          source={
+            props.details.first_image
+              ? {
+                  uri: props.details.first_image,
+                }
+              : {
+                  uri: props.details.second_image,
+                }
+          }
         />
-        <Text category="p2">
-          {"     "}
-          {props.details.address}, {props.details.city}, {props.details.zip}
+        {/* Event Date */}
+        {/* <Text style={styles.date}>00 Jan</Text> */}
+        <Text style={styles.date}>{parseDate(props.details.start_time)}</Text>
+        <Text category="h6" style={styles.title}>
+          {props.details.title}
         </Text>
+        <Text category="p1" style={styles.id}>
+          ID: {props.details.event_key || "no event key"}
+        </Text>
+        <Layout style={styles.location}>
+          <Image
+            resizeMode="contain"
+            source={require("../../../assets/Vector(10).png")}
+          />
+          <Text category="p2">
+            {"     "}
+            {props.details.address}, {props.details.city}, {props.details.zip}
+          </Text>
+        </Layout>
+      </TouchableOpacity>
+    );
+  };
+
+  const eventIsPrivate = () => {
+    return props.details.public_private ? (
+      <Layout style={styles.container}>
+        <Text>Event is Private...only showing for debug purposes.</Text>
       </Layout>
-    </TouchableOpacity>
-  );
+    ) : (
+      eventCardPublic()
+    );
+  };
+
+  return eventIsPrivate();
 };
 
 const styles = StyleSheet.create({

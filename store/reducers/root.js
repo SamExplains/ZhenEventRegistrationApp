@@ -15,16 +15,21 @@ import {
   FETCH_EVENTS,
   FIND_EVENT_DETAILS,
   FETCH_EVENT_DETAILS,
+  SET_SEARCH_RESULTS,
 } from "../actions/actionTypes";
 
 const initialState = {
   // currentUser: null,
   currentUser: { name: "username" },
+  // set after login
   authenticated: false,
+  // holds events on events screen
   allEvents: [],
   allEventsView: true,
   // Sets to event details when a event card is clicked
   activeEvent: {},
+  // holds search results
+  searchResults: [],
   // Not in use
   currentUserAttending: false,
   showUser: null,
@@ -88,9 +93,12 @@ const reducer = (state = initialState, action) => {
         activeEvent: event[0],
       };
       break;
-    case FETCH_EVENT_DETAILS:
-      console.log("Store: FETCH_EVENT_DETAILS");
-      return {};
+    case SET_SEARCH_RESULTS:
+      console.log("Store: SET_SEARCH_RESULTS");
+      return {
+        ...state,
+        searchResults: [...action.payload],
+      };
       break;
     default:
       return state;

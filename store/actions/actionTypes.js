@@ -45,3 +45,6 @@ export const FIND_EVENT_DETAILS = "FIND_EVENT_DETAILS";
 
 // fetch a single event
 export const FETCH_EVENT_DETAILS = "FETCH_EVENT_DETAILS";
+
+// set search results
+export const SET_SEARCH_RESULTS = "SET_SEARCH_RESULTS";

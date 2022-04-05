@@ -25,7 +25,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
-export const EventDetailedScreen = ({ navigation, route }) => {
+export const EventDetailedScreen = ({ navigation }) => {
   const eventDetails = useSelector((state) => state.eventsAndUsers.activeEvent);
   const [source, setSource] = useState(eventDetails.first_image);
   const [visible, setVisible] = useState(false);
@@ -191,16 +191,30 @@ export const EventDetailedScreen = ({ navigation, route }) => {
                 >
                   {eventDetails.url}/{eventDetails.event_key}
                 </Text>
-                {/* <Button
-                  style={styles.pagelinkBtn}
-                  size="small"
-                  appearance="ghost"
-                  onPress={() => copyToClipboard()}
-                >
-                  <CopyOutline style={styles.copy} />
-                </Button> */}
               </Layout>
-              {/* <Button onPress={() => setVisible(false)}>DISMISS</Button> */}
+              <Layout
+                style={{
+                  display: "flex",
+                  marginTop: 15,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  style={{ height: 75, width: 75 }}
+                  source={{ uri: eventDetails.qrcode }}
+                />
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    padding: 10,
+                    textAlign: "center",
+                  }}
+                >
+                  www.domain.com/api/events/ID
+                </Text>
+              </Layout>
+              {/* QR code link */}
             </Card>
           </Modal>
         </Layout>
