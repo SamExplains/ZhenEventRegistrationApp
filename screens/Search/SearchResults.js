@@ -1,28 +1,25 @@
 import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, FlatList } from "react-native";
 import {
-  Layout,
   Text,
   TopNavigation,
   TopNavigationAction,
-  Divider,
-  CheckBox,
-  Card,
-  Button,
-  Modal,
 } from "@ui-kitten/components";
 import { ArrowBackIcon } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import EventCard from "../../components/molecules/events/EventCard";
+import { setSearchResultEventDetails } from "../../store/actions/event";
 
-export const SearchResults = ({ navigation }) => {
+export const SearchResults = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+
   const searchResults = useSelector(
     (state) => state.eventsAndUsers.searchResults
   );
 
-  useEffect(() => {
-    console.log("Search results with ", searchResults.length);
-  }, [searchResults]);
+  useEffect(() => {}, [searchResults]);
 
   const navigateBack = () => {
     navigation.goBack();
@@ -31,13 +28,26 @@ export const SearchResults = ({ navigation }) => {
     <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
   );
 
+  const setSearchEventDetails = (item) => {
+    dispatch(setSearchResultEventDetails(item));
+  };
+
   const renderResults = () => {
     if (searchResults.length) {
-      return searchResults.map((el) => {
-        return <Text key={el.id}>Result</Text>;
-      });
+      return (
+        <FlatList
+          data={searchResults}
+          keyExtractor={(item) => item.event_key.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => setSearchEventDetails(item)}>
+              <EventCard details={item} fromComponent="search" />
+            </TouchableOpacity>
+          )}
+          onEndReachedThreshold={0.9}
+        />
+      );
     } else {
-      return <Text>No items found.</Text>;
+      return <Text style={{ padding: 15 }}>No reults found.</Text>;
     }
   };
 
@@ -50,7 +60,9 @@ export const SearchResults = ({ navigation }) => {
         style={styles.topnav}
         // backgroundColor="transparent"
       />
-      <Layout style={styles.container}>{renderResults()}</Layout>
+      {/* <ScrollView style={styles.container}>{renderResults()}</ScrollView>
+       */}
+      {renderResults()}
     </SafeAreaView>
   );
 };
@@ -62,8 +74,6 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flex: 1,
-    backgroundColor: "lightgreen",
-    padding: 15,
   },
 });
 

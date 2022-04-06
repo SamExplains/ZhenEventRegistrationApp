@@ -10,10 +10,17 @@ export const EventCard = (props) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const navigateEventDetails = () => {
+  const navigateEventDetails = async () => {
     // Dispatch ID to set event
-    dispatch(findEventDetails(props.details.id));
-    navigation.navigate("EventDetails");
+    console.log("Dispatching ");
+    await Promise.all([dispatch(findEventDetails(props.details.id))]).then(
+      () => {
+        console.log("Now navigating");
+        navigation.navigate("EventDetails", {
+          fromComponent: props.fromComponent,
+        });
+      }
+    );
   };
 
   const parseDate = (date) => {
@@ -102,7 +109,7 @@ export const EventCard = (props) => {
   };
 
   const eventIsPrivate = () => {
-    return props.details.public_private ? (
+    return props.details.public_private === 1 ? (
       <Layout style={styles.container}>
         <Text>Event is Private...only showing for debug purposes.</Text>
       </Layout>

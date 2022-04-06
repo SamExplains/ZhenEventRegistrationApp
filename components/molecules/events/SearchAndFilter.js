@@ -23,7 +23,7 @@ export const SearchAndFilter = () => {
         // Dispatch
         dispatch(setSearchResults(data));
         // Move to Results screen
-        navigation.navigate("SearchResults");
+        navigation.navigate("SearchResults", { fromComponent: "search" });
       })
       .catch((e) => {
         console.log("Error ", e);

@@ -25,8 +25,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
-export const EventDetailedScreen = ({ navigation }) => {
-  const eventDetails = useSelector((state) => state.eventsAndUsers.activeEvent);
+export const EventDetailedScreen = ({ navigation, route }) => {
+  const eventDetails = useSelector((state) =>
+    route.params.fromComponent === "event"
+      ? state.eventsAndUsers.activeEvent
+      : state.eventsAndUsers.searchResultDetails
+  );
   const [source, setSource] = useState(eventDetails.first_image);
   const [visible, setVisible] = useState(false);
 
@@ -231,7 +235,7 @@ export const EventDetailedScreen = ({ navigation }) => {
           <Layout style={styles.fourLabelsContainer}>
             <Text style={styles.purpleLabel}>ID: {eventDetails.event_key}</Text>
             <Text style={styles.purpleLabel}>
-              {eventDetails.public_private ? "Public" : "Private"}
+              {eventDetails.public_private === 0 ? "Public" : "Private"}
             </Text>
             <Text style={styles.purpleLabel}>
               {eventDetails.on_off_line ? "Online" : "Offline"}

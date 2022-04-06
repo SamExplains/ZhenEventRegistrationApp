@@ -16,6 +16,7 @@ import {
   FIND_EVENT_DETAILS,
   FETCH_EVENT_DETAILS,
   SET_SEARCH_RESULTS,
+  SET_SEARCH_RESULT_EVENT_DETAILS,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -30,6 +31,8 @@ const initialState = {
   activeEvent: {},
   // holds search results
   searchResults: [],
+  // hold search result event object details ONLY when the EventCard component is clicked through Search compoent
+  searchResultDetails: {},
   // Not in use
   currentUserAttending: false,
   showUser: null,
@@ -87,17 +90,21 @@ const reducer = (state = initialState, action) => {
       const event = state.allEvents.filter((el) => {
         return el.id === action.payload;
       });
-      // console.log("Store: FIND_EVENT_DETAILS: ", event[0]);
       return {
         ...state,
         activeEvent: event[0],
       };
       break;
     case SET_SEARCH_RESULTS:
-      console.log("Store: SET_SEARCH_RESULTS");
       return {
         ...state,
         searchResults: [...action.payload],
+      };
+      break;
+    case SET_SEARCH_RESULT_EVENT_DETAILS:
+      return {
+        ...state,
+        searchResultDetails: action.payload,
       };
       break;
     default:

@@ -172,7 +172,7 @@ export const EventsScreen = () => {
           ListHeaderComponent={renderHeader}
           data={events}
           keyExtractor={(item) => item.event_key.toString()}
-          renderItem={({ item }) => <EventCard details={item} />}
+          renderItem={({ item }) => <EventCard details={item} fromComponent="event" />}
           onEndReachedThreshold={0.9}
           onEndReached={fetchMore}
         />

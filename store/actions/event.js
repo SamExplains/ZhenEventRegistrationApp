@@ -3,6 +3,7 @@ import {
   FIND_EVENT_DETAILS,
   FETCH_EVENT_DETAILS,
   SET_SEARCH_RESULTS,
+  SET_SEARCH_RESULT_EVENT_DETAILS,
 } from "./actionTypes";
 
 //Add user's information from payload
@@ -37,6 +38,15 @@ export const setSearchResults = (payload) => {
   return (dispatch) => {
     dispatch({
       type: SET_SEARCH_RESULTS,
+      payload: payload,
+    });
+  };
+};
+
+export const setSearchResultEventDetails = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_SEARCH_RESULT_EVENT_DETAILS,
       payload: payload,
     });
   };
