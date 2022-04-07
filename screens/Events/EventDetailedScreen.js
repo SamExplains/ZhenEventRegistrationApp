@@ -24,6 +24,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
+import Toast from "react-native-toast-message";
+import ROOT_URL from "../../settings.json";
+import axios from "axios";
 
 export const EventDetailedScreen = ({ navigation, route }) => {
   const eventDetails = useSelector((state) =>
@@ -31,8 +34,15 @@ export const EventDetailedScreen = ({ navigation, route }) => {
       ? state.eventsAndUsers.activeEvent
       : state.eventsAndUsers.searchResultDetails
   );
+  const user = useSelector((state) => state.eventsAndUsers.currentUser);
+  const authenticated = useSelector(
+    (state) => state.eventsAndUsers.authenticated
+  );
   const [source, setSource] = useState(eventDetails.first_image);
   const [visible, setVisible] = useState(false);
+  const [registered, setRegistered] = useState(false);
+  // Additional items
+  const [additionalItems, setAdditionalItems] = useState([]);
 
   useEffect(() => {
     // Update image source
@@ -41,7 +51,113 @@ export const EventDetailedScreen = ({ navigation, route }) => {
         ? eventDetails.first_image
         : eventDetails.second_image
     );
+    // console.log("Registered is ", checkIfRegistered());
+    setAdditionalItems(parseAdditionalItems());
+    setRegistered(checkIfRegistered());
   }, [eventDetails]);
+
+  const checkIfRegistered = () => {
+    if (authenticated && eventDetails.registered !== null) {
+      // Parse and check registered to see if already done
+      const registeredParsed = JSON.parse(eventDetails.registered);
+      // Find matching record
+      const match = registeredParsed.length
+        ? registeredParsed.filter((el) => el.user_id === user.id)
+        : null;
+      // Check if true and update
+      if (match !== null && match.length) {
+        // match[0].registered === true ? setRegistered(true) : null;
+        // console.log("Search record! ", registered, "   ", match[0].registered);
+        return match[0].registered ? true : false;
+      }
+      return false;
+    } else {
+      console.log("No registered found! ", eventDetails.registered);
+      return false;
+    }
+  };
+
+  const registeredRequestData = async (flag) => {
+    // Update events array the registered field
+    const registeredParsed = JSON.parse(eventDetails.registered);
+    const regigsteredIndex = registeredParsed.findIndex(
+      (el) => el.user_id === user.id
+    );
+    // Update array with the value
+    registeredParsed[regigsteredIndex].registered = flag;
+    // Update the database
+    const registeredStringified = registeredParsed;
+    // Update Event Registered
+    await axios.patch(`${ROOT_URL.api}/events/${eventDetails.id}`, {
+      registered: registeredStringified,
+    });
+  };
+
+  const onUnsubscribe = async () => {
+    await registeredRequestData(false);
+    // Delete from Registrations
+    await axios
+      .delete(`${ROOT_URL.api}/registration`, {
+        data: {
+          event_id: eventDetails.id,
+          creator_id: user.id,
+        },
+      })
+      .catch((e) => {
+        console.log("Error ", e);
+      });
+    Toast.show({
+      type: "info",
+      text1: "Registered",
+      text2: "You are not longer registered for this event!",
+    });
+    // Update state
+    setRegistered(false);
+  };
+
+  const onSubscribe = async () => {
+    console.log("onSubscribe");
+    // Update events array the registered field
+    await registeredRequestData(true);
+    // Insert event into Registered
+    await axios.post(`${ROOT_URL.api}/registration`, {
+      creator_id: user.id,
+      event_id: eventDetails.id,
+    });
+    setRegistered(true);
+    Toast.show({
+      type: "success",
+      text1: "Registered",
+      text2: "You are registered for this event!",
+    });
+  };
+
+  const showRegisterButton = () => {
+    if (authenticated) {
+      return registered ? (
+        <Button style={styles.button} size="medium" onPress={onUnsubscribe}>
+          Unsubscribe
+        </Button>
+      ) : (
+        <Button style={styles.button} size="medium" onPress={onSubscribe}>
+          Subscribe
+        </Button>
+      );
+    }
+    return (
+      <Text
+        style={{
+          padding: 15,
+          marginTop: 15,
+          textAlign: "center",
+          borderWidth: 1,
+          borderColor: "#E6E5E5",
+        }}
+      >
+        Login to subscribe or use checklist.
+      </Text>
+    );
+  };
 
   // Check images to only return an array of actual image links
   const checkImages = () => {
@@ -62,11 +178,6 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     const parsed = JSON.parse(eventDetails.additional_items);
     return parsed.length ? [...parsed] : [];
   };
-
-  // Additional items
-  const [additionalItems, setAdditionalItems] = useState(
-    parseAdditionalItems()
-  );
 
   const navigateBack = () => {
     navigation.goBack();
@@ -111,7 +222,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   };
 
   const renderChecklist = () => {
-    if (additionalItems.length) {
+    if (additionalItems.length && authenticated) {
       const _c = [...additionalItems];
       return _c.map((item) => {
         return (
@@ -126,8 +237,16 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           </CheckBox>
         );
       });
+    } else if (!additionalItems.length && authenticated) {
+      return <Text>Checklist is empty.</Text>;
     } else {
-      return <Text>No items available</Text>;
+      console.log(additionalItems);
+      if (additionalItems.length) {
+        const _c = [...additionalItems];
+        return _c.map((item) => {
+          return <Text key={item.id}>{item.name}</Text>;
+        });
+      } else return <Text>No checklist available</Text>;
     }
   };
 
@@ -279,15 +398,15 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           </Layout>
 
           <Divider style={{ marginTop: 25, marginBottom: 25 }} />
-          <Text category="p2" style={{ color: "#454545" }}>
+          <Text category="p2" style={{ color: "#454545", marginBottom: 10 }}>
             Items needed for the Party
           </Text>
           {renderChecklist()}
-          <Button style={styles.button} size="medium">
-            Register
-          </Button>
+          {/* Register/Not register button */}
+          {showRegisterButton()}
         </Layout>
       </ScrollView>
+      <Toast />
     </SafeAreaView>
   );
 };

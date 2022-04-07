@@ -129,7 +129,7 @@ export const EventsScreen = () => {
               <Text style={styles.purpleLabel}>Party</Text>
               <Text style={styles.purpleLabel}>Online</Text>
             </Layout>
-            <Text style={styles.appSubtsitle} category="c2">
+            <Text style={{ fontWeight: "500", color: "white" }} category="c2">
               Assign Party Supplies or Check In Your Guest
             </Text>
           </Layout>
@@ -172,7 +172,9 @@ export const EventsScreen = () => {
           ListHeaderComponent={renderHeader}
           data={events}
           keyExtractor={(item) => item.event_key.toString()}
-          renderItem={({ item }) => <EventCard details={item} fromComponent="event" />}
+          renderItem={({ item }) => (
+            <EventCard details={item} fromComponent="event" />
+          )}
           onEndReachedThreshold={0.9}
           onEndReached={fetchMore}
         />

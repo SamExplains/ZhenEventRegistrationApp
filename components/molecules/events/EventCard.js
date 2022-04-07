@@ -12,10 +12,8 @@ export const EventCard = (props) => {
 
   const navigateEventDetails = async () => {
     // Dispatch ID to set event
-    console.log("Dispatching ");
     await Promise.all([dispatch(findEventDetails(props.details.id))]).then(
       () => {
-        console.log("Now navigating");
         navigation.navigate("EventDetails", {
           fromComponent: props.fromComponent,
         });
@@ -89,7 +87,7 @@ export const EventCard = (props) => {
         {/* <Text style={styles.date}>00 Jan</Text> */}
         <Text style={styles.date}>{parseDate(props.details.start_time)}</Text>
         <Text category="h6" style={styles.title}>
-          {props.details.title}
+          [ID: {props.details.id}] {props.details.title}
         </Text>
         <Text category="p1" style={styles.id}>
           ID: {props.details.event_key || "no event key"}
