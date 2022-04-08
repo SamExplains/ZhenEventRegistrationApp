@@ -58,3 +58,8 @@ export const UPDATE_EVENT_CHECKLIST = "UPDATE_EVENT_CHECKLIST";
 
 // update checklist if "search" prop filter used
 export const UPDATE_EVENT_SEARCH_CHECKLIST = "UPDATE_EVENT_SEARCH_CHECKLIST";
+
+// set profile tab events whether tab 1 or 2
+export const SET_PROFILE_TAB_EVENTS = "SET_PROFILE_TAB_EVENTS";
+// set profile tab details
+export const SET_PROFILE_TAB_EVENT_DETAILS = "SET_PROFILE_TAB_EVENT_DETAILS";

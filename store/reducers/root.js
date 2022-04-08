@@ -19,6 +19,8 @@ import {
   SET_SEARCH_RESULT_EVENT_DETAILS,
   UPDATE_EVENT_CHECKLIST,
   UPDATE_EVENT_SEARCH_CHECKLIST,
+  SET_PROFILE_TAB_EVENTS,
+  SET_PROFILE_TAB_EVENT_DETAILS,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -35,6 +37,10 @@ const initialState = {
   searchResults: [],
   // hold search result event object details ONLY when the EventCard component is clicked through Search compoent
   searchResultDetails: {},
+  // holds tab events results
+  tabEvents: [],
+  // hold selected event details from the item selected from either tab
+  tabEventDetails: {},
   // Not in use
   currentUserAttending: false,
   showUser: null,
@@ -132,19 +138,25 @@ const reducer = (state = initialState, action) => {
         searchResults: [...state.searchResults],
       };
       break;
+    case SET_PROFILE_TAB_EVENTS:
+      return {
+        ...state,
+        tabEvents: [...action.payload],
+      };
+      break;
+    //
+    case SET_PROFILE_TAB_EVENT_DETAILS:
+      const tabEvent = state.tabEvents.filter((el) => {
+        return el.id === action.payload;
+      });
+      return {
+        ...state,
+        tabEventDetails: tabEvent[0],
+      };
+      break;
     default:
       return state;
   }
 };
-
-// case UPDATE_EVENT_CHECKLIST:
-//   // Event details update
-//   state.allEvents[action.payload.id].additional_items =
-//     action.payload.checklist;
-//   return {
-//     ...state,
-//     allEvents: [...state.allEvents],
-//   };
-//   break;
 
 export default reducer;

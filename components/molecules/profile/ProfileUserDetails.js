@@ -11,17 +11,36 @@ import {
 import EventCard from "./EventCardProfile";
 import { useSelector, useDispatch } from "react-redux";
 import { updateAuthenticated } from "../../../store/actions/user";
+import { setProfileTabEvents } from "../../../store/actions/event";
+import axios from "axios";
+import ROOT_URL from "../../../settings.json";
 
 // Tab menu toggle
 
 export const ProfileUserDetails = (props) => {
   // State / Authenticated
   const state = useSelector((state) => state);
+  const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
   const dispatch = useDispatch();
+  const [events, setEvents] = useState([]);
   const [toggle, setToggle] = useState(1);
 
   const toggleTab = (tab) => {
-    // alert(tab);
+    // Make request for data and store
+    if (tab === 2) {
+      axios
+        .get(`${ROOT_URL.api}/registration/${currentUser.id}`)
+        .then(({ data }) => {
+          let EVENTS = [];
+          data.forEach((el) => {
+            EVENTS.push(el.events);
+          });
+          // Set events stats
+          setEvents(EVENTS);
+          // Pass to store
+          dispatch(setProfileTabEvents(EVENTS));
+        });
+    }
     setToggle(tab);
   };
 
@@ -61,17 +80,28 @@ export const ProfileUserDetails = (props) => {
     if (toggle === 1) {
       return (
         <Layout>
-          <EventCard />
+          <EventCard activeTab={toggle} />
         </Layout>
       );
     } else {
-      return (
-        <Layout>
-          <EventCard />
-          <EventCard />
-        </Layout>
-      );
+      return <Layout>{renderEvents()}</Layout>;
     }
+  };
+
+  const renderEvents = () => {
+    return events.map((ev) => {
+      return (
+        <EventCard
+          key={ev.id}
+          activeTab={toggle}
+          tabEventId={ev.id}
+          title={ev.title}
+          date={ev.start_time}
+          eventId={ev.event_key}
+          fromComponent="profile"
+        />
+      );
+    });
   };
 
   return (

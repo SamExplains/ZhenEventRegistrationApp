@@ -1,24 +1,60 @@
 import { Text, View, StyleSheet, Image } from "react-native";
 import React, { Component } from "react";
-import {
-  Layout,
-  Button,
-  TopNavigation,
-  TopNavigationAction,
-} from "@ui-kitten/components";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { Layout, Button } from "@ui-kitten/components";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { setProfileTabEventDetails } from "../../../store/actions/event";
 
-export const EventCardProfile = () => {
+export const EventCardProfile = (props) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const navigateEventDetails = () => {
-    navigation.navigate("EventDetails");
+    // Set event details
+    dispatch(setProfileTabEventDetails(props.tabEventId));
+    navigation.navigate("EventDetails", {
+      fromComponent: props.fromComponent,
+    });
   };
   const navigateToCheckIn = () => {
     navigation.navigate("CheckIn");
   };
+
+  const activeTabButtonsToShow = () => {
+    // Dispatch to set event Details
+    if (props.activeTab == 1) {
+      return (
+        <Layout style={styles.cardBottom}>
+          {/* View */}
+          <Button style={styles.button} onPress={navigateEventDetails}>
+            View
+          </Button>
+          {/* Edit / Check In */}
+          <Button style={styles.buttonAlternate}>
+            <Text style={{ color: "#3F295A" }}>Edit</Text>
+          </Button>
+          <Button style={styles.buttonAlternate}>
+            <Text style={{ color: "#3F295A" }} onPress={navigateToCheckIn}>
+              Check In
+            </Text>
+          </Button>
+        </Layout>
+      );
+    } else {
+      return (
+        <Layout style={styles.cardBottom}>
+          {/* View */}
+          <Button style={styles.buttonFull} onPress={navigateEventDetails}>
+            View
+          </Button>
+        </Layout>
+      );
+    }
+  };
+
   return (
     <View style={styles.card}>
+      <Text>{props.fromComponent || "blank"}</Text>
       <Layout style={styles.cardContent}>
         <Image source={require("../../../assets/Rectangle_53.png")} />
         {/* Details */}
@@ -26,36 +62,22 @@ export const EventCardProfile = () => {
           {/* Event Name */}
           <Layout style={styles.cardText}>
             <Text style={styles.cardLabel}>Event Name:</Text>
-            <Text>A event name goes here.</Text>
+            <Text>{props.title}</Text>
           </Layout>
           {/* Event Date */}
           <Layout style={styles.cardText}>
             <Text style={styles.cardLabel}>Event Date:</Text>
-            <Text>00/00/0000</Text>
+            <Text>{props.date}</Text>
           </Layout>
           {/* Event ID */}
           <Layout style={styles.cardText}>
             <Text style={styles.cardLabel}>Event ID:</Text>
-            <Text>0000</Text>
+            <Text>{props.eventId}</Text>
           </Layout>
         </Layout>
       </Layout>
       {/* Buttons */}
-      <Layout style={styles.cardBottom}>
-        {/* View */}
-        <Button style={styles.button} onPress={navigateEventDetails}>
-          View
-        </Button>
-        {/* Edit / Check In */}
-        <Button style={styles.buttonAlternate}>
-          <Text style={{ color: "#3F295A" }}>Edit</Text>
-        </Button>
-        <Button style={styles.buttonAlternate}>
-          <Text style={{ color: "#3F295A" }} onPress={navigateToCheckIn}>
-            Check In
-          </Text>
-        </Button>
-      </Layout>
+      {activeTabButtonsToShow()}
     </View>
   );
 };
@@ -95,6 +117,12 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "33%",
+    marginTop: 20,
+    backgroundColor: "#3F295A",
+    borderColor: "transparent",
+  },
+  buttonFull: {
+    width: "99%",
     marginTop: 20,
     backgroundColor: "#3F295A",
     borderColor: "transparent",

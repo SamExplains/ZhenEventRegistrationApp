@@ -6,6 +6,8 @@ import {
   SET_SEARCH_RESULT_EVENT_DETAILS,
   UPDATE_EVENT_CHECKLIST,
   UPDATE_EVENT_SEARCH_CHECKLIST,
+  SET_PROFILE_TAB_EVENTS,
+  SET_PROFILE_TAB_EVENT_DETAILS,
 } from "./actionTypes";
 
 //Add user's information from payload
@@ -66,6 +68,22 @@ export const updateEventSearchChecklist = (payload) => {
   return (dispatch) =>
     dispatch({
       type: UPDATE_EVENT_SEARCH_CHECKLIST,
+      payload: payload,
+    });
+};
+
+export const setProfileTabEvents = (payload) => {
+  return (dispatch) =>
+    dispatch({
+      type: SET_PROFILE_TAB_EVENTS,
+      payload: payload,
+    });
+};
+
+export const setProfileTabEventDetails = (payload) => {
+  return (dispatch) =>
+    dispatch({
+      type: SET_PROFILE_TAB_EVENT_DETAILS,
       payload: payload,
     });
 };

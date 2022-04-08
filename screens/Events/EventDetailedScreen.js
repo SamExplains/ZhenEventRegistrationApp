@@ -39,7 +39,9 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   const eventDetails = useSelector((state) =>
     route.params.fromComponent === "event"
       ? state.eventsAndUsers.activeEvent
-      : state.eventsAndUsers.searchResultDetails
+      : route.params.fromComponent === "search"
+      ? state.eventsAndUsers.searchResultDetails
+      : state.eventsAndUsers.tabEventDetails
   );
   const user = useSelector((state) => state.eventsAndUsers.currentUser);
   const authenticated = useSelector(
