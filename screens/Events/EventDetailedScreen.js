@@ -10,6 +10,8 @@ import {
   Card,
   Button,
   Modal,
+  Radio,
+  RadioGroup,
 } from "@ui-kitten/components";
 import {
   ArrowBackIcon,
@@ -23,12 +25,17 @@ import {
 } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Toast from "react-native-toast-message";
-import ROOT_URL from "../../settings.json";
 import axios from "axios";
+import {
+  updateEventChecklist,
+  updateEventSearchChecklist,
+} from "../../store/actions/event";
+import ROOT_URL from "../../settings.json";
 
 export const EventDetailedScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const eventDetails = useSelector((state) =>
     route.params.fromComponent === "event"
       ? state.eventsAndUsers.activeEvent
@@ -43,6 +50,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   const [registered, setRegistered] = useState(false);
   // Additional items
   const [additionalItems, setAdditionalItems] = useState([]);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   useEffect(() => {
     // Update image source
@@ -55,6 +63,14 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     setAdditionalItems(parseAdditionalItems());
     setRegistered(checkIfRegistered());
   }, [eventDetails]);
+
+  const BackAction = () => (
+    <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
+  );
+
+  const navigateBack = () => {
+    navigation.goBack();
+  };
 
   const checkIfRegistered = () => {
     if (authenticated && eventDetails.registered !== null) {
@@ -176,16 +192,15 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   const parseAdditionalItems = () => {
     // Parse for state
     const parsed = JSON.parse(eventDetails.additional_items);
+    // Set the selected index
+    if (parsed.length) {
+      // Check for the item if there is one taken
+      const foundIndex = parsed.findIndex((item) => item.taken === user.name);
+      // Set the index
+      foundIndex ? setSelectedIndex(foundIndex) : null;
+    }
     return parsed.length ? [...parsed] : [];
   };
-
-  const navigateBack = () => {
-    navigation.goBack();
-  };
-
-  const BackAction = () => (
-    <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
-  );
 
   const toggleImage = (index) => {
     console.log("Toggled");
@@ -225,22 +240,18 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     if (additionalItems.length && authenticated) {
       const _c = [...additionalItems];
       return _c.map((item) => {
-        return (
-          <CheckBox
-            key={item.id}
-            checked={item.checked}
-            onChange={() => updateChecklistItem(item)}
-            style={{ marginTop: 10 }}
-          >
+        return !item.taken ? (
+          <Radio key={item.id}>{item.name}</Radio>
+        ) : (
+          <Radio key={item.id} disabled={true}>
             {item.name}{" "}
             {item.taken ? " will be brought by " + item.taken : null}
-          </CheckBox>
+          </Radio>
         );
       });
     } else if (!additionalItems.length && authenticated) {
       return <Text>Checklist is empty.</Text>;
     } else {
-      console.log(additionalItems);
       if (additionalItems.length) {
         const _c = [...additionalItems];
         return _c.map((item) => {
@@ -248,6 +259,43 @@ export const EventDetailedScreen = ({ navigation, route }) => {
         });
       } else return <Text>No checklist available</Text>;
     }
+  };
+
+  const setSelectedIndexAndUpdateChecklist = (index) => {
+    console.log("setSelectedIndexAndUpdateChecklist");
+    // Check for the item if there is one taken
+    const foundIndex = additionalItems.findIndex(
+      (item) => item.taken === user.name
+    );
+    // Remove properties from old one
+    additionalItems[foundIndex].taken = "";
+    additionalItems[foundIndex].checked = false;
+    // Update with new data
+    additionalItems[index].taken = user.name;
+    additionalItems[index].checked = user.true;
+    // Set state
+    setAdditionalItems([...additionalItems]);
+    // Update state
+    setSelectedIndex(index);
+  };
+
+  const onSaveChecklist = async () => {
+    // Save through request
+    await axios
+      .patch(`${ROOT_URL.api}/checklist`, {
+        id: eventDetails.id,
+        additional_items: JSON.stringify(additionalItems),
+      })
+      .then(({ data }) => {
+        // console.log(additionalItems);
+        // Update event state if it is Search of Event screen
+        if (route.params.fromComponent === "event") {
+          dispatch(updateEventChecklist(data));
+        } else if (route.params.fromComponent === "search") {
+          dispatch(updateEventSearchChecklist(data));
+        }
+        // console.log("Data ", data);
+      });
   };
 
   return (
@@ -401,7 +449,22 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           <Text category="p2" style={{ color: "#454545", marginBottom: 10 }}>
             Items needed for the Party
           </Text>
-          {renderChecklist()}
+
+          <RadioGroup
+            selectedIndex={selectedIndex}
+            onChange={(index) => setSelectedIndexAndUpdateChecklist(index)}
+          >
+            {renderChecklist()}
+          </RadioGroup>
+          {/* Save selection button */}
+          <Button
+            style={styles.buttonSaveSelection}
+            size="tiny"
+            onPress={onSaveChecklist}
+          >
+            Save selection
+          </Button>
+          <Divider style={{ marginTop: 25, marginBottom: 25 }} />
           {/* Register/Not register button */}
           {showRegisterButton()}
         </Layout>
@@ -542,11 +605,18 @@ const styles = StyleSheet.create({
     height: 25,
     tintColor: "#301A4B",
   },
+  buttonSaveSelection: {
+    marginBottom: 5,
+    marginTop: 10,
+    backgroundColor: "#3F295A",
+    borderColor: "transparent",
+    width: "50%",
+  },
   button: {
     marginBottom: 15,
     // marginLeft: 15,
     // marginRight: 15,
-    marginTop: 35,
+    marginTop: 5,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
   },

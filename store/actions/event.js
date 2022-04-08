@@ -4,6 +4,8 @@ import {
   FETCH_EVENT_DETAILS,
   SET_SEARCH_RESULTS,
   SET_SEARCH_RESULT_EVENT_DETAILS,
+  UPDATE_EVENT_CHECKLIST,
+  UPDATE_EVENT_SEARCH_CHECKLIST,
 } from "./actionTypes";
 
 //Add user's information from payload
@@ -50,4 +52,20 @@ export const setSearchResultEventDetails = (payload) => {
       payload: payload,
     });
   };
+};
+
+export const updateEventChecklist = (payload) => {
+  return (dispatch) =>
+    dispatch({
+      type: UPDATE_EVENT_CHECKLIST,
+      payload: payload,
+    });
+};
+
+export const updateEventSearchChecklist = (payload) => {
+  return (dispatch) =>
+    dispatch({
+      type: UPDATE_EVENT_SEARCH_CHECKLIST,
+      payload: payload,
+    });
 };

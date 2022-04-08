@@ -52,3 +52,9 @@ export const SET_SEARCH_RESULTS = "SET_SEARCH_RESULTS";
 // set search result details
 export const SET_SEARCH_RESULT_EVENT_DETAILS =
   "SET_SEARCH_RESULT_EVENT_DETAILS";
+
+// update checklist if "event" prop filter used
+export const UPDATE_EVENT_CHECKLIST = "UPDATE_EVENT_CHECKLIST";
+
+// update checklist if "search" prop filter used
+export const UPDATE_EVENT_SEARCH_CHECKLIST = "UPDATE_EVENT_SEARCH_CHECKLIST";

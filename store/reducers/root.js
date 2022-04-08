@@ -17,6 +17,8 @@ import {
   FETCH_EVENT_DETAILS,
   SET_SEARCH_RESULTS,
   SET_SEARCH_RESULT_EVENT_DETAILS,
+  UPDATE_EVENT_CHECKLIST,
+  UPDATE_EVENT_SEARCH_CHECKLIST,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -107,9 +109,42 @@ const reducer = (state = initialState, action) => {
         searchResultDetails: action.payload,
       };
       break;
+    case UPDATE_EVENT_CHECKLIST:
+      const eventIndex = state.allEvents.findIndex((el) => {
+        return el.id === action.payload.id;
+      });
+      // Event details update
+      state.allEvents[eventIndex] = action.payload;
+      return {
+        ...state,
+        allEvents: [...state.allEvents],
+      };
+      break;
+    case UPDATE_EVENT_SEARCH_CHECKLIST:
+      // Searched event details update
+      const searchEventIndex = state.searchResults.findIndex((el) => {
+        return el.id === action.payload.id;
+      });
+      // Event details update
+      state.searchResults[searchEventIndex] = action.payload;
+      return {
+        ...state,
+        searchResults: [...state.searchResults],
+      };
+      break;
     default:
       return state;
   }
 };
+
+// case UPDATE_EVENT_CHECKLIST:
+//   // Event details update
+//   state.allEvents[action.payload.id].additional_items =
+//     action.payload.checklist;
+//   return {
+//     ...state,
+//     allEvents: [...state.allEvents],
+//   };
+//   break;
 
 export default reducer;
