@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import { setUser, setAuthenticated } from "../../store/actions/user";
+import { CloseOutline } from "../../assets/icons";
 import baseUrl from "../../settings.json";
 
 export const LoginScreen = () => {
@@ -52,20 +53,27 @@ export const LoginScreen = () => {
   };
 
   const _retrieveData = async () => {
+    console.log("Retrieving data!");
     try {
       const value = await AsyncStorage.getItem("account");
       if (value !== null) {
         // Our data is fetched successfully
-        const accounts = JSON.parse(value);
+        const acc = JSON.parse(value);
+        // console.log("We have account data of ", acc);
+        console.log("We have account data of");
+
         // Set loaded to true to show the List
         setLoaded(true);
         // Update accounts state with accounts
-        setAccounts(accounts);
+        setAccounts(acc);
+      } else {
+        console.log("We have no key set");
       }
     } catch (error) {
       // Error retrieving data
     }
   };
+
   const continueWithUser = async (user) => {
     await axios
       .post(`${baseUrl.api}/quicklogin`, {
@@ -74,7 +82,6 @@ export const LoginScreen = () => {
         token: user.token,
       })
       .then(({ data, status }) => {
-        // console.log("Response ", data, "   ", status);
         dispatch(setUser(data));
         dispatch(setAuthenticated(true));
         // Set logged in state and user to details
@@ -84,25 +91,51 @@ export const LoginScreen = () => {
       });
   };
 
+  const onRemoveAccount = (account) => {
+    // Update the accounts to remove the one selected
+    const updatedAccounts = accounts.filter((acc) => acc.id !== account.id);
+    // Update State
+    setAccounts([...updatedAccounts]);
+    // Save accounts items to Async
+    AsyncStorage.setItem("account", JSON.stringify([...updatedAccounts]));
+    // await AsyncStorage.setItem("account", JSON.stringify([...updatedAccounts]));
+  };
+
   const renderAccountsList = () => {
     if (accounts.length) {
       return accounts.map((account) => {
         return (
-          <TouchableOpacity
-            style={styles.accountItem}
-            onPress={() => continueWithUser(account)}
-            key={account.id}
-          >
-            <Avatar
-              source={{
-                // uri: "https://cdn.pixabay.com/photo/2016/07/31/13/43/dog-1558962_960_720.jpg",\
-                // uri: account.profile_image_src,
-                uri: "http:10.0.2.2:8000/img/tc_logo.png",
+          <Layout style={styles.accountItem} key={account.id}>
+            <TouchableOpacity
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
               }}
-              shape="square"
-            />
-            <Text style={styles.accountName}>{account.name}</Text>
-          </TouchableOpacity>
+              onPress={() => continueWithUser(account)}
+            >
+              <Avatar
+                style={{ width: 35 }}
+                source={{
+                  // uri: "https://cdn.pixabay.com/photo/2016/07/31/13/43/dog-1558962_960_720.jpg",\
+                  // uri: account.profile_image_src,
+                  uri: "http:10.0.2.2:8000/img/tc_logo.png",
+                }}
+                shape="square"
+              />
+              <Text style={styles.accountName}>{account.name}</Text>
+              <Button
+                style={{
+                  marginLeft: 10,
+                }}
+                size="medium"
+                appearance="ghost"
+                status="danger"
+                accessoryLeft={CloseOutline}
+                onPress={() => onRemoveAccount(account)}
+              />
+            </TouchableOpacity>
+          </Layout>
         );
       });
     }
@@ -133,21 +166,25 @@ export const LoginScreen = () => {
     } catch (error) {}
          * 
          */
-          const accounts = await AsyncStorage.getItem("account");
-          if (accounts === null) {
+          const accs = await AsyncStorage.getItem("account");
+          if (accs === null) {
             // We have NO data!!
             // Set new account
             AsyncStorage.setItem("account", JSON.stringify([data]));
           } else {
             // Add account if it does not exist
-            JSON.parse(accounts).forEach((el) => {
-              data.id === el.id
-                ? null
-                : AsyncStorage.setItem(
+            if (accounts.length <= 0) {
+              AsyncStorage.setItem("account", JSON.stringify([data]));
+            } else {
+              accounts.forEach((el) => {
+                if (data.id !== el.id) {
+                  AsyncStorage.setItem(
                     "account",
-                    JSON.stringify([...JSON.parse(accounts), data])
+                    JSON.stringify([...accounts, data])
                   );
-            });
+                }
+              });
+            }
           }
           dispatch(setUser(data));
           dispatch(setAuthenticated(true));
@@ -159,6 +196,7 @@ export const LoginScreen = () => {
           });
         })
         .catch((e) => {
+          console.log("Error ", e);
           Toast.show({
             type: "error",
             text1: "Check your login details!",

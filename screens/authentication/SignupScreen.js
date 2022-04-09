@@ -49,7 +49,7 @@ export const SignupScreen = ({ navigation }) => {
   const _storeData = async (user) => {
     try {
       await AsyncStorage.setItem("account", JSON.stringify([user]));
-      console.log("Async User Saved");
+      // console.log("Async User Saved");
     } catch (error) {}
   };
 

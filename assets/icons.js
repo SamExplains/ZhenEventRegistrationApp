@@ -35,3 +35,4 @@ export const ShareLink = (style) => <Icon {...style} name="share-outline" />;
 export const Twitter = (style) => <Icon {...style} name="twitter" />;
 export const Facebook = (style) => <Icon {...style} name="facebook" />;
 export const CopyOutline = (style) => <Icon {...style} name="copy-outline" />;
+export const CloseOutline = (style) => <Icon {...style} name="close-outline" />;
