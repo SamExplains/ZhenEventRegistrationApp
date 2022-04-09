@@ -23,10 +23,20 @@ export const ProfileUserDetails = (props) => {
   const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
-  const [toggle, setToggle] = useState(1);
+  const [toggle, setToggle] = useState(0);
 
   const toggleTab = (tab) => {
     // Make request for data and store
+    if (tab === 1) {
+      axios
+        .get(`${ROOT_URL.api}/events/creator/${currentUser.id}'`)
+        .then(({ data }) => {
+          // Set events stats
+          setEvents(data);
+          // Pass to store
+          dispatch(setProfileTabEvents(data));
+        });
+    }
     if (tab === 2) {
       axios
         .get(`${ROOT_URL.api}/registration/${currentUser.id}`)
@@ -78,11 +88,7 @@ export const ProfileUserDetails = (props) => {
 
   const tabView = () => {
     if (toggle === 1) {
-      return (
-        <Layout>
-          <EventCard activeTab={toggle} />
-        </Layout>
-      );
+      return <Layout>{renderEvents()}</Layout>;
     } else {
       return <Layout>{renderEvents()}</Layout>;
     }

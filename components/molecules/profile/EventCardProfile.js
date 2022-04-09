@@ -54,7 +54,6 @@ export const EventCardProfile = (props) => {
 
   return (
     <View style={styles.card}>
-      <Text>{props.fromComponent || "blank"}</Text>
       <Layout style={styles.cardContent}>
         <Image source={require("../../../assets/Rectangle_53.png")} />
         {/* Details */}

@@ -224,20 +224,6 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     });
   };
 
-  const updateChecklistItem = (item) => {
-    // Updated based on item
-    // Dispach to state
-    const itemIndex = additionalItems.findIndex((x) => x.id === item.id);
-    // Set checked value
-    additionalItems[itemIndex].checked = !item.checked;
-    // Set taken name
-    additionalItems[itemIndex].checked
-      ? (additionalItems[itemIndex].taken = "Peanut")
-      : (additionalItems[itemIndex].taken = null);
-    // Make Request and Update checked items state
-    setAdditionalItems([...additionalItems]);
-  };
-
   const renderChecklist = () => {
     if (additionalItems.length && authenticated) {
       const _c = [...additionalItems];
@@ -264,14 +250,16 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   };
 
   const setSelectedIndexAndUpdateChecklist = (index) => {
-    console.log("setSelectedIndexAndUpdateChecklist");
+    // console.log("setSelectedIndexAndUpdateChecklist ", index);
     // Check for the item if there is one taken
     const foundIndex = additionalItems.findIndex(
       (item) => item.taken === user.name
     );
-    // Remove properties from old one
-    additionalItems[foundIndex].taken = "";
-    additionalItems[foundIndex].checked = false;
+    // Remove properties from old one only if a match was found
+    if (foundIndex > 0) {
+      additionalItems[foundIndex].taken = "";
+      additionalItems[foundIndex].checked = false;
+    }
     // Update with new data
     additionalItems[index].taken = user.name;
     additionalItems[index].checked = user.true;
