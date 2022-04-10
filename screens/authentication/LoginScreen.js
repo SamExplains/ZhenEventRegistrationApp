@@ -53,14 +53,14 @@ export const LoginScreen = () => {
   };
 
   const _retrieveData = async () => {
-    console.log("Retrieving data!");
+    // console.log("Retrieving data!");
     try {
       const value = await AsyncStorage.getItem("account");
       if (value !== null) {
         // Our data is fetched successfully
         const acc = JSON.parse(value);
         // console.log("We have account data of ", acc);
-        console.log("We have account data of");
+        // console.log("We have account data of");
 
         // Set loaded to true to show the List
         setLoaded(true);
@@ -93,7 +93,7 @@ export const LoginScreen = () => {
 
   const onRemoveAccount = (account) => {
     // Update the accounts to remove the one selected
-    const updatedAccounts = accounts.filter((acc) => acc.id !== account.id);
+    const updatedAccounts = accounts.filter((acc) => acc.uuid !== account.uuid);
     // Update State
     setAccounts([...updatedAccounts]);
     // Save accounts items to Async
@@ -105,7 +105,7 @@ export const LoginScreen = () => {
     if (accounts.length) {
       return accounts.map((account) => {
         return (
-          <Layout style={styles.accountItem} key={account.id}>
+          <Layout style={styles.accountItem} key={account.uuid}>
             <TouchableOpacity
               style={{
                 display: "flex",
@@ -166,18 +166,23 @@ export const LoginScreen = () => {
     } catch (error) {}
          * 
          */
+          // console.log("Login data of ", data);
           const accs = await AsyncStorage.getItem("account");
           if (accs === null) {
             // We have NO data!!
             // Set new account
+            // console.log("Null accounts");
             AsyncStorage.setItem("account", JSON.stringify([data]));
           } else {
             // Add account if it does not exist
             if (accounts.length <= 0) {
+              // console.log("Account doesn exist");
               AsyncStorage.setItem("account", JSON.stringify([data]));
             } else {
               accounts.forEach((el) => {
-                if (data.id !== el.id) {
+                console.log(el);
+                if (el.uuid !== data.uuid) {
+                  // console.log("We can push item");
                   AsyncStorage.setItem(
                     "account",
                     JSON.stringify([...accounts, data])

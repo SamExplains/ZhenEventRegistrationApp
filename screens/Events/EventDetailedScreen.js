@@ -61,9 +61,8 @@ export const EventDetailedScreen = ({ navigation, route }) => {
         ? eventDetails.first_image
         : eventDetails.second_image
     );
-    // console.log("Registered is ", checkIfRegistered());
     setAdditionalItems(parseAdditionalItems());
-    setRegistered(checkIfRegistered());
+    checkIfRegistered();
   }, [eventDetails]);
 
   const BackAction = () => (
@@ -74,85 +73,79 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     navigation.goBack();
   };
 
-  const checkIfRegistered = () => {
-    if (authenticated && eventDetails.registered !== null) {
-      // Parse and check registered to see if already done
-      const registeredParsed = JSON.parse(eventDetails.registered);
-      // Find matching record
-      const match = registeredParsed.length
-        ? registeredParsed.filter((el) => el.user_id === user.id)
-        : null;
-      // Check if true and update
-      if (match !== null && match.length) {
-        // match[0].registered === true ? setRegistered(true) : null;
-        // console.log("Search record! ", registered, "   ", match[0].registered);
-        return match[0].registered ? true : false;
-      }
-      return false;
+  const checkIfRegistered = async () => {
+    if (authenticated) {
+      // Make request to get value
+      await axios
+        .get(`${ROOT_URL.api}/registration/user/${user.id}/${eventDetails.id}`)
+        .then(({ data }) => {
+          // IF there is data update the flag
+          // console.log(...data);
+          if (data.length) {
+            // Set the record to UPDATE record
+            setRegistered(...data);
+          } else {
+            // Push an empty object to CREATE a record
+            console.log("Registered NULL...set clean object!");
+            setRegistered({
+              id: null,
+              registered: null,
+              creator_id: user.id,
+              event_id: eventDetails.id,
+            });
+          }
+        });
     } else {
-      console.log("No registered found! ", eventDetails.registered);
-      return false;
+      console.log("No registered found since not authenticated!");
     }
   };
 
-  const registeredRequestData = async (flag) => {
-    // Update events array the registered field
-    const registeredParsed = JSON.parse(eventDetails.registered);
-    const regigsteredIndex = registeredParsed.findIndex(
-      (el) => el.user_id === user.id
-    );
-    // Update array with the value
-    registeredParsed[regigsteredIndex].registered = flag;
-    // Update the database
-    const registeredStringified = registeredParsed;
-    // Update Event Registered
-    await axios.patch(`${ROOT_URL.api}/events/${eventDetails.id}`, {
-      registered: registeredStringified,
-    });
-  };
-
   const onUnsubscribe = async () => {
-    await registeredRequestData(false);
-    // Delete from Registrations
     await axios
-      .delete(`${ROOT_URL.api}/registration`, {
-        data: {
-          event_id: eventDetails.id,
-          creator_id: user.id,
-        },
+      .patch(`${ROOT_URL.api}/registration/${registered.id}`, {
+        registered: 0,
       })
-      .catch((e) => {
-        console.log("Error ", e);
+      .then(({ data }) => {
+        setRegistered(data);
       });
     Toast.show({
       type: "info",
-      text1: "Registered",
+      text1: "Unsubscribed",
       text2: "You are not longer registered for this event!",
     });
-    // Update state
-    setRegistered(false);
   };
 
   const onSubscribe = async () => {
     console.log("onSubscribe");
-    // Update events array the registered field
-    await registeredRequestData(true);
     // Insert event into Registered
-    await axios.post(`${ROOT_URL.api}/registration`, {
-      creator_id: user.id,
-      event_id: eventDetails.id,
-    });
-    setRegistered(true);
+    // Check if registered object has an id
+    if (registered.id !== null) {
+      axios
+        .patch(`${ROOT_URL.api}/registration/${registered.id}`, {
+          registered: 1,
+        })
+        .then(({ data }) => {
+          setRegistered(data);
+        });
+    } else {
+      await axios
+        .post(`${ROOT_URL.api}/registration`, {
+          creator_id: user.id,
+          event_id: eventDetails.id,
+          registered: 1,
+        })
+        .then(({ data }) => setRegistered(data));
+    }
     Toast.show({
       type: "success",
-      text1: "Registered",
+      text1: "Subscribed",
       text2: "You are registered for this event!",
     });
   };
 
   const showRegisterButton = () => {
     if (authenticated) {
-      return registered ? (
+      return registered.registered === 1 ? (
         <Button style={styles.button} size="medium" onPress={onUnsubscribe}>
           Unsubscribe
         </Button>
@@ -447,13 +440,15 @@ export const EventDetailedScreen = ({ navigation, route }) => {
             {renderChecklist()}
           </RadioGroup>
           {/* Save selection button */}
-          <Button
-            style={styles.buttonSaveSelection}
-            size="tiny"
-            onPress={onSaveChecklist}
-          >
-            Save selection
-          </Button>
+          {authenticated ? (
+            <Button
+              style={styles.buttonSaveSelection}
+              size="tiny"
+              onPress={onSaveChecklist}
+            >
+              Save selection
+            </Button>
+          ) : null}
           <Divider style={{ marginTop: 25, marginBottom: 25 }} />
           {/* Register/Not register button */}
           {showRegisterButton()}
