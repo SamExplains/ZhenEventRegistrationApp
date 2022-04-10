@@ -12,8 +12,11 @@ import {
 import { ArrowBackIcon, ProfileIcon } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ViewOrCheckIn from "../../components/molecules/profile/ViewOrCheckIn";
+import { useSelector } from "react-redux";
 
 export const CheckInScreen = ({ navigation }) => {
+  const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
+
   const navigateBack = () => {
     navigation.goBack();
   };
@@ -23,7 +26,7 @@ export const CheckInScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
-        title="Check In"
+        title="Check In <USER>"
         alignment="center"
         accessoryLeft={BackAction}
       />
@@ -72,12 +75,13 @@ export const CheckInScreen = ({ navigation }) => {
               <Layout style={styles.profileImageBackside}>
                 <Image
                   style={styles.profileImage}
-                  source={require("../../assets/Screenshot_from_2022.png")}
+                  resizeMode="cover"
+                  source={{ uri: currentUser.profile_image_src }}
                 />
               </Layout>
 
               <Text category="h4" style={{ marginTop: 15, paddingLeft: 15 }}>
-                Firstname Lastname
+                {currentUser.name}
               </Text>
               <Text
                 style={{
@@ -87,7 +91,7 @@ export const CheckInScreen = ({ navigation }) => {
                   paddingLeft: 15,
                 }}
               >
-                Member ID: 002
+                Member ID: {currentUser.id}
               </Text>
             </Layout>
 
@@ -96,7 +100,7 @@ export const CheckInScreen = ({ navigation }) => {
               {/* Name */}
               <Layout style={styles.userDetailsContainer}>
                 <Text style={styles.userDetail_1}>Email</Text>
-                <Text style={styles.userDetail_2}>Email@email.com</Text>
+                <Text style={styles.userDetail_2}>{currentUser.email}</Text>
                 <Text style={styles.userDetail_3}>
                   <Icon
                     style={styles.iconDetail}
@@ -108,7 +112,7 @@ export const CheckInScreen = ({ navigation }) => {
               {/* Zipcode */}
               <Layout style={styles.userDetailsContainer}>
                 <Text style={styles.userDetail_1}>Zipcode</Text>
-                <Text style={styles.userDetail_2}>00000</Text>
+                <Text style={styles.userDetail_2}>{currentUser.zip}</Text>
                 <Text style={styles.userDetail_3}>
                   <Icon
                     style={styles.iconDetail}
@@ -119,7 +123,9 @@ export const CheckInScreen = ({ navigation }) => {
               {/* Phone */}
               <Layout style={styles.userDetailsContainer}>
                 <Text style={styles.userDetail_1}>Phone</Text>
-                <Text style={styles.userDetail_2}>+1 000 0000</Text>
+                <Text style={styles.userDetail_2}>
+                  {currentUser.phone || "no phone present"}
+                </Text>
                 <Text style={styles.userDetail_3}>
                   <Icon
                     style={styles.iconDetail}
@@ -129,20 +135,24 @@ export const CheckInScreen = ({ navigation }) => {
               </Layout>
               <Divider />
               <Layout style={{ alignItems: "center" }}>
+                <Text style={{ marginTop: 15 }}>
+                  this QR code will be scanned by the Host "Checking-In" users.
+                  This QR code represents a unique User QR Code .
+                </Text>
                 <Image
                   style={styles.image}
                   resizeMode="contain"
                   source={require("../../assets/Rectangle_56.png")}
                 />
               </Layout>
-              <Divider />
+              {/* <Divider />
               <Text
                 category="p2"
                 style={{ fontWeight: "bold", marginTop: 25, marginBottom: 15 }}
               >
                 Event ID: 0000 Check-in-Status
               </Text>
-              <ViewOrCheckIn organizer={"true"} />
+              <ViewOrCheckIn organizer={"true"} /> */}
             </Layout>
           </Layout>
         </Layout>

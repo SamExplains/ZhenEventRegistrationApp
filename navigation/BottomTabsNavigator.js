@@ -21,7 +21,7 @@ import { SignupScreen } from "../screens/authentication/SignupScreen";
 import PasswordResetScreen from "../screens/authentication/PasswordResetScreen";
 import EventDetailedScreen from "../screens/Events/EventDetailedScreen";
 import EventsScreen from "../screens/Events/EventsScreen";
-import CheckInScreen from "../screens/Profile/OrganizerCheckInScreen";
+import CheckInScreen from "../screens/Profile/UserCheckInScreen";
 import AddEventScreen from "../screens/AddEvent/AddEventScreen";
 import SearchResults from "../screens/Search/SearchResults";
 

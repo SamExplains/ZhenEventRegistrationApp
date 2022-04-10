@@ -4,7 +4,7 @@ import { Layout, Text, Button } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { findEventDetails } from "../../../store/actions/event";
-import CheckInScreen from "../../../screens/Profile/OrganizerCheckInScreen";
+import CheckInScreen from "../../../screens/Profile/UserCheckInScreen";
 
 export const EventCard = (props) => {
   const navigation = useNavigation();

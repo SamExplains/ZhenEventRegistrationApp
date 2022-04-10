@@ -33,10 +33,8 @@ export const EventCardProfile = (props) => {
           <Button style={styles.buttonAlternate}>
             <Text style={{ color: "#3F295A" }}>Edit</Text>
           </Button>
-          <Button style={styles.buttonAlternate}>
-            <Text style={{ color: "#3F295A" }} onPress={navigateToCheckIn}>
-              Check In
-            </Text>
+          <Button style={styles.buttonAlternate} onPress={navigateToCheckIn}>
+            <Text style={{ color: "#3F295A" }}>Check In</Text>
           </Button>
         </Layout>
       );
@@ -44,8 +42,11 @@ export const EventCardProfile = (props) => {
       return (
         <Layout style={styles.cardBottom}>
           {/* View */}
-          <Button style={styles.buttonFull} onPress={navigateEventDetails}>
+          <Button style={styles.buttonFull_L} onPress={navigateEventDetails}>
             View
+          </Button>
+          <Button style={styles.buttonFull_R} onPress={navigateToCheckIn}>
+            Check-In Details
           </Button>
         </Layout>
       );
@@ -55,7 +56,11 @@ export const EventCardProfile = (props) => {
   return (
     <View style={styles.card}>
       <Layout style={styles.cardContent}>
-        <Image source={require("../../../assets/Rectangle_53.png")} />
+        <Image
+          source={{ uri: props.image }}
+          resizeMode="cover"
+          style={{ height: 100, width: 100 }}
+        />
         {/* Details */}
         <Layout style={styles.cardTextContainer}>
           {/* Event Name */}
@@ -120,8 +125,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#3F295A",
     borderColor: "transparent",
   },
-  buttonFull: {
-    width: "99%",
+  buttonFull_L: {
+    width: "49%",
+    marginTop: 20,
+    backgroundColor: "#3F295A",
+    borderColor: "transparent",
+  },
+  buttonFull_R: {
+    width: "49%",
     marginTop: 20,
     backgroundColor: "#3F295A",
     borderColor: "transparent",

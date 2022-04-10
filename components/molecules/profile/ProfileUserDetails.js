@@ -104,6 +104,7 @@ export const ProfileUserDetails = (props) => {
           title={ev.title}
           date={ev.start_time}
           eventId={ev.event_key}
+          image={ev.first_image.length ? ev.first_image : ev.second_image}
           fromComponent="profile"
         />
       );
@@ -164,10 +165,9 @@ export const ProfileUserDetails = (props) => {
             <Layout style={styles.profileImageBackside}>
               <Image
                 style={styles.profileImage}
+                resizeMode="cover"
                 // source={{ uri: props.authenticatedUser.profile_image_src }}
-                source={{
-                  uri: "http:10.0.2.2:8000/img/dog-1558962_960_720.jpg",
-                }}
+                source={{ uri: currentUser.profile_image_src }}
               />
               <Button style={styles.cameraUploadButton}>
                 <Icon style={styles.icon} name="camera" />
