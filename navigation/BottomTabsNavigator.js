@@ -24,6 +24,7 @@ import EventsScreen from "../screens/Events/EventsScreen";
 import CheckInScreen from "../screens/Profile/UserCheckInScreen";
 import AddEventScreen from "../screens/AddEvent/AddEventScreen";
 import SearchResults from "../screens/Search/SearchResults";
+import CheckinScannerScreen from "../screens/Profile/CheckinScannerScreen";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -66,6 +67,7 @@ export const BottomTabsNavigator = () => (
     <Screen name="Reset" component={PasswordResetScreen} />
     <Screen name="EventDetails" component={EventDetailedScreen} />
     <Screen name="CheckIn" component={CheckInScreen} />
+    <Screen name="CheckInScanner" component={CheckinScannerScreen} />
     <Screen name="SearchResults" component={SearchResults} />
   </Navigator>
 );

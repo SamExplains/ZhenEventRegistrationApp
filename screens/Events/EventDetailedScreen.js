@@ -55,6 +55,8 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   useEffect(() => {
+    // Check if registered
+    checkIfRegistered();
     // Update image source
     setSource(
       eventDetails.first_image.length
@@ -62,7 +64,6 @@ export const EventDetailedScreen = ({ navigation, route }) => {
         : eventDetails.second_image
     );
     setAdditionalItems(parseAdditionalItems());
-    checkIfRegistered();
   }, [eventDetails]);
 
   const BackAction = () => (
@@ -89,11 +90,14 @@ export const EventDetailedScreen = ({ navigation, route }) => {
             console.log("Registered NULL...set clean object!");
             setRegistered({
               id: null,
-              registered: null,
+              registered: 0,
               creator_id: user.id,
               event_id: eventDetails.id,
             });
           }
+        })
+        .catch((e) => {
+          console.log("Error fetching ", e);
         });
     } else {
       console.log("No registered found since not authenticated!");
@@ -120,7 +124,8 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     // Insert event into Registered
     // Check if registered object has an id
     if (registered.id !== null) {
-      axios
+      console.log("We have a ID");
+      await axios
         .patch(`${ROOT_URL.api}/registration/${registered.id}`, {
           registered: 1,
         })
@@ -128,6 +133,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           setRegistered(data);
         });
     } else {
+      console.log("NO ID...creating");
       await axios
         .post(`${ROOT_URL.api}/registration`, {
           creator_id: user.id,
@@ -218,6 +224,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   };
 
   const renderChecklist = () => {
+    console.log("render checklist");
     if (additionalItems.length && authenticated) {
       const _c = [...additionalItems];
       return _c.map((item) => {
@@ -249,7 +256,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
       (item) => item.taken === user.name
     );
     // Remove properties from old one only if a match was found
-    if (foundIndex > 0) {
+    if (foundIndex >= 0) {
       additionalItems[foundIndex].taken = "";
       additionalItems[foundIndex].checked = false;
     }

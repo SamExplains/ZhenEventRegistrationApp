@@ -20,6 +20,10 @@ export const EventCardProfile = (props) => {
     navigation.navigate("CheckIn");
   };
 
+  const navigateToCheckInScanner = () => {
+    navigation.navigate("CheckInScanner");
+  };
+
   const activeTabButtonsToShow = () => {
     // Dispatch to set event Details
     if (props.activeTab == 1) {
@@ -33,7 +37,10 @@ export const EventCardProfile = (props) => {
           <Button style={styles.buttonAlternate}>
             <Text style={{ color: "#3F295A" }}>Edit</Text>
           </Button>
-          <Button style={styles.buttonAlternate} onPress={navigateToCheckIn}>
+          <Button
+            style={styles.buttonAlternate}
+            onPress={navigateToCheckInScanner}
+          >
             <Text style={{ color: "#3F295A" }}>Check In</Text>
           </Button>
         </Layout>

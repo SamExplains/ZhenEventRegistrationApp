@@ -116,11 +116,12 @@ export const LoginScreen = () => {
             >
               <Avatar
                 style={{ width: 35 }}
-                source={{
-                  // uri: "https://cdn.pixabay.com/photo/2016/07/31/13/43/dog-1558962_960_720.jpg",\
-                  // uri: account.profile_image_src,
-                  uri: "http:10.0.2.2:8000/img/tc_logo.png",
-                }}
+                source={require("../../assets/quick_login_default.png")}
+                // source={{
+                //   // uri: "https://cdn.pixabay.com/photo/2016/07/31/13/43/dog-1558962_960_720.jpg",\
+                //   // uri: account.profile_image_src,
+                //   uri: "http:10.0.2.2:8000/img/tc_logo.png",
+                // }}
                 shape="square"
               />
               <Text style={styles.accountName}>{account.name}</Text>

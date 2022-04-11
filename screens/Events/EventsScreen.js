@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   vector3: {
     position: "absolute",
     right: 0,
-    top: -30,
+    top: 0,
   },
   contentContainer: {
     // padding: 15,
