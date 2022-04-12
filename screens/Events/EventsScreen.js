@@ -91,7 +91,7 @@ export const EventsScreen = () => {
             // console.log("Next page ", data.next_page_url);
             // Update Store with items
             dispatch(fetchEvents(data.data));
-            setEvents((oldEvents) => [...oldEvents, ...data.data]);
+            setEvents(events.concat(data.data));
           }
         })
         .catch((e) => console.log(e));
@@ -171,7 +171,7 @@ export const EventsScreen = () => {
         <FlatList
           ListHeaderComponent={renderHeader}
           data={events}
-          keyExtractor={(item) => item.event_key.toString()}
+          keyExtractor={(item) => item.private_authentication_code.toString()}
           renderItem={({ item }) => (
             <EventCard details={item} fromComponent="event" />
           )}

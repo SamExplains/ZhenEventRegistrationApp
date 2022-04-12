@@ -11,6 +11,7 @@ export const EventCard = (props) => {
   const dispatch = useDispatch();
 
   const navigateEventDetails = async () => {
+    console.log("Navigating to details!");
     // Dispatch ID to set event
     await Promise.all([dispatch(findEventDetails(props.details.id))]).then(
       () => {

@@ -224,7 +224,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   };
 
   const renderChecklist = () => {
-    console.log("render checklist");
+    // console.log("render checklist");
     if (additionalItems.length && authenticated) {
       const _c = [...additionalItems];
       return _c.map((item) => {

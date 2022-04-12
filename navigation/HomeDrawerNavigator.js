@@ -10,19 +10,25 @@ import {
 } from "@ui-kitten/components";
 import { HomeIcon, InfoIcon, LoginIcon } from "../assets/icons";
 
-import { AboutScreen } from "../screens/AboutScreen";
 import { BottomTabsNavigator } from "./BottomTabsNavigator";
-import { LoginScreen } from "../screens/LoginScreen";
+import { LoginScreen } from "../screens/authentication/LoginScreen";
 import React from "react";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { useSelector } from "react-redux";
+import { ProfileScreen } from "../screens/Profile/ProfileScreen";
 
 const { Navigator, Screen } = createDrawerNavigator();
 
 const DrawerContent = ({ navigation, state }) => {
+  const authenticated = useSelector(
+    (state) => state.eventsAndUsers.authenticated
+  );
+  const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
+
   const styles = useStyleSheet(themedStyles);
 
   const Header = () => (
@@ -30,10 +36,14 @@ const DrawerContent = ({ navigation, state }) => {
       <View style={styles.profileContainer}>
         <Avatar
           size="giant"
-          source={require("../assets/MomsInLA-condensed.png")}
+          source={
+            authenticated
+              ? { uri: currentUser.profile_image_src }
+              : require("../assets/MomsInLA-condensed.png")
+          }
         />
         <Text style={styles.profileName} category="h6">
-          Name Here
+          {authenticated ? currentUser.name : ""}
         </Text>
       </View>
     </Layout>
@@ -47,9 +57,9 @@ const DrawerContent = ({ navigation, state }) => {
         onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
       >
         <DrawerItem title="Home" accessoryLeft={HomeIcon} />
-        <DrawerItem title="About" accessoryLeft={InfoIcon} />
+        {/* <DrawerItem title="Profile" accessoryLeft={InfoIcon} /> */}
         <DrawerItem title="Settings" accessoryLeft={InfoIcon} />
-        <DrawerItem title="Login" accessoryLeft={LoginIcon} />
+        {/* <DrawerItem title="Login" accessoryLeft={LoginIcon} /> */}
       </Drawer>
     </SafeAreaView>
   );
@@ -58,10 +68,11 @@ const DrawerContent = ({ navigation, state }) => {
 export const HomeDrawerNavigator = () => (
   <Navigator drawerContent={(props) => <DrawerContent {...props} />}>
     <Screen name="Home" component={BottomTabsNavigator} />
-    <Screen name="About" component={AboutScreen} />
+    {/* <Screen name="Profile" component={ProfileScreen} /> */}
     <Screen name="Settings" component={SettingsScreen} />
-    <Screen name="Login" component={LoginScreen} />
-    <Screen name="Register" component={RegisterScreen} />
+    {/* <Screen name="Login" component={LoginScreen} /> */}
+
+    {/* <Screen name="Register" component={RegisterScreen} /> */}
   </Navigator>
 );
 

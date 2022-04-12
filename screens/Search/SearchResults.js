@@ -8,11 +8,11 @@ import {
 import { ArrowBackIcon } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import EventCard from "../../components/molecules/events/EventCard";
 import { setSearchResultEventDetails } from "../../store/actions/event";
 
-export const SearchResults = ({ navigation, route }) => {
+export const SearchResults = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const searchResults = useSelector(
@@ -60,8 +60,6 @@ export const SearchResults = ({ navigation, route }) => {
         style={styles.topnav}
         // backgroundColor="transparent"
       />
-      {/* <ScrollView style={styles.container}>{renderResults()}</ScrollView>
-       */}
       {renderResults()}
     </SafeAreaView>
   );
