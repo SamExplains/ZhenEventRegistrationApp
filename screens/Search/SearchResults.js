@@ -8,11 +8,14 @@ import {
 import { ArrowBackIcon } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import EventCard from "../../components/molecules/events/EventCard";
+import {
+  TouchableOpacity,
+  TouchableNativeFeedback,
+} from "react-native-gesture-handler";
+import SearchCard from "../../components/molecules/search/SearchCard";
 import { setSearchResultEventDetails } from "../../store/actions/event";
 
-export const SearchResults = ({ navigation }) => {
+export const SearchResults = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const searchResults = useSelector(
@@ -28,8 +31,13 @@ export const SearchResults = ({ navigation }) => {
     <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
   );
 
-  const setSearchEventDetails = (item) => {
-    dispatch(setSearchResultEventDetails(item));
+  const setSearchEventDetails = async (item) => {
+    consollog("setSearchEventDetails");
+    await Promise.all([dispatch(setSearchResultEventDetails(item))]);
+    // Navigate to card
+    navigation.navigate("EventDetails", {
+      fromComponent: "search",
+    });
   };
 
   const renderResults = () => {
@@ -39,9 +47,7 @@ export const SearchResults = ({ navigation }) => {
           data={searchResults}
           keyExtractor={(item) => item.event_key.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => setSearchEventDetails(item)}>
-              <EventCard details={item} fromComponent="search" />
-            </TouchableOpacity>
+            <SearchCard details={item} fromComponent="search" />
           )}
           onEndReachedThreshold={0.9}
         />

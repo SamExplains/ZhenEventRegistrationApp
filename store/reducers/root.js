@@ -110,7 +110,6 @@ const reducer = (state = initialState, action) => {
       };
       break;
     case SET_SEARCH_RESULT_EVENT_DETAILS:
-      console.log("SET_SEARCH_RESULT_EVENT_DETAILS ", action.payload);
       return {
         ...state,
         searchResultDetails: action.payload,
