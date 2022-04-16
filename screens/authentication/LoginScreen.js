@@ -181,7 +181,6 @@ export const LoginScreen = () => {
               AsyncStorage.setItem("account", JSON.stringify([data]));
             } else {
               accounts.forEach((el) => {
-                console.log(el);
                 if (el.uuid !== data.uuid) {
                   // console.log("We can push item");
                   AsyncStorage.setItem(

@@ -21,7 +21,10 @@ export const EventCardProfile = (props) => {
   };
 
   const navigateToCheckInScanner = () => {
-    navigation.navigate("CheckInScanner", { fromComponent: "profile" });
+    navigation.navigate("CheckInScanner", {
+      fromComponent: "profile",
+      eventId: props.id,
+    });
   };
 
   const activeTabButtonsToShow = () => {
@@ -40,6 +43,7 @@ export const EventCardProfile = (props) => {
           <Button
             style={styles.buttonAlternate}
             onPress={navigateToCheckInScanner}
+            eventId
           >
             <Text style={{ color: "#3F295A" }}>Check In</Text>
           </Button>
@@ -62,6 +66,19 @@ export const EventCardProfile = (props) => {
 
   return (
     <View style={styles.card}>
+      {props.private === 1 && (
+        <Text
+          style={{
+            marginBottom: 10,
+            padding: 5,
+            backgroundColor: "#CBBEDA",
+            color: "#282131",
+            textAlign: "center",
+          }}
+        >
+          This is a Private event
+        </Text>
+      )}
       <Layout style={styles.cardContent}>
         <Image
           source={{ uri: props.image }}

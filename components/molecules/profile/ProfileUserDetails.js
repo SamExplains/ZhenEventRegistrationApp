@@ -99,11 +99,13 @@ export const ProfileUserDetails = (props) => {
       return (
         <EventCard
           key={ev.id}
+          id={ev.id}
           activeTab={toggle}
           tabEventId={ev.id}
           title={ev.title}
           date={ev.start_time}
           eventId={ev.event_key}
+          private={ev.public_private}
           image={ev.first_image.length ? ev.first_image : ev.second_image}
           fromComponent="profile"
         />

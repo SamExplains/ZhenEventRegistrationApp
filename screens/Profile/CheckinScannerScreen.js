@@ -76,6 +76,28 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
     }
   };
 
+  const checkUserIn = async (uuid, email) => {
+    await axios
+      .patch(`${ROOT_URL.api}/registration/user/checkin`, {
+        eid: route.params.eventId,
+        uuid: uuid,
+        email: email,
+      })
+      .then(({ data }) => {
+        if (data.success) {
+          Toast.show({
+            type: "success",
+            text1: "User was checked in.",
+          });
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Could not find user or registration record",
+          });
+        }
+      });
+  };
+
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     setIsRequesting(true);
@@ -85,9 +107,11 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
       await addPrivateEvent(parsedKey[6]);
       setIsRequesting(false);
     } else {
-      alert("Profile");
+      const parsed = data.split(":");
+      await checkUserIn(parsed[7].slice(0, -4), parsed[4].slice(0, -3));
+      setIsRequesting(false);
+      // alert(`Profile: Bar code with type data: ${data} has been scanned!`);
     }
-    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {
