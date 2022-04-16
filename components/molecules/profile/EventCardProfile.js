@@ -21,7 +21,7 @@ export const EventCardProfile = (props) => {
   };
 
   const navigateToCheckInScanner = () => {
-    navigation.navigate("CheckInScanner");
+    navigation.navigate("CheckInScanner", { fromComponent: "profile" });
   };
 
   const activeTabButtonsToShow = () => {

@@ -8,13 +8,14 @@ import {
   Text,
   useStyleSheet,
 } from "@ui-kitten/components";
-import { HomeIcon, InfoIcon, LoginIcon } from "../assets/icons";
+import { HomeIcon, InfoIcon, LoginIcon, PlusOutline } from "../assets/icons";
 
 import { BottomTabsNavigator } from "./BottomTabsNavigator";
 import { LoginScreen } from "../screens/authentication/LoginScreen";
 import React from "react";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
+import AddPrivateEvent from "../screens/PrivateEvent/AddPrivateEvent";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -59,6 +60,7 @@ const DrawerContent = ({ navigation, state }) => {
         <DrawerItem title="Home" accessoryLeft={HomeIcon} />
         {/* <DrawerItem title="Profile" accessoryLeft={InfoIcon} /> */}
         <DrawerItem title="Settings" accessoryLeft={InfoIcon} />
+        <DrawerItem title="Add Private Event" accessoryLeft={PlusOutline} />
         {/* <DrawerItem title="Login" accessoryLeft={LoginIcon} /> */}
       </Drawer>
     </SafeAreaView>
@@ -70,6 +72,7 @@ export const HomeDrawerNavigator = () => (
     <Screen name="Home" component={BottomTabsNavigator} />
     {/* <Screen name="Profile" component={ProfileScreen} /> */}
     <Screen name="Settings" component={SettingsScreen} />
+    <Screen name="Add Private Event" component={AddPrivateEvent} />
     {/* <Screen name="Login" component={LoginScreen} /> */}
 
     {/* <Screen name="Register" component={RegisterScreen} /> */}
