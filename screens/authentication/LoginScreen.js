@@ -6,7 +6,14 @@ import {
   AsyncStorage,
   TouchableOpacity,
 } from "react-native";
-import { Input, Layout, Text, Button, Avatar } from "@ui-kitten/components";
+import {
+  Input,
+  Layout,
+  Text,
+  Button,
+  Avatar,
+  Spinner,
+} from "@ui-kitten/components";
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
 import React, { useState, useEffect } from "react";
@@ -55,6 +62,9 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
 
+  // Spinner
+  const [awaiting, setAwaiting] = useState(false);
+
   const navigation = useNavigation();
 
   const navigateForgotPassword = () => {
@@ -88,6 +98,7 @@ export const LoginScreen = () => {
   };
 
   const continueWithUser = async (user) => {
+    setAwaiting(true);
     await axios
       .post(`${ROOT_URL.api}/quicklogin`, {
         id: user.id,
@@ -95,6 +106,7 @@ export const LoginScreen = () => {
         token: user.token,
       })
       .then(({ data, status }) => {
+        setAwaiting(false);
         dispatch(setUser(data));
         dispatch(setAuthenticated(true));
         // Set logged in state and user to details
@@ -166,12 +178,14 @@ export const LoginScreen = () => {
 
   const onLogin = async () => {
     if (emailError && passwordError) {
+      setAwaiting(true);
       await axios
         .post(`${ROOT_URL.api}/login`, {
           email: email,
           password: password,
         })
         .then(async ({ data, status }) => {
+          // setAwaiting(false);
           // Add user to Async if not available.
           /**
          *     try {
@@ -204,6 +218,7 @@ export const LoginScreen = () => {
               });
             }
           }
+          setAwaiting(false);
           dispatch(setUser(data));
           dispatch(setAuthenticated(true));
           // Set logged in state and user to details
@@ -234,6 +249,7 @@ export const LoginScreen = () => {
     _retrieveData();
     // Google Auth
     if (response?.type === "success") {
+      setAwaiting(true);
       // console.log("Google success ", response);
       // Use the access token from authentication to get the users details to store as a record or retrieve...
       // Which will be used throughout the app for user details
@@ -255,6 +271,7 @@ export const LoginScreen = () => {
               phone: "--- --- ----",
             })
             .then(({ data }) => {
+              setAwaiting(false);
               if (!data.error) {
                 dispatch(setUser(data));
                 dispatch(setAuthenticated(true));
@@ -379,9 +396,15 @@ export const LoginScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <Layout style={styles.container}>{show()}</Layout>
-      </ScrollView>
+      {awaiting ? (
+        <Layout style={styles.spinnerContainer}>
+          <Spinner />
+        </Layout>
+      ) : (
+        <ScrollView style={styles.scrollView}>
+          <Layout style={styles.container}>{show()}</Layout>
+        </ScrollView>
+      )}
       <Toast />
     </SafeAreaView>
   );
@@ -459,6 +482,12 @@ const styles = StyleSheet.create({
     width: 220,
     height: 220,
     marginBottom: -30,
+  },
+  spinnerContainer: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

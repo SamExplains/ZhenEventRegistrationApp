@@ -9,6 +9,7 @@ import {
   Input,
   Button,
   Toggle,
+  Spinner,
 } from "@ui-kitten/components";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -74,6 +75,9 @@ export const AddEventScreen = () => {
   // Additional items
   const [additionalItem, setAdditionalItem] = useState("");
   const [additionalItems, setAdditionalItems] = useState([]);
+
+  // Spinner
+  const [awaiting, setAwaiting] = useState(false);
 
   const navigation = useNavigation();
   const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
@@ -282,6 +286,7 @@ export const AddEventScreen = () => {
       eventUrlError &&
       imageFlag !== null
     ) {
+      setAwaiting(true);
       // Stringify Additional Items if array length exceeds 0
       // Reset state when done
       console.log("success");
@@ -336,8 +341,9 @@ export const AddEventScreen = () => {
         .then(({ data }) => {
           // Save event object to state
           // Check in verification field required for checking in!
-          console.log(data);
+          // console.log(data);
           onResetFields();
+          setAwaiting(false);
         })
         .catch((error) => {
           console.log(error);
@@ -679,7 +685,17 @@ export const AddEventScreen = () => {
         alignment="center"
         accessoryLeft={renderDrawerAction}
       />
-      {authenticated ? addEventForm() : notAuthenticated()}
+      {authenticated ? (
+        awaiting ? (
+          <Layout style={styles.spinnerContainer}>
+            <Spinner />
+          </Layout>
+        ) : (
+          addEventForm()
+        )
+      ) : (
+        notAuthenticated()
+      )}
       <Toast />
     </SafeAreaView>
   );
@@ -818,6 +834,12 @@ const styles = StyleSheet.create({
     marginTop: 18,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
+  },
+  spinnerContainer: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
