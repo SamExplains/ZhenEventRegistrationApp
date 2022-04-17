@@ -16,9 +16,22 @@ import Toast from "react-native-toast-message";
 import axios from "axios";
 import { setUser, setAuthenticated } from "../../store/actions/user";
 import { CloseOutline } from "../../assets/icons";
-import baseUrl from "../../settings.json";
+import ROOT_URL from "../../settings.json";
+import EXPO_GO_CLIENT_SECRET from "../../expo.auth.json";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export const LoginScreen = () => {
+  /** GOOGLE ******************/
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: EXPO_GO_CLIENT_SECRET.expoClientId,
+    // iosClientId: "GOOGLE_GUID.apps.googleusercontent.com",
+    // androidClientId: "GOOGLE_GUID.apps.googleusercontent.com",
+    // webClientId: "GOOGLE_GUID.apps.googleusercontent.com",
+  });
+  /** GOOGLE ******************/
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.eventsAndUsers.currentUser);
   const authenticated = useSelector(
@@ -76,7 +89,7 @@ export const LoginScreen = () => {
 
   const continueWithUser = async (user) => {
     await axios
-      .post(`${baseUrl.api}/quicklogin`, {
+      .post(`${ROOT_URL.api}/quicklogin`, {
         id: user.id,
         email: user.email,
         token: user.token,
@@ -154,7 +167,7 @@ export const LoginScreen = () => {
   const onLogin = async () => {
     if (emailError && passwordError) {
       await axios
-        .post(`${baseUrl.api}/login`, {
+        .post(`${ROOT_URL.api}/login`, {
           email: email,
           password: password,
         })
@@ -219,7 +232,44 @@ export const LoginScreen = () => {
   useEffect(() => {
     // Wait for AsyncStorage to finish before rendering the lists account
     _retrieveData();
-  }, [loaded]);
+    // Google Auth
+    if (response?.type === "success") {
+      // console.log("Google success ", response);
+      // Use the access token from authentication to get the users details to store as a record or retrieve...
+      // Which will be used throughout the app for user details
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response.authentication.accessToken}`
+        )
+        .then(({ data }) => {
+          // Check if an account exist with the given uuid which in this case will be sub key
+          axios
+            .post(`${ROOT_URL.api}/google`, {
+              sub: data.sub,
+              email: data.email,
+              zip: "-----",
+              name: data.name,
+              profile_image_src: data.picture,
+              uuid: data.sub,
+              password: data.sub,
+              phone: "--- --- ----",
+            })
+            .then(({ data }) => {
+              if (!data.error) {
+                dispatch(setUser(data));
+                dispatch(setAuthenticated(true));
+              } else {
+                Toast.show({
+                  type: "error",
+                  text1: "Could not authenticate!",
+                });
+              }
+            });
+        });
+
+      // const { authentication } = response;
+    }
+  }, [loaded, response]);
 
   const show = () => {
     if (signup === 1) {
@@ -297,7 +347,15 @@ export const LoginScreen = () => {
           <Button style={styles.button} size="medium" onPress={onLogin}>
             Let's Go!
           </Button>
-          <Button size="medium" appearance="outline" style={styles.buttonAlt}>
+          <Button
+            size="medium"
+            appearance="outline"
+            style={styles.buttonAlt}
+            disabled={!request}
+            onPress={() => {
+              promptAsync();
+            }}
+          >
             <Text style={{ fontWeight: "700", color: "#454545" }}>
               Log in with Google
             </Text>
