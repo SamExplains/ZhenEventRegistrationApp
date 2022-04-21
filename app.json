@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true    },
+      "supportsTablet": true
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -29,14 +30,14 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      [        
+      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
     ],
-    "description": "Update v3. Updates include the Check-In feature for Host to check-in users for private events. Also added the Add Private Event in the sidebar drawer. Many other small updates too.",
+    "description": "Update v4. This brings Google Sign In and many other updates which include the Check-In feature for Host to check-in users for private events. Also added the Add Private Event in the sidebar drawer. Many other small updates too.",
     "scheme": "mycoolredirect"
   }
 }

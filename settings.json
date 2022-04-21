@@ -1,5 +1,5 @@
 {
-    // "api":"http:10.0.2.2:8000/api/partybemine"
-    "api":"http://partybemine.samexplains.com/api/partybemine"
+    "api":"http:10.0.2.2:8000/api/partybemine"
+    // "api":"http://partybemine.samexplains.com/api/partybemine"
     // "api":"http://tracker.technologycredit.io/api/partybemine"
 }
