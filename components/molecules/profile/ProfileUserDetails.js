@@ -7,6 +7,7 @@ import {
   Text,
   Button,
   Icon,
+  Spinner,
 } from "@ui-kitten/components";
 import EventCard from "./EventCardProfile";
 import { useSelector, useDispatch } from "react-redux";
@@ -24,9 +25,11 @@ export const ProfileUserDetails = (props) => {
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
   const [toggle, setToggle] = useState(0);
+  const [awaiting, setAwaiting] = useState(false);
 
   const toggleTab = (tab) => {
     // Make request for data and store
+    setAwaiting(true);
     if (tab === 1) {
       axios
         .get(`${ROOT_URL.api}/events/creator/${currentUser.id}'`)
@@ -35,6 +38,7 @@ export const ProfileUserDetails = (props) => {
           setEvents(data);
           // Pass to store
           dispatch(setProfileTabEvents(data));
+          setAwaiting(false);
         });
     }
     if (tab === 2) {
@@ -49,6 +53,7 @@ export const ProfileUserDetails = (props) => {
           setEvents(EVENTS);
           // Pass to store
           dispatch(setProfileTabEvents(EVENTS));
+          setAwaiting(false);
         });
     }
     setToggle(tab);
@@ -88,9 +93,21 @@ export const ProfileUserDetails = (props) => {
 
   const tabView = () => {
     if (toggle === 1) {
-      return <Layout>{renderEvents()}</Layout>;
+      return awaiting ? (
+        <Layout style={styles.spinnerContainer}>
+          <Spinner />
+        </Layout>
+      ) : (
+        <Layout>{renderEvents()}</Layout>
+      );
     } else {
-      return <Layout>{renderEvents()}</Layout>;
+      return awaiting ? (
+        <Layout style={styles.spinnerContainer}>
+          <Spinner />
+        </Layout>
+      ) : (
+        <Layout>{renderEvents()}</Layout>
+      );
     }
   };
 
@@ -391,6 +408,12 @@ const styles = StyleSheet.create({
     // backgroundColor: "lightgreen",
     color: "#969595",
     padding: 20,
+  },
+  spinnerContainer: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
