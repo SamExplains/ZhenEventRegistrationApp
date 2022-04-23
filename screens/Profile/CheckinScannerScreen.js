@@ -36,6 +36,7 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+  const [capacity, setCapacity] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -84,10 +85,18 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
         email: email,
       })
       .then(({ data }) => {
+        // console.log(data);
         if (data.success) {
+          // Increase checkin
+          setCapacity(capacity + 1);
           Toast.show({
             type: "success",
             text1: "User was checked in.",
+          });
+        } else if (data.error === "User already checked in") {
+          Toast.show({
+            type: "error",
+            text1: "User already checked in!",
           });
         } else {
           Toast.show({
@@ -108,10 +117,39 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
       setIsRequesting(false);
     } else {
       const parsed = data.split(":");
-      await checkUserIn(parsed[7].slice(0, -4), parsed[4].slice(0, -3));
+      // If the PHONE key is still in the QR code
+      if (parsed[3].slice(0, -5).trim() === "--- --- ----") {
+        // console.log("Google QR");
+        await checkUserIn(
+          parsed[6].slice(0, -4).trim(),
+          parsed[4].slice(0, -3).trim()
+        );
+      } else {
+        // console.log("Standard");
+        await checkUserIn(
+          parsed[6].slice(0, -4).trim(),
+          parsed[3].slice(0, -3).trim()
+        );
+      }
       setIsRequesting(false);
       // alert(`Profile: Bar code with type data: ${data} has been scanned!`);
     }
+  };
+
+  const privateEventMetricsKey = () => {
+    return route.params.fromComponent !== "sidebar" ? (
+      <Text style={styles.event_key_label}>
+        Event Key: {route.params.eventKey}
+      </Text>
+    ) : null;
+  };
+
+  const privateEventMetricsCapacity = () => {
+    return route.params.fromComponent !== "sidebar" ? (
+      <Text style={styles.capacity_label}>
+        Event Capacity: {capacity} / {route.params.capacity}
+      </Text>
+    ) : null;
   };
 
   if (hasPermission === null) {
@@ -156,6 +194,8 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
             <Text style={styles.waiting_text}>Registration in progress...</Text>
           </Layout>
         )}
+        {privateEventMetricsKey()}
+        {privateEventMetricsCapacity()}
       </Layout>
 
       <Toast />
@@ -168,6 +208,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    position: "relative",
   },
   scan_button: {
     margin: 50,
@@ -181,6 +222,20 @@ const styles = StyleSheet.create({
   },
   waiting_text: {
     fontSize: 20,
+  },
+  event_key_label: {
+    backgroundColor: "rgba(255,255,255,0.75)",
+    padding: 15,
+    top: 0,
+    position: "absolute",
+    fontWeight: "bold",
+  },
+  capacity_label: {
+    backgroundColor: "rgba(255,255,255,0.75)",
+    padding: 15,
+    top: 45,
+    position: "absolute",
+    fontWeight: "bold",
   },
 });
 export default CheckinScannerScreen;

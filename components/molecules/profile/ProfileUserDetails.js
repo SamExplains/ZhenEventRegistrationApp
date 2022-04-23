@@ -124,6 +124,7 @@ export const ProfileUserDetails = (props) => {
           eventId={ev.event_key}
           private={ev.public_private}
           image={ev.first_image.length ? ev.first_image : ev.second_image}
+          capacity={ev.capacity}
           fromComponent="profile"
         />
       );

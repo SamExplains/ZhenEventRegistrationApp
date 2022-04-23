@@ -24,6 +24,8 @@ export const EventCardProfile = (props) => {
     navigation.navigate("CheckInScanner", {
       fromComponent: "profile",
       eventId: props.id,
+      capacity: props.capacity,
+      eventKey: props.eventId,
     });
   };
 
