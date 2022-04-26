@@ -37,8 +37,19 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
   const [scanned, setScanned] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [capacity, setCapacity] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!loading) {
+      (async () => {
+        await axios
+          .get(`${ROOT_URL.api}/registration/checkin/${route.params.eventId}`)
+          .then(({ data }) => {
+            setCapacity(data);
+            setLoading(true);
+          });
+      })();
+    }
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
@@ -78,33 +89,40 @@ export const CheckinScannerScreen = ({ navigation, route }) => {
   };
 
   const checkUserIn = async (uuid, email) => {
-    await axios
-      .patch(`${ROOT_URL.api}/registration/user/checkin`, {
-        eid: route.params.eventId,
-        uuid: uuid,
-        email: email,
-      })
-      .then(({ data }) => {
-        // console.log(data);
-        if (data.success) {
-          // Increase checkin
-          setCapacity(capacity + 1);
-          Toast.show({
-            type: "success",
-            text1: "User was checked in.",
-          });
-        } else if (data.error === "User already checked in") {
-          Toast.show({
-            type: "error",
-            text1: "User already checked in!",
-          });
-        } else {
-          Toast.show({
-            type: "error",
-            text1: "Could not find user or registration record",
-          });
-        }
+    if (capacity <= route.params.capacity) {
+      await axios
+        .patch(`${ROOT_URL.api}/registration/user/checkin`, {
+          eid: route.params.eventId,
+          uuid: uuid,
+          email: email,
+        })
+        .then(({ data }) => {
+          // console.log(data);
+          if (data.success) {
+            // Increase checkin
+            setCapacity(capacity + 1);
+            Toast.show({
+              type: "success",
+              text1: "User was checked in.",
+            });
+          } else if (data.error === "User already checked in") {
+            Toast.show({
+              type: "error",
+              text1: "User already checked in!",
+            });
+          } else {
+            Toast.show({
+              type: "error",
+              text1: "Could not find user or registration record",
+            });
+          }
+        });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Max capcity reached",
       });
+    }
   };
 
   const handleBarCodeScanned = async ({ type, data }) => {

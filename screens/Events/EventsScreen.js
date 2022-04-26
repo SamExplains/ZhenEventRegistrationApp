@@ -222,6 +222,10 @@ export const EventsScreen = () => {
               style={styles.search}
               value={value}
               placeholder="Search by Event Name or Event Type"
+              textContentType={"none"}
+              clearButtonMode="always"
+              returnKeyType="next"
+              keyboardType="default"
               accessoryLeft={SearchOutline}
               onChangeText={(newValue) => setValue(newValue)}
               onSubmitEditing={onSearchQuery}

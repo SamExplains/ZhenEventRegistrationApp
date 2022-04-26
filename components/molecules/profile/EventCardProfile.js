@@ -69,17 +69,30 @@ export const EventCardProfile = (props) => {
   return (
     <View style={styles.card}>
       {props.private === 1 && (
-        <Text
-          style={{
-            marginBottom: 10,
-            padding: 5,
-            backgroundColor: "#CBBEDA",
-            color: "#282131",
-            textAlign: "center",
-          }}
-        >
-          This is a Private event
-        </Text>
+        <Layout>
+          <Text
+            style={{
+              marginBottom: 10,
+              padding: 5,
+              backgroundColor: "#CBBEDA",
+              color: "#282131",
+              textAlign: "center",
+            }}
+          >
+            This is a Private event
+          </Text>
+          <Text style={{ marginBottom: 15 }}>
+            Private Event Add Code:{" "}
+            <Text
+              style={{
+                backgroundColor: "#CBBEDA",
+                color: "#282131",
+              }}
+            >
+              {props.authCode}
+            </Text>
+          </Text>
+        </Layout>
       )}
       <Layout style={styles.cardContent}>
         <Image
@@ -92,7 +105,7 @@ export const EventCardProfile = (props) => {
           {/* Event Name */}
           <Layout style={styles.cardText}>
             <Text style={styles.cardLabel}>Event Name:</Text>
-            <Text>{props.title}</Text>
+            <Text style={{ flex: 1, flexWrap: "wrap" }}>{props.title}</Text>
           </Layout>
           {/* Event Date */}
           <Layout style={styles.cardText}>

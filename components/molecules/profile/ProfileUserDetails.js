@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image, ScrollView } from "react-native";
-import React, { Component, useState } from "react";
+import React, { Component, useState, useRef } from "react";
 import {
   Layout,
   Tab,
@@ -26,6 +26,7 @@ export const ProfileUserDetails = (props) => {
   const [events, setEvents] = useState([]);
   const [toggle, setToggle] = useState(0);
   const [awaiting, setAwaiting] = useState(false);
+  const scrollViewRef = useRef();
 
   const toggleTab = (tab) => {
     // Make request for data and store
@@ -123,6 +124,7 @@ export const ProfileUserDetails = (props) => {
           date={ev.start_time}
           eventId={ev.event_key}
           private={ev.public_private}
+          authCode={ev.private_authentication_code}
           image={ev.first_image.length ? ev.first_image : ev.second_image}
           capacity={ev.capacity}
           fromComponent="profile"
@@ -132,7 +134,13 @@ export const ProfileUserDetails = (props) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView
+      ref={scrollViewRef}
+      scrollsToTop={true}
+      onContentSizeChange={(contentWidth, contentHeight) => {
+        scrollViewRef.current.scrollTo({ y: 350, animated: true });
+      }}
+    >
       <Layout style={styles.container}>
         {/* Header */}
         <Layout style={styles.hero}>

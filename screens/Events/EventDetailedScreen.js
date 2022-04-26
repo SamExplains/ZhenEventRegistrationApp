@@ -52,19 +52,33 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   const [registered, setRegistered] = useState(false);
   // Additional items
   const [additionalItems, setAdditionalItems] = useState([]);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [capacity, setCapacity] = useState(0);
 
   useEffect(() => {
     // Check if registered
-    checkIfRegistered();
+    if (authenticated) {
+      checkIfRegistered();
+    }
     // Update image source
     setSource(
       eventDetails.first_image.length
         ? eventDetails.first_image
         : eventDetails.second_image
     );
+    if (!loading) {
+      (async () => {
+        await axios
+          .get(`${ROOT_URL.api}/registration/checkin/${route.params.eventId}`)
+          .then(({ data }) => {
+            setCapacity(data);
+            setLoading(true);
+          });
+      })();
+    }
     setAdditionalItems(parseAdditionalItems());
-  }, [eventDetails]);
+  }, [eventDetails, authenticated]);
 
   const BackAction = () => (
     <TopNavigationAction icon={ArrowBackIcon} onPress={navigateBack} />
@@ -386,7 +400,10 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           </Text>
           <Text style={styles.spotsLeft}>
             Spots Left:
-            <Text> 0/{eventDetails.capacity} Full</Text>
+            <Text>
+              {" "}
+              {eventDetails.capacity - capacity}/{eventDetails.capacity}
+            </Text>
           </Text>
           {/* Four Purple Labels */}
           <Layout style={styles.fourLabelsContainer}>
@@ -397,7 +414,9 @@ export const EventDetailedScreen = ({ navigation, route }) => {
             <Text style={styles.purpleLabel}>
               {eventDetails.on_off_line ? "Online" : "Offline"}
             </Text>
-            <Text style={styles.purpleLabel}>0/{eventDetails.capacity}</Text>
+            <Text style={styles.purpleLabel}>
+              {eventDetails.capacity - capacity}/{eventDetails.capacity}
+            </Text>
           </Layout>
           <Text category="p1" style={styles.description}>
             {eventDetails.description}
