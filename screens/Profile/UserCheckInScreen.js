@@ -136,7 +136,7 @@ export const CheckInScreen = ({ navigation }) => {
               <Divider />
               <Layout style={{ alignItems: "center" }}>
                 <Text style={{ marginTop: 15 }}>
-                  this QR code will be scanned by the Host "Checking-In" users.
+                  This QR code will be scanned by the Host "Checking-In" users.
                   This QR code represents a unique User QR Code .
                 </Text>
                 <Image

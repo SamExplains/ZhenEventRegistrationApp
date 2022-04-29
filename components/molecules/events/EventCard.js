@@ -11,7 +11,7 @@ export const EventCard = (props) => {
   const dispatch = useDispatch();
 
   const navigateEventDetails = async () => {
-    console.log("Navigating to details!");
+    // console.log("Navigating to details!");
     // Dispatch ID to set event
     await Promise.all([dispatch(findEventDetails(props.details.id))]).then(
       () => {
@@ -87,11 +87,14 @@ export const EventCard = (props) => {
         {/* Event Date */}
         {/* <Text style={styles.date}>00 Jan</Text> */}
         <Text style={styles.date}>{parseDate(props.details.start_time)}</Text>
+        <Text style={styles.eid}>{props.details.id}</Text>
         <Text category="h6" style={styles.title}>
-          [ID: {props.details.id}] {props.details.title}
+          {props.details.title}
         </Text>
         <Text category="p1" style={styles.id}>
-          ID: {props.details.event_key || "no event key"}
+          {props.details.start_time}
+          {"   "}-{"   "}
+          {props.details.end_time}
         </Text>
         <Layout style={styles.location}>
           <Image
@@ -108,13 +111,15 @@ export const EventCard = (props) => {
   };
 
   const eventIsPrivate = () => {
-    return props.details.public_private === 1 ? (
-      <Layout style={styles.container}>
-        <Text>Event is Private...only showing for debug purposes.</Text>
-      </Layout>
-    ) : (
-      eventCardPublic()
-    );
+    //   return props.details.public_private === 1 ? (
+    //     <Layout style={styles.container}>
+    //       <Text>Event is Private...only showing for debug purposes.</Text>
+    //     </Layout>
+    //   ) : (
+    //     eventCardPublic()
+    //   );
+    // };
+    return props.details.public_private !== 1 ? eventCardPublic() : null;
   };
 
   return eventIsPrivate();
@@ -163,6 +168,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     top: 170,
+  },
+  eid: {
+    backgroundColor: "white",
+    width: 65,
+    textAlign: "center",
+    padding: 10,
+    fontWeight: "bold",
+    color: "#301A4B",
+    borderRadius: 5,
+    position: "absolute",
+    left: 20,
+    top: 20,
   },
 });
 

@@ -70,10 +70,11 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     if (!loading) {
       (async () => {
         await axios
-          .get(`${ROOT_URL.api}/registration/checkin/${route.params.eventId}`)
+          .get(`${ROOT_URL.api}/registration/checkin/${eventDetails.id}`)
           .then(({ data }) => {
+            console.log("We have a registered count of ", data);
             setCapacity(data);
-            setLoading(true);
+            // setLoading(true);
           });
       })();
     }
@@ -124,6 +125,8 @@ export const EventDetailedScreen = ({ navigation, route }) => {
         registered: 0,
       })
       .then(({ data }) => {
+        // set spots left
+        setCapacity(capacity - 1);
         setRegistered(data);
       });
     Toast.show({
@@ -133,34 +136,56 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     });
   };
 
+  const checkRegisteredAmount = async () => {
+    await axios
+      .get(`${ROOT_URL.api}/registration/checkin/${eventDetails.id}`)
+      .then(({ data }) => {
+        console.log("We have a registered count of ", data);
+        setCapacity(data);
+      });
+  };
+
   const onSubscribe = async () => {
     console.log("onSubscribe");
-    // Insert event into Registered
-    // Check if registered object has an id
-    if (registered.id !== null) {
-      console.log("We have a ID");
-      await axios
-        .patch(`${ROOT_URL.api}/registration/${registered.id}`, {
-          registered: 1,
-        })
-        .then(({ data }) => {
-          setRegistered(data);
-        });
+    // Check if capcaity is not full yet
+    // Insert event into Registered if Capacity allows
+    await checkRegisteredAmount();
+    // If Capacity > Event Capacity ERROR!
+    if (capacity >= eventDetails.capacity) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Event capcity reached",
+      });
     } else {
-      console.log("NO ID...creating");
-      await axios
-        .post(`${ROOT_URL.api}/registration`, {
-          creator_id: user.id,
-          event_id: eventDetails.id,
-          registered: 1,
-        })
-        .then(({ data }) => setRegistered(data));
+      // Check if registered object has an id
+      if (registered.id !== null) {
+        console.log("We have a ID");
+        await axios
+          .patch(`${ROOT_URL.api}/registration/${registered.id}`, {
+            registered: 1,
+          })
+          .then(({ data }) => {
+            // set spots left
+            setCapacity(capacity + 1);
+            setRegistered(data);
+          });
+      } else {
+        console.log("NO ID...creating");
+        await axios
+          .post(`${ROOT_URL.api}/registration`, {
+            creator_id: user.id,
+            event_id: eventDetails.id,
+            registered: 1,
+          })
+          .then(({ data }) => setRegistered(data));
+      }
+      Toast.show({
+        type: "success",
+        text1: "Subscribed",
+        text2: "You are registered for this event!",
+      });
     }
-    Toast.show({
-      type: "success",
-      text1: "Subscribed",
-      text2: "You are registered for this event!",
-    });
   };
 
   const showRegisterButton = () => {
@@ -183,6 +208,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           textAlign: "center",
           borderWidth: 1,
           borderColor: "#E6E5E5",
+          borderRadius: 25,
         }}
       >
         Login to subscribe or use checklist.
@@ -454,19 +480,27 @@ export const EventDetailedScreen = ({ navigation, route }) => {
             <Layout style={styles.DMLItemRight}></Layout>
           </Layout>
 
-          <Divider style={{ marginTop: 25, marginBottom: 25 }} />
-          <Text category="p2" style={{ color: "#454545", marginBottom: 10 }}>
-            Items needed for the Party
-          </Text>
+          {additionalItems.length > 0 ? (
+            <Layout>
+              <Divider style={{ marginTop: 25, marginBottom: 25 }} />
+              <Text
+                category="p2"
+                style={{ color: "#454545", marginBottom: 10 }}
+              >
+                Items needed for the Party
+              </Text>
 
-          <RadioGroup
-            selectedIndex={selectedIndex}
-            onChange={(index) => setSelectedIndexAndUpdateChecklist(index)}
-          >
-            {renderChecklist()}
-          </RadioGroup>
+              <RadioGroup
+                selectedIndex={selectedIndex}
+                onChange={(index) => setSelectedIndexAndUpdateChecklist(index)}
+              >
+                {renderChecklist()}
+              </RadioGroup>
+            </Layout>
+          ) : null}
+
           {/* Save selection button */}
-          {authenticated ? (
+          {authenticated && additionalItems.length > 0 ? (
             <Button
               style={styles.buttonSaveSelection}
               size="tiny"
@@ -622,6 +656,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#3F295A",
     borderColor: "transparent",
     width: "50%",
+    borderRadius: 25,
   },
   button: {
     marginBottom: 15,
@@ -630,6 +665,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
+    borderRadius: 25,
   },
 });
 

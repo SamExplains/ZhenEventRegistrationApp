@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
+    borderRadius: 25,
   },
   step: {
     textAlign: "center",

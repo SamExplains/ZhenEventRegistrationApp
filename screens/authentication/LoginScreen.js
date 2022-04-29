@@ -452,6 +452,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
+    borderRadius: 25,
   },
   buttonAlt: {
     marginBottom: 10,
@@ -459,6 +460,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     backgroundColor: "white",
     borderColor: "#E4E4E4",
+    borderRadius: 25,
   },
   noaccount: {
     textAlign: "center",

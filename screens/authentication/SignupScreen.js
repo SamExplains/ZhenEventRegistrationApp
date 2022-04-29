@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     backgroundColor: "#3F295A",
     borderColor: "transparent",
+    borderRadius: 25,
   },
   checkBox: {
     marginLeft: 15,
