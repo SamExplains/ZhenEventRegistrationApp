@@ -374,8 +374,12 @@ export const LoginScreen = () => {
             }}
           >
             <Text style={{ fontWeight: "700", color: "#454545" }}>
-              Log in with Google
+              Log in with Google{" "}
             </Text>
+            <Image
+              source={require("../../assets/Google_Logo.png")}
+              style={styles.tinyLogo}
+            />
           </Button>
 
           <Text style={styles.noaccount}>
@@ -411,6 +415,10 @@ export const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  tinyLogo: {
+    width: 15,
+    height: 15,
+  },
   container: {
     flex: 1,
   },

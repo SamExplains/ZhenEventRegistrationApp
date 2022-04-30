@@ -1,4 +1,4 @@
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, Dimensions, Platform, Linking } from "react-native";
 import React, { useState, useEffect } from "react";
 import {
   Layout,
@@ -53,8 +53,75 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   // Additional items
   const [additionalItems, setAdditionalItems] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [imageIndex, setImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [capacity, setCapacity] = useState(0);
+  const windowWidth = Dimensions.get("window").width;
+  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
+
+  const openMapLinking = () => {
+    console.log("openMapLinking");
+    // const scheme = Platform.OS === "ios" ? "maps:" : "geo:";
+    // const url = scheme + `${lat},${lng}`;
+    // Linking.openURL("google.navigation:q=centurylink+field");
+    // Build the address link
+    // const adjusted = name.replace(/\s/g, "");
+    const linkTo = `"https://www.google.com/maps/search/?api=1&query="${eventDetails.address.replace(
+      /\s/g,
+      "+"
+    )},+${eventDetails.city.replace(/\s/g, "+")},+${eventDetails.zip.replace(
+      /\s/g,
+      "+"
+    )}`;
+    // console.log(linkTo);
+    // Linking.openURL(
+    //   "https://www.google.com/maps/search/?api=1&query=1500+Pennsylvania+Avenue+NW,+Washington,+DC+20220"
+    // );
+    Linking.openURL(
+      `https://www.google.com/maps/search/?api=1&query=${linkTo}`
+    );
+  };
+
+  function onSwipeLeft() {
+    console.log("SWIPE_LEFT");
+    onSwipeToNextImage();
+  }
+
+  function onSwipeRight() {
+    console.log("SWIPE_RIGHT");
+    onSwipeToNextImage();
+  }
+
+  const onSwipeToNextImage = () => {
+    imageIndex === 0 ? toggleImage(1) : toggleImage(0);
+  };
+
+  function useSwipe(onSwipeLeft, onSwipeRight, rangeOffset = 4) {
+    let firstTouch = 0;
+
+    // set user touch start position
+    function onTouchStart(e) {
+      firstTouch = e.nativeEvent.pageX;
+    }
+
+    // when touch ends check for swipe directions
+    function onTouchEnd(e) {
+      // get touch position and screen size
+      const positionX = e.nativeEvent.pageX;
+      const range = windowWidth / rangeOffset;
+
+      // check if position is growing positively and has reached specified range
+      if (positionX - firstTouch > range) {
+        onSwipeRight && onSwipeRight();
+      }
+      // check if position is growing negatively and has reached specified range
+      else if (firstTouch - positionX > range) {
+        onSwipeLeft && onSwipeLeft();
+      }
+    }
+
+    return { onTouchStart, onTouchEnd };
+  }
 
   useEffect(() => {
     // Check if registered
@@ -244,8 +311,9 @@ export const EventDetailedScreen = ({ navigation, route }) => {
   };
 
   const toggleImage = (index) => {
+    setImageIndex(index);
     console.log("Toggled");
-    index === 0
+    imageIndex === 0
       ? setSource(eventDetails.first_image)
       : setSource(eventDetails.second_image);
   };
@@ -339,7 +407,11 @@ export const EventDetailedScreen = ({ navigation, route }) => {
       />
       <ScrollView>
         {/* Image Containe "TOP" */}
-        <Layout style={styles.imageContainer}>
+        <Layout
+          style={styles.imageContainer}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <Image
             style={{ height: 300, width: "100%" }}
             source={{ uri: source }}
@@ -355,17 +427,17 @@ export const EventDetailedScreen = ({ navigation, route }) => {
               backgroundColor: "transparent",
             }}
           >
-            {renderImageToggle()}
+            {/* {renderImageToggle()} */}
           </Layout>
           {/* Modal */}
-          <Button
+          {/* <Button
             size="tiny"
             appearance="ghost"
             style={styles.imageContainerShareButton}
             onPress={() => setVisible(true)}
           >
             <ShareLink fill="black" style={styles.icon} />
-          </Button>
+          </Button> */}
           {/* Share modal links */}
           <Modal
             visible={visible}
@@ -433,7 +505,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           </Text>
           {/* Four Purple Labels */}
           <Layout style={styles.fourLabelsContainer}>
-            <Text style={styles.purpleLabel}>ID: {eventDetails.event_key}</Text>
+            <Text style={styles.purpleLabel}>ID: {eventDetails.id}</Text>
             <Text style={styles.purpleLabel}>
               {eventDetails.public_private === 0 ? "Public" : "Private"}
             </Text>
@@ -467,7 +539,9 @@ export const EventDetailedScreen = ({ navigation, route }) => {
               {eventDetails.address}, {eventDetails.city}, {eventDetails.zip}
             </Text>
             <Layout style={styles.DMLItemRight}>
-              <NavigationOutline2 style={styles.icon} />
+              <Button appearance="ghost" onPress={openMapLinking}>
+                <NavigationOutline2 style={styles.icon} />
+              </Button>
             </Layout>
           </Layout>
           {/* Website */}
@@ -477,6 +551,16 @@ export const EventDetailedScreen = ({ navigation, route }) => {
               <GlobeOutline style={styles.icon} />
             </Layout>
             <Text style={styles.DMLItemMiddle}>{eventDetails.url}</Text>
+            <Layout style={styles.DMLItemRight}></Layout>
+          </Layout>
+          {/* Share */}
+          <Layout style={styles.DMLContainer}>
+            <Layout style={styles.DMLItemLeft}>
+              <ShareLink fill="#454545" style={styles.icon} />
+            </Layout>
+            <Text style={styles.DMLItemMiddle}>
+              {eventDetails.url}/{eventDetails.event_key}
+            </Text>
             <Layout style={styles.DMLItemRight}></Layout>
           </Layout>
 
