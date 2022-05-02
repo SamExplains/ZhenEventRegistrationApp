@@ -115,7 +115,7 @@ export const EventCardProfile = (props) => {
           {/* Event ID */}
           <Layout style={styles.cardText}>
             <Text style={styles.cardLabel}>Event ID:</Text>
-            <Text>{props.eventId}</Text>
+            <Text>{props.id}</Text>
           </Layout>
         </Layout>
       </Layout>

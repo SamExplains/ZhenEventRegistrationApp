@@ -1,4 +1,10 @@
-import { View, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React, { Component, useState, useRef } from "react";
 import {
   Layout,
@@ -11,12 +17,14 @@ import {
 } from "@ui-kitten/components";
 import EventCard from "./EventCardProfile";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 import { updateAuthenticated } from "../../../store/actions/user";
 import { setProfileTabEvents } from "../../../store/actions/event";
 import axios from "axios";
 import ROOT_URL from "../../../settings.json";
 
 // Tab menu toggle
+// EditProfileDetails
 
 export const ProfileUserDetails = (props) => {
   // State / Authenticated
@@ -27,6 +35,7 @@ export const ProfileUserDetails = (props) => {
   const [toggle, setToggle] = useState(0);
   const [awaiting, setAwaiting] = useState(false);
   const scrollViewRef = useRef();
+  const navigation = useNavigation();
 
   const toggleTab = (tab) => {
     // Make request for data and store
@@ -133,6 +142,10 @@ export const ProfileUserDetails = (props) => {
     });
   };
 
+  const onProfileDetails = () => {
+    navigation.navigate("EditProfileDetails");
+  };
+
   return (
     <ScrollView
       ref={scrollViewRef}
@@ -197,7 +210,10 @@ export const ProfileUserDetails = (props) => {
                 // source={{ uri: props.authenticatedUser.profile_image_src }}
                 source={{ uri: currentUser.profile_image_src }}
               />
-              <Button style={styles.cameraUploadButton}>
+              <Button
+                style={styles.cameraUploadButton}
+                onPress={onProfileDetails}
+              >
                 <Icon style={styles.icon} name="camera" />
               </Button>
             </Layout>
@@ -214,18 +230,18 @@ export const ProfileUserDetails = (props) => {
 
           {/* Email / Zip / Phone / EDIT */}
           <Layout style={styles.userDetailsContainerParent}>
-            {/* Name */}
+            {/* Email */}
             <Layout style={styles.userDetailsContainer}>
               <Text style={styles.userDetail_1}>Email</Text>
               <Text style={styles.userDetail_2}>
                 {props.authenticatedUser.email}
               </Text>
-              <Text style={styles.userDetail_3}>
-                <Icon
-                  style={styles.iconDetail}
-                  name="arrow-ios-forward-outline"
-                />
-              </Text>
+              <TouchableOpacity
+                style={styles.userDetail_3}
+                onPress={onProfileDetails}
+              >
+                <Icon style={styles.iconDetail} name="edit-outline" />
+              </TouchableOpacity>
             </Layout>
 
             {/* Zipcode */}
@@ -234,12 +250,12 @@ export const ProfileUserDetails = (props) => {
               <Text style={styles.userDetail_2}>
                 {props.authenticatedUser.zip}
               </Text>
-              <Text style={styles.userDetail_3}>
-                <Icon
-                  style={styles.iconDetail}
-                  name="arrow-ios-forward-outline"
-                />
-              </Text>
+              <TouchableOpacity
+                style={styles.userDetail_3}
+                onPress={onProfileDetails}
+              >
+                <Icon style={styles.iconDetail} name="edit-outline" />
+              </TouchableOpacity>
             </Layout>
             {/* Phone */}
             <Layout style={styles.userDetailsContainer}>
@@ -247,12 +263,12 @@ export const ProfileUserDetails = (props) => {
               <Text style={styles.userDetail_2}>
                 {props.authenticatedUser.phone || "no phone number present"}
               </Text>
-              <Text style={styles.userDetail_3}>
-                <Icon
-                  style={styles.iconDetail}
-                  name="arrow-ios-forward-outline"
-                />
-              </Text>
+              <TouchableOpacity
+                style={styles.userDetail_3}
+                onPress={onProfileDetails}
+              >
+                <Icon style={styles.iconDetail} name="edit-outline" />
+              </TouchableOpacity>
             </Layout>
           </Layout>
           {/* Tabs */}

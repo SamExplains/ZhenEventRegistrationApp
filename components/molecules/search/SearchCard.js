@@ -107,13 +107,14 @@ export const EventCard = (props) => {
   };
 
   const eventIsPrivate = () => {
-    return props.details.public_private === 1 ? (
-      <Layout style={styles.container}>
-        <Text>Event is Private...only showing for debug purposes.</Text>
-      </Layout>
-    ) : (
-      eventCardPublic()
-    );
+    // return props.details.public_private === 1 ? (
+    //   <Layout style={styles.container}>
+    //     <Text>Event is Private...only showing for debug purposes.</Text>
+    //   </Layout>
+    // ) : (
+    //   eventCardPublic()
+    // );
+    return eventCardPublic();
   };
 
   return eventIsPrivate();

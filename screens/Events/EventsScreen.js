@@ -176,78 +176,6 @@ export const EventsScreen = () => {
     fetch("new");
   }, [page, shouldFetch]);
 
-  const renderHeader = () => {
-    return (
-      <Layout>
-        <Layout style={{ position: "relative" }}>
-          <Layout style={styles.header}>
-            <Text category="h5" style={styles.appTitle}>
-              Party Be Mine
-            </Text>
-            <Text style={styles.appSubtitle} category="c2">
-              Create Your Favorite Events
-            </Text>
-            {/* Four Labels */}
-            <Layout style={styles.labelsContainer}>
-              <Text style={styles.purpleLabel}>Birthday</Text>
-              <Text style={styles.purpleLabel}>Potluck</Text>
-              <Text style={styles.purpleLabel}>Party</Text>
-              <Text style={styles.purpleLabel}>Online</Text>
-            </Layout>
-            <Text style={{ fontWeight: "500", color: "white" }} category="c2">
-              Assign Party Supplies or Check In Your Guest
-            </Text>
-          </Layout>
-          {/* Vector 1 */}
-          <Image
-            style={styles.vector1}
-            source={require("../../assets/Vector(3).png")}
-          />
-          {/* Vector2 */}
-          <Image
-            style={styles.vector2}
-            source={require("../../assets/Vector(1).png")}
-          />
-          {/* Vector3 */}
-          <Image
-            style={styles.vector3}
-            source={require("../../assets/Vector(2).png")}
-          />
-        </Layout>
-
-        <Layout>
-          <Layout style={styles.searchContainer}>
-            <Input
-              textStyle={{ paddingLeft: 5 }}
-              style={styles.search}
-              value={value}
-              placeholder="Search by Event Name or Event Type"
-              textContentType={"none"}
-              clearButtonMode="always"
-              returnKeyType="next"
-              keyboardType="default"
-              accessoryLeft={SearchOutline}
-              onChangeText={(newValue) => setValue(newValue)}
-              onSubmitEditing={onSearchQuery}
-            />
-            <Button
-              style={styles.button}
-              accessoryLeft={Options2}
-              onPress={onShowFilterMenu}
-            />
-          </Layout>
-          {filterMenu()}
-        </Layout>
-
-        <Layout style={styles.contentContainer}>
-          <Text category="h6" style={styles.title}>
-            Recently Listed Events
-          </Text>
-        </Layout>
-      </Layout>
-    );
-  };
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopNavigation
@@ -257,7 +185,77 @@ export const EventsScreen = () => {
       />
       {!shouldFetch ? (
         <FlatList
-          ListHeaderComponent={renderHeader}
+          ListHeaderComponent={
+            <Layout>
+              <Layout style={{ position: "relative" }}>
+                <Layout style={styles.header}>
+                  <Text category="h5" style={styles.appTitle}>
+                    Party Be Mine
+                  </Text>
+                  <Text style={styles.appSubtitle} category="c2">
+                    Create Your Favorite Events
+                  </Text>
+                  {/* Four Labels */}
+                  <Layout style={styles.labelsContainer}>
+                    <Text style={styles.purpleLabel}>Birthday</Text>
+                    <Text style={styles.purpleLabel}>Potluck</Text>
+                    <Text style={styles.purpleLabel}>Party</Text>
+                    <Text style={styles.purpleLabel}>Online</Text>
+                  </Layout>
+                  <Text
+                    style={{ fontWeight: "500", color: "white" }}
+                    category="c2"
+                  >
+                    Assign Party Supplies or Check In Your Guest
+                  </Text>
+                </Layout>
+                {/* Vector 1 */}
+                <Image
+                  style={styles.vector1}
+                  source={require("../../assets/Vector(3).png")}
+                />
+                {/* Vector2 */}
+                <Image
+                  style={styles.vector2}
+                  source={require("../../assets/Vector(1).png")}
+                />
+                {/* Vector3 */}
+                <Image
+                  style={styles.vector3}
+                  source={require("../../assets/Vector(2).png")}
+                />
+              </Layout>
+
+              <Layout>
+                <Layout style={styles.searchContainer}>
+                  <Input
+                    textStyle={{ paddingLeft: 5 }}
+                    style={styles.search}
+                    value={value}
+                    placeholder="Search by Event Name or Event Type"
+                    textContentType={"none"}
+                    clearButtonMode="always"
+                    keyboardType="default"
+                    accessoryLeft={SearchOutline}
+                    onChangeText={(newValue) => setValue(newValue)}
+                    onSubmitEditing={onSearchQuery}
+                  />
+                  <Button
+                    style={styles.button}
+                    accessoryLeft={Options2}
+                    onPress={onShowFilterMenu}
+                  />
+                </Layout>
+                {filterMenu()}
+              </Layout>
+
+              <Layout style={styles.contentContainer}>
+                <Text category="h6" style={styles.title}>
+                  Recently Listed Events
+                </Text>
+              </Layout>
+            </Layout>
+          }
           data={events}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (

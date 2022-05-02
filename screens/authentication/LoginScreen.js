@@ -373,13 +373,14 @@ export const LoginScreen = () => {
               promptAsync();
             }}
           >
-            <Text style={{ fontWeight: "700", color: "#454545" }}>
-              Log in with Google{" "}
-            </Text>
             <Image
               source={require("../../assets/Google_Logo.png")}
               style={styles.tinyLogo}
             />
+            {"   "}
+            <Text style={{ fontWeight: "700", color: "#454545" }}>
+              Log in with Google{" "}
+            </Text>
           </Button>
 
           <Text style={styles.noaccount}>

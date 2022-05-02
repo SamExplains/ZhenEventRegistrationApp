@@ -64,18 +64,23 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     // const scheme = Platform.OS === "ios" ? "maps:" : "geo:";
     // const url = scheme + `${lat},${lng}`;
     // Linking.openURL("google.navigation:q=centurylink+field");
+
     // Build the address link
     // const adjusted = name.replace(/\s/g, "");
-    const linkTo = `"https://www.google.com/maps/search/?api=1&query="${eventDetails.address.replace(
+    const linkTo = `${eventDetails.address.replace(
       /\s/g,
       "+"
     )},+${eventDetails.city.replace(/\s/g, "+")},+${eventDetails.zip.replace(
       /\s/g,
       "+"
     )}`;
+
     // console.log(linkTo);
     // Linking.openURL(
     //   "https://www.google.com/maps/search/?api=1&query=1500+Pennsylvania+Avenue+NW,+Washington,+DC+20220"
+    // );
+    // Linking.openURL(
+    //   `https://www.google.com/maps/search/?api=1&query=${linkTo}`
     // );
     Linking.openURL(
       `https://www.google.com/maps/search/?api=1&query=${linkTo}`
@@ -198,7 +203,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
       });
     Toast.show({
       type: "info",
-      text1: "Unsubscribed",
+      text1: "Unregistered",
       text2: "You are not longer registered for this event!",
     });
   };
@@ -249,7 +254,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
       }
       Toast.show({
         type: "success",
-        text1: "Subscribed",
+        text1: "Registered",
         text2: "You are registered for this event!",
       });
     }
@@ -259,11 +264,11 @@ export const EventDetailedScreen = ({ navigation, route }) => {
     if (authenticated) {
       return registered.registered === 1 ? (
         <Button style={styles.button} size="medium" onPress={onUnsubscribe}>
-          Unsubscribe
+          Unregister
         </Button>
       ) : (
         <Button style={styles.button} size="medium" onPress={onSubscribe}>
-          Subscribe
+          Register
         </Button>
       );
     }
@@ -278,7 +283,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           borderRadius: 25,
         }}
       >
-        Login to subscribe or use checklist.
+        Login to register or use checklist.
       </Text>
     );
   };

@@ -510,11 +510,11 @@ export const AddEventScreen = () => {
                 onBlur={onAddressBlur}
                 status={addressError ? "success" : "danger"}
               />
-              {/* City */}
+              {/* City / State */}
               <Input
                 style={styles.location_b}
                 value={city}
-                label="City"
+                label="State"
                 placeholder="..."
                 textContentType={"none"}
                 clearButtonMode="always"
@@ -523,7 +523,7 @@ export const AddEventScreen = () => {
                 onChangeText={(newCity) => setCity(newCity)}
                 onBlur={onCityBlur}
                 status={cityError ? "success" : "danger"}
-                maxLength={2}
+                maxLength={25}
               />
               <Input
                 style={styles.location_c}
