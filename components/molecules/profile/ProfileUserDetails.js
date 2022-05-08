@@ -86,6 +86,7 @@ export const ProfileUserDetails = (props) => {
           <Text
             style={toggle === 1 ? styles.tabActiveText : styles.tabInactiveText}
             onPress={() => toggleTab(1)}
+            category="p2"
           >
             I am the Organizer
           </Text>
@@ -97,6 +98,7 @@ export const ProfileUserDetails = (props) => {
               toggle === 2 ? styles.tabActiveTextRight : styles.tabInactiveText
             }
             onPress={() => toggleTab(2)}
+            category="p2"
           >
             I am the Participant
           </Text>
@@ -226,11 +228,12 @@ export const ProfileUserDetails = (props) => {
               </Button>
             </Layout>
 
-            <Text category="h4" style={{ marginTop: 15 }}>
+            <Text category="h6" style={{ marginTop: 15 }}>
               {props.authenticatedUser.name}
             </Text>
             <Text
               style={{ fontWeight: "bold", marginTop: 10, color: "#301A4B" }}
+              category="p2"
             >
               Member ID: {props.authenticatedUser.id}
             </Text>
@@ -240,8 +243,10 @@ export const ProfileUserDetails = (props) => {
           <Layout style={styles.userDetailsContainerParent}>
             {/* Email */}
             <Layout style={styles.userDetailsContainer}>
-              <Text style={styles.userDetail_1}>Email</Text>
-              <Text style={styles.userDetail_2}>
+              <Text style={styles.userDetail_1} category="p2">
+                Email
+              </Text>
+              <Text style={styles.userDetail_2} category="p2">
                 {props.authenticatedUser.email}
               </Text>
               <TouchableOpacity
@@ -254,8 +259,10 @@ export const ProfileUserDetails = (props) => {
 
             {/* Zipcode */}
             <Layout style={styles.userDetailsContainer}>
-              <Text style={styles.userDetail_1}>Zipcode</Text>
-              <Text style={styles.userDetail_2}>
+              <Text style={styles.userDetail_1} category="p2">
+                Zipcode
+              </Text>
+              <Text style={styles.userDetail_2} category="p2">
                 {props.authenticatedUser.zip}
               </Text>
               <TouchableOpacity
@@ -267,8 +274,10 @@ export const ProfileUserDetails = (props) => {
             </Layout>
             {/* Phone */}
             <Layout style={styles.userDetailsContainer}>
-              <Text style={styles.userDetail_1}>Phone</Text>
-              <Text style={styles.userDetail_2}>
+              <Text style={styles.userDetail_1} category="p2">
+                Phone
+              </Text>
+              <Text style={styles.userDetail_2} category="p2">
                 {props.authenticatedUser.phone || "no phone number present"}
               </Text>
               <TouchableOpacity
@@ -347,8 +356,8 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   profileImage: {
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     borderRadius: 100,
   },
   cameraUploadButton: {
@@ -373,7 +382,7 @@ const styles = StyleSheet.create({
   userDetailsContainer: {
     display: "flex",
     flexDirection: "row",
-    marginBottom: 15,
+    marginBottom: 10,
   },
   userDetail_1: {
     width: "35%",
@@ -397,7 +406,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     // backgroundColor: "orange",
-    padding: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+    marginTop: -15,
   },
   tabActive: {
     borderBottomWidth: 2.5,
