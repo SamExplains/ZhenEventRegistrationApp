@@ -148,8 +148,8 @@ export const EventsScreen = () => {
           // on next page api url update
           if (data.next_page_url === finalPage) {
             console.log("Final page Reached");
-            console.log(data.next_page_url);
-            console.log(finalPage);
+            // console.log(data.next_page_url);
+            // console.log(finalPage);
             setFinalPageReached(true);
           } else {
             // console.log("Previous page ", page);

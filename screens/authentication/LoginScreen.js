@@ -13,6 +13,7 @@ import {
   Button,
   Avatar,
   Spinner,
+  Divider,
 } from "@ui-kitten/components";
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
@@ -311,7 +312,8 @@ export const LoginScreen = () => {
               fontWeight: "bold",
               paddingLeft: 10,
               color: "#301A4B",
-              marginBottom: 20,
+              marginTop: 25,
+              // marginBottom: 20,
             }}
           >
             Event Registration
@@ -347,12 +349,15 @@ export const LoginScreen = () => {
             onBlur={onPasswodBlur}
             status={passwordError ? "success" : "danger"}
           />
+
+          <Button style={styles.button} size="medium" onPress={onLogin}>
+            Let's Go!
+          </Button>
           <Text
             style={{
               textAlign: "right",
               marginRight: 15,
-              marginTop: 10,
-              marginBottom: 40,
+              marginBottom: 25,
               color: "#0B2F8D",
               fontWeight: "bold",
             }}
@@ -360,10 +365,29 @@ export const LoginScreen = () => {
           >
             Forgot Password?
           </Text>
-
-          <Button style={styles.button} size="medium" onPress={onLogin}>
-            Let's Go!
-          </Button>
+          <Layout
+            style={{
+              paddingLeft: 10,
+              paddingRight: 10,
+              marginBottom: 30,
+              position: "relative",
+            }}
+          >
+            <Divider />
+            <Text
+              style={{
+                position: "absolute",
+                top: -10,
+                left: "45%",
+                backgroundColor: "white",
+                // padding: 10,
+                paddingLeft: 20,
+                paddingRight: 20,
+              }}
+            >
+              OR
+            </Text>
+          </Layout>
           <Button
             size="medium"
             appearance="outline"
@@ -462,6 +486,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#3F295A",
     borderColor: "transparent",
     borderRadius: 25,
+    marginTop: 15,
   },
   buttonAlt: {
     marginBottom: 10,

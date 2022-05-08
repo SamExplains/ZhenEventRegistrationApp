@@ -5,7 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { Component, useState, useRef } from "react";
+import React, { Component, useState, useRef, useEffect } from "react";
 import {
   Layout,
   Tab,
@@ -33,9 +33,17 @@ export const ProfileUserDetails = (props) => {
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
   const [toggle, setToggle] = useState(0);
+  const [initial, setInitial] = useState(false);
   const [awaiting, setAwaiting] = useState(false);
   const scrollViewRef = useRef();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!initial) {
+      toggleTab(1);
+      setInitial(true);
+    }
+  }, [toggle]);
 
   const toggleTab = (tab) => {
     // Make request for data and store

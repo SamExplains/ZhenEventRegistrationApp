@@ -10,6 +10,7 @@ import {
   Button,
   Toggle,
   Spinner,
+  Divider,
 } from "@ui-kitten/components";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -61,10 +62,10 @@ export const AddEventScreen = () => {
   const [offlineChk, setOfflineChk] = useState(false);
   const [checkinChk, setCheckinChk] = useState(false);
 
-  const [capacity, setCapacity] = useState(0);
+  const [capacity, setCapacity] = useState(500);
 
   const [eventUrl, setEventUrl] = useState("");
-  const [eventUrlError, setEventUrlError] = useState(false);
+  const [eventUrlError, setEventUrlError] = useState(true);
 
   // Personal details
   const [email, setEmail] = useState("");
@@ -259,7 +260,7 @@ export const AddEventScreen = () => {
     setCapacity(0);
 
     setEventUrl("");
-    setEventUrlError(false);
+    setEventUrlError(true);
 
     // Personal details
     setEmail("");
@@ -332,7 +333,7 @@ export const AddEventScreen = () => {
           on_off_line: offlineChk,
           check_in: checkinChk,
           capacity: capacity,
-          url: eventUrl,
+          url: eventUrl === "" ? "no url included" : eventUrl,
           additional_items: JSON.stringify(additionalItems),
           email: email,
           phone: phone,
@@ -570,7 +571,11 @@ export const AddEventScreen = () => {
                 paddinngrRight: 15,
               }}
             >
-              <Text style={styles.label}>Capacity {capacity}</Text>
+              <Text style={styles.label}>
+                Capacity (how many people can register)
+                {"   -   "}
+                {capacity}
+              </Text>
               <Slider
                 minimumValue={0}
                 maximumValue={500}
@@ -597,45 +602,74 @@ export const AddEventScreen = () => {
               onBlur={onEventUrlBlur}
               status={eventUrlError ? "success" : "danger"}
             />
-            {/* Additional Items */}
+
             <Layout
               style={{
+                paddingLeft: 10,
+                paddingRight: 10,
                 marginTop: 15,
                 marginBottom: 15,
-                paddingLeft: 15,
-                paddinngrRight: 15,
               }}
             >
-              <Text style={styles.label}>Additional items</Text>
-              {renderAdditionalItems()}
+              <Divider />
             </Layout>
 
-            {/* Add additional item input */}
-            <Layout style={styles.additional_container}>
-              <Input
-                style={styles.additional_item_input}
-                value={additionalItem}
-                label="Add additional item"
-                placeholder="..."
-                textContentType={"none"}
-                clearButtonMode="always"
-                returnKeyType="next"
-                keyboardType="default"
-                maxLength={50}
-                onChangeText={(newItem) => setAdditionalItem(newItem)}
-              />
-              <Button
-                style={styles.additional_item_button}
-                accessoryRight={PlusOutline}
-                size="small"
-                onPress={onAddAdditionalItem}
-              />
-            </Layout>
+            {/* Additional Items */}
+            {offlineChk ? (
+              <Layout>
+                <Layout
+                  style={{
+                    marginTop: 15,
+                    marginBottom: 15,
+                    paddingLeft: 15,
+                    paddinngrRight: 15,
+                  }}
+                >
+                  <Text style={styles.label}>
+                    Items List - For peopple to chip in
+                  </Text>
+                  {renderAdditionalItems()}
+                </Layout>
+
+                {/* Add additional item input */}
+                <Layout style={styles.additional_container}>
+                  <Input
+                    style={styles.additional_item_input}
+                    value={additionalItem}
+                    label="Add additional item to items list"
+                    placeholder="..."
+                    textContentType={"none"}
+                    clearButtonMode="always"
+                    returnKeyType="next"
+                    keyboardType="default"
+                    maxLength={50}
+                    onChangeText={(newItem) => setAdditionalItem(newItem)}
+                  />
+                  <Button
+                    style={styles.additional_item_button}
+                    accessoryRight={PlusOutline}
+                    size="small"
+                    onPress={onAddAdditionalItem}
+                  />
+                </Layout>
+                <Layout
+                  style={{
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    marginTop: 15,
+                    marginBottom: 15,
+                  }}
+                >
+                  <Divider />
+                </Layout>
+              </Layout>
+            ) : null}
+
             {/* Email */}
             <Input
               style={styles.input}
               value={email}
-              label="Email for people to see"
+              label="Email (allow people to email you?)"
               placeholder="..."
               textContentType={"none"}
               clearButtonMode="always"
@@ -649,7 +683,7 @@ export const AddEventScreen = () => {
             <Input
               style={styles.input}
               value={phone}
-              label="Number to call you"
+              label="Number (allow people to call you?)"
               placeholder="..."
               textContentType={"none"}
               clearButtonMode="always"

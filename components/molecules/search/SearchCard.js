@@ -70,37 +70,48 @@ export const EventCard = (props) => {
         style={styles.container}
         onPress={setSearchEventDetails}
       >
-        <Image
-          resizeMode="cover"
-          style={styles.image}
-          source={
-            props.details.first_image
-              ? {
-                  uri: props.details.first_image,
-                }
-              : {
-                  uri: props.details.second_image,
-                }
-          }
-        />
-        {/* Event Date */}
-        {/* <Text style={styles.date}>00 Jan</Text> */}
-        <Text style={styles.date}>{parseDate(props.details.start_time)}</Text>
-        <Text category="h6" style={styles.title}>
-          [ID: {props.details.id}] {props.details.title}
-        </Text>
-        <Text category="p1" style={styles.id}>
-          ID: {props.details.event_key || "no event key"}
-        </Text>
-        <Layout style={styles.location}>
-          <Image
-            resizeMode="contain"
-            source={require("../../../assets/Vector(10).png")}
-          />
-          <Text category="p2">
-            {"     "}
-            {props.details.address}, {props.details.city}, {props.details.zip}
-          </Text>
+        <Layout style={styles.split_container}>
+          <Layout style={styles.split_container_image}>
+            <Image
+              resizeMode="cover"
+              style={styles.image}
+              source={
+                props.details.first_image
+                  ? {
+                      uri: props.details.first_image,
+                    }
+                  : {
+                      uri: props.details.second_image,
+                    }
+              }
+            />
+          </Layout>
+          <Layout style={styles.split_container_content}>
+            {/* Event Date */}
+            {/* <Text style={styles.date}>00 Jan</Text> */}
+            <Text style={styles.date}>
+              {parseDate(props.details.start_time)}
+            </Text>
+            <Text category="p1" style={styles.title}>
+              {props.details.title}
+            </Text>
+            <Text category="c1" style={styles.id}>
+              {props.details.start_time}
+              {"   "}-{"   "}
+              {props.details.end_time}
+            </Text>
+            <Layout style={styles.location}>
+              <Image
+                resizeMode="contain"
+                source={require("../../../assets/Vector(10).png")}
+              />
+              <Text category="c2">
+                {"     "}
+                {props.details.address}, {props.details.city},{" "}
+                {props.details.zip}
+              </Text>
+            </Layout>
+          </Layout>
         </Layout>
       </TouchableOpacity>
     );
@@ -134,13 +145,25 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
+  split_container: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+  },
+  split_container_image: {
+    width: "30%",
+  },
+  split_container_content: {
+    width: "70%",
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
   image: {
     width: "100%",
-    height: 230,
+    height: 100,
   },
   title: {
     fontWeight: "bold",
-    marginTop: 10,
   },
   id: { marginTop: 10 },
   location: {

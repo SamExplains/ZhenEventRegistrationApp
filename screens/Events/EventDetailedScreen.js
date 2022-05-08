@@ -551,23 +551,27 @@ export const EventDetailedScreen = ({ navigation, route }) => {
           </Layout>
           {/* Website */}
           {/* Location */}
-          <Layout style={styles.DMLContainer}>
-            <Layout style={styles.DMLItemLeft}>
-              <GlobeOutline style={styles.icon} />
+          {eventDetails.url !== "no url included" && (
+            <Layout style={styles.DMLContainer}>
+              <Layout style={styles.DMLItemLeft}>
+                <GlobeOutline style={styles.icon} />
+              </Layout>
+              <Text style={styles.DMLItemMiddle}>{eventDetails.url}</Text>
+              <Layout style={styles.DMLItemRight}></Layout>
             </Layout>
-            <Text style={styles.DMLItemMiddle}>{eventDetails.url}</Text>
-            <Layout style={styles.DMLItemRight}></Layout>
-          </Layout>
+          )}
           {/* Share */}
-          <Layout style={styles.DMLContainer}>
-            <Layout style={styles.DMLItemLeft}>
-              <ShareLink fill="#454545" style={styles.icon} />
+          {eventDetails.url !== "no url included" && (
+            <Layout style={styles.DMLContainer}>
+              <Layout style={styles.DMLItemLeft}>
+                <ShareLink fill="#454545" style={styles.icon} />
+              </Layout>
+              <Text style={styles.DMLItemMiddle}>
+                {eventDetails.url + "/" + eventDetails.event_key}
+              </Text>
+              <Layout style={styles.DMLItemRight}></Layout>
             </Layout>
-            <Text style={styles.DMLItemMiddle}>
-              {eventDetails.url}/{eventDetails.event_key}
-            </Text>
-            <Layout style={styles.DMLItemRight}></Layout>
-          </Layout>
+          )}
 
           {additionalItems.length > 0 ? (
             <Layout>
