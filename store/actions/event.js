@@ -8,6 +8,8 @@ import {
   UPDATE_EVENT_SEARCH_CHECKLIST,
   SET_PROFILE_TAB_EVENTS,
   SET_PROFILE_TAB_EVENT_DETAILS,
+  UPDATE_PROFILE_EVENT_DETAILS,
+  FETCH_TAB_EVENTS,
 } from "./actionTypes";
 
 //Add user's information from payload
@@ -86,4 +88,21 @@ export const setProfileTabEventDetails = (payload) => {
       type: SET_PROFILE_TAB_EVENT_DETAILS,
       payload: payload,
     });
+};
+
+export const updateEditedEventDetails = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: UPDATE_PROFILE_EVENT_DETAILS,
+      payload: payload,
+    });
+  };
+};
+
+export const fetchTabEvents = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: FETCH_TAB_EVENTS,
+    });
+  };
 };

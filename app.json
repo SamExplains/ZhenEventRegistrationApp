@@ -37,7 +37,7 @@
         }
       ]
     ],
-    "description": "Update v7.2.",
+    "description": "Update v8. This brings the Expo SDK from 41 to 45.",
     "scheme": "mycoolredirect"
   }
 }

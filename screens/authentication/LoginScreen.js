@@ -3,7 +3,6 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
-  AsyncStorage,
   TouchableOpacity,
 } from "react-native";
 import {
@@ -15,6 +14,7 @@ import {
   Spinner,
   Divider,
 } from "@ui-kitten/components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignupScreen from "./SignupScreen";
 import PasswordResetScreen from "./PasswordResetScreen";
 import React, { useState, useEffect } from "react";

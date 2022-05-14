@@ -19,7 +19,10 @@ import EventCard from "./EventCardProfile";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { updateAuthenticated } from "../../../store/actions/user";
-import { setProfileTabEvents } from "../../../store/actions/event";
+import {
+  setProfileTabEvents,
+  fetchTabEvents,
+} from "../../../store/actions/event";
 import axios from "axios";
 import ROOT_URL from "../../../settings.json";
 
@@ -132,24 +135,26 @@ export const ProfileUserDetails = (props) => {
   };
 
   const renderEvents = () => {
-    return events.map((ev) => {
-      return (
-        <EventCard
-          key={ev.id}
-          id={ev.id}
-          activeTab={toggle}
-          tabEventId={ev.id}
-          title={ev.title}
-          date={ev.start_time}
-          eventId={ev.event_key}
-          private={ev.public_private}
-          authCode={ev.private_authentication_code}
-          image={ev.first_image.length ? ev.first_image : ev.second_image}
-          capacity={ev.capacity}
-          fromComponent="profile"
-        />
-      );
-    });
+    if (events) {
+      return events.map((ev) => {
+        return (
+          <EventCard
+            key={ev.id}
+            id={ev.id}
+            activeTab={toggle}
+            tabEventId={ev.id}
+            title={ev.title}
+            date={ev.start_time}
+            eventId={ev.event_key}
+            private={ev.public_private}
+            authCode={ev.private_authentication_code}
+            image={ev.first_image.length ? ev.first_image : ev.second_image}
+            capacity={ev.capacity}
+            fromComponent="profile"
+          />
+        );
+      });
+    }
   };
 
   const onProfileDetails = () => {

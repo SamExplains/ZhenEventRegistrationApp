@@ -144,7 +144,7 @@ export const EventDetailedScreen = ({ navigation, route }) => {
         await axios
           .get(`${ROOT_URL.api}/registration/checkin/${eventDetails.id}`)
           .then(({ data }) => {
-            console.log("We have a registered count of ", data);
+            // console.log("We have a registered count of ", data);
             setCapacity(data);
             // setLoading(true);
           });

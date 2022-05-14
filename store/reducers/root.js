@@ -21,6 +21,8 @@ import {
   UPDATE_EVENT_SEARCH_CHECKLIST,
   SET_PROFILE_TAB_EVENTS,
   SET_PROFILE_TAB_EVENT_DETAILS,
+  UPDATE_PROFILE_EVENT_DETAILS,
+  FETCH_TAB_EVENTS,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -154,6 +156,24 @@ const reducer = (state = initialState, action) => {
         tabEventDetails: tabEvent[0],
       };
       break;
+    case UPDATE_PROFILE_EVENT_DETAILS:
+      // find index
+      const editEventIndex = state.tabEvents.findIndex((el) => {
+        return el.id === action.payload.id;
+      });
+      // Event details update
+      state.tabEvents[editEventIndex] = action.payload;
+      return {
+        ...state,
+        tabEvents: [...state.tabEvents],
+      };
+      break;
+    case FETCH_TAB_EVENTS:
+      // FETCH TAB EVENTS
+      return {
+        ...state,
+        tabEvents: [...state.tabEvents],
+      };
     default:
       return state;
   }

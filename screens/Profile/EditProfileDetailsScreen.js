@@ -68,7 +68,7 @@ const EditProfileDetailsScreen = ({ navigation }) => {
 
     // Compress image
     if (image !== null && image.substr(0, 7) === "file://") {
-      console.log("We have an image to compress and update");
+      // console.log("We have an image to compress and update");
       firstBase64Image = await FileSystem.readAsStringAsync(image, {
         encoding: "base64",
       });

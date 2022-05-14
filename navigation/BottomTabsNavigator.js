@@ -26,6 +26,7 @@ import AddEventScreen from "../screens/AddEvent/AddEventScreen";
 import SearchResults from "../screens/Search/SearchResults";
 import CheckinScannerScreen from "../screens/Profile/CheckinScannerScreen";
 import EditProfileDetailsScreen from "../screens/Profile/EditProfileDetailsScreen";
+import EditEventScreen from "../screens/Events/EditEventScreen";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -71,5 +72,6 @@ export const BottomTabsNavigator = () => (
     <Screen name="CheckInScanner" component={CheckinScannerScreen} />
     <Screen name="SearchResults" component={SearchResults} />
     <Screen name="EditProfileDetails" component={EditProfileDetailsScreen} />
+    <Screen name="EditEventScreen" component={EditEventScreen} />
   </Navigator>
 );

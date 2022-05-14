@@ -11,7 +11,6 @@ import {
 } from "@ui-kitten/components";
 import { ArrowBackIcon, ProfileIcon } from "../../assets/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ViewOrCheckIn from "../../components/molecules/profile/ViewOrCheckIn";
 import { useSelector } from "react-redux";
 
 export const CheckInScreen = ({ navigation }) => {

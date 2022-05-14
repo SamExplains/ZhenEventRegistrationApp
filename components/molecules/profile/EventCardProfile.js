@@ -20,6 +20,14 @@ export const EventCardProfile = (props) => {
     navigation.navigate("CheckIn");
   };
 
+  const navigateToEditEvent = () => {
+    // Set event details
+    dispatch(setProfileTabEventDetails(props.tabEventId));
+    navigation.navigate("EditEventScreen", {
+      eid: props.tabEventId,
+    });
+  };
+
   const navigateToCheckInScanner = () => {
     navigation.navigate("CheckInScanner", {
       fromComponent: "profile",
@@ -39,7 +47,7 @@ export const EventCardProfile = (props) => {
             View
           </Button>
           {/* Edit / Check In */}
-          <Button style={styles.buttonAlternate}>
+          <Button style={styles.buttonAlternate} onPress={navigateToEditEvent}>
             <Text style={{ color: "#3F295A" }}>Edit</Text>
           </Button>
           <Button
