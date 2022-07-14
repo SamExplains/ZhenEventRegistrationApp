@@ -1,0 +1,112 @@
+{
+  "components": {
+    "MenuItem": {
+            "appearances": {
+                "default": {
+                    "mapping": {
+                        "state": {
+                            "selected": {
+                                "backgroundColor": "#CBBEDB",
+                                "indicatorBackgroundColor": "#0A050F",
+                                "titleColor": "#0A050F",
+                                "iconTintColor": "#0A050F"
+                            }
+                        }
+                    }
+                },
+                "grouped": {
+                    "mapping": {
+                        "paddingLeft": 16
+                    }
+                }
+            }
+    },
+    "Toggle": {
+        "appearances": {
+            "default": {
+                "variantGroups": {
+                    "status": {
+                        "basic": {
+                            "borderColor": "color-basic-transparent-default-border",
+                            "backgroundColor": "color-basic-transparent-default",
+                            "thumbBackgroundColor": "background-basic-color-1",
+                            "outlineBackgroundColor": "transparent",
+                            "textColor": "#301A4B",
+                            "iconTintColor": "transparent",
+                            "state": {
+                                "checked": {
+                                    "borderColor": "#301A4B",
+                                    "backgroundColor": "#301A4B",
+                                    "iconTintColor": "white"
+                                },
+                                "focused": {
+                                    "borderColor": "color-primary-transparent-focus-border",
+                                    "backgroundColor": "color-primary-transparent-focus",
+                                    "outlineBackgroundColor": "outline-color"
+                                },
+                                "checked.focused": {
+                                    "borderColor": "#301A4B",
+                                    "backgroundColor": "#9C87B7"
+                                },
+                                "hover": {
+                                    "borderColor": "#301A4B",
+                                    "backgroundColor": "#9C87B7"
+                                },
+                                "checked.hover": {
+                                    "borderColor": "#301A4B",
+                                    "backgroundColor": "#9C87B7"
+                                },
+                                "active": {
+                                    "borderColor": "#301A4B",
+                                    "backgroundColor": "#9C87B7",
+                                    "outlineBackgroundColor": "outline-color"
+                                },
+                                "checked.active": {
+                                    "borderColor": "#301A4B",
+                                    "backgroundColor": "#9C87B7"
+                                },
+                                "disabled": {
+                                    "borderColor": "#301A4B",
+                                    "backgroundColor": "#9C87B7",
+                                    "thumbBackgroundColor": "color-basic-disabled",
+                                    "textColor": "text-disabled-color"
+                                },
+                                "checked.disabled": {
+                                    "iconTintColor": "text-control-color"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "BottomNavigationTab": {
+        "appearances": {
+            "default": {
+                "mapping": {
+                    "textMarginVertical": 2,
+                    "textFontSize": "text-caption-2-font-size",
+                    "textFontWeight": "text-caption-2-font-weight",
+                    "textFontFamily": "text-caption-2-font-family",
+                    "textColor": "text-hint-color",
+                    "iconWidth": 24,
+                    "iconHeight": 24,
+                    "iconMarginVertical": 2,
+                    "iconTintColor": "text-hint-color",
+                    "state": {
+                        "hover": {
+                            "textColor": "text-primary-hover-color",
+                            "iconTintColor": "text-primary-hover-color"
+                        },
+                        "selected": {
+                            "textColor": "#301A4B",
+                            "iconTintColor": "#301A4B"
+                        }
+                    }
+                }
+            }
+        }
+    }
+  }
+}

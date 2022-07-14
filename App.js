@@ -1,20 +1,26 @@
-import * as eva from '@eva-design/eva';
+import "react-native-gesture-handler";
+import * as eva from "@eva-design/eva";
 
-import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 
-import { AppNavigator } from './navigation/AppNavigator';
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppNavigator } from "./navigation/AppNavigator";
+import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import configureStore from "./store/configureStore";
+import { default as mapping } from "./mapping.json";
+import { connect, Provider } from "react-redux";
 
 export default () => (
   <>
-    <IconRegistry icons={EvaIconsPack}/>
-    <ApplicationProvider {...eva} theme={eva.light}>
+    <IconRegistry icons={EvaIconsPack} />
+    <Provider store={configureStore}>
+      <ApplicationProvider {...eva} customMapping={mapping} theme={eva.light}>
         <SafeAreaProvider>
-            <AppNavigator />
+          <AppNavigator />
         </SafeAreaProvider>
-    </ApplicationProvider>
+      </ApplicationProvider>
+    </Provider>
   </>
 );
 
